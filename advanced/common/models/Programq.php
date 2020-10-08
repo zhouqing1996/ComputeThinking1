@@ -1,0 +1,46 @@
+<?php
+namespace common\models;
+
+use Yii;
+use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
+
+/**
+ * Programq model
+ *
+ * @property integer $pqid
+ * @property string $pqitem
+ * @property string $pqans
+ * @property string $pqtail
+ * @property string $pqrem
+ * @property string $pqstatus
+ */
+class Programq extends ActiveRecord
+{
+    public static function tableName()
+    {
+        return 'Programq';
+    }
+    public function rules()
+    {
+        return [
+            [['pqid','status'],'required'],
+            [['pqid','status'],'integer'],
+            [['pqans'],'string','max'=>255],
+            [['pqitem','pqtail','pqrem'],'text'],
+        ];
+    }
+    public function attributeLabels()
+    {
+        return [
+            'pqid'=>'Pqid',
+            'pqitem'=>'Pqitem',
+            'pqans'=>'Pqans',
+            'pqtail'=>'Pqtail',
+            'pqrem'=>'Pqrem',
+            'pqstatus'=>'Pqtatus',
+        ];
+    }
+}
