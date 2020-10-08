@@ -85,11 +85,6 @@ class IndexController extends Controller
     	$request = \Yii::$app->request;
     	$username = $request->post('username');
     	$password = $request->post('password');
-//    	$password1 = $request->post('password1');
-//    	if($password != $password1)
-//    	{
-//    		return array("data"=>[$password,$password1],"msg"=>"两次输入密码不一致");
-//    	}
     	if($this->UsernameQuery($username)['msg']=='No')
     	{
     		$passwordE = $this->PasswordEncry($password);
@@ -125,7 +120,6 @@ class IndexController extends Controller
     	$request = \Yii::$app->request;
     	$username = $request->post('username');
     	$password = $request->post('password');
-//    	$query =$this->UsernameQuery($username);
         $query = (new Query())
             ->select('*')
             ->from('user')
@@ -207,28 +201,27 @@ class IndexController extends Controller
     {
         //改变token
         $request = \Yii::$app->request;
-        $username = $request->post('username');
+        $userid = $request->post('userid');
         $query = (new Query())
             ->select('*')
             ->from('user')
-            ->Where(['username'=> $username])
+            ->Where(['id'=> $userid])
             ->andWhere(['status'=> 1])
             ->one();
-        if($query !=null)
+        if($query)
         {
             $token ="";
-            $id = $query['id'];
-            $updateU = \Yii::$app->db->createCommand()->update('user', ['token' => $token], 'id=:id',[':id'=>$id])->execute();
+            $updateU =\Yii::$app->db->createCommand()->update('user', ['token' => $token], "id={$userid}")->execute();
             if($updateU)
             {
-                return array("data"=>[$username],"msg"=>"退出成功");
+                return array("data"=>[$userid],"msg"=>"退出成功");
             }
             else{
-                return array("data"=>[$username],"msg"=>"退出时，token失败");
+                return array("data"=>[$userid],"msg"=>"已退出，退出时，token失败");
             }
         }
         else{
-            return array("data"=>[$username],"msg"=>"退出时，没有找到相应的用户");
+            return array("data"=>[$userid],"msg"=>"退出时，没有找到相应的用户");
         }
 
     }
@@ -237,12 +230,11 @@ class IndexController extends Controller
      */
     public function actionTest()
     {
-//        $password = "123456";
-//        $en = $this->PasswordEncry($password);
-//        $de = $this->PasswordDecry($en);
-//        return array("data"=>[$en,$de,$password],"msg"=>"ceshi");
-        $s = $this->UsernameQuery('zhouqing');
-        return $s;
+        $query = (new Query())
+            ->select('*')
+            ->from('user')
+            ->max('id');
+        return array("data"=>$query,"msg"=>"ssssss");
     }
 
 }

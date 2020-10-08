@@ -40,36 +40,43 @@ Vue.prototype.$http = axios
 //
 router.beforeEach((to,from,next)=>{
   let stoken = store.getters.getsToken
+  let user = store.getters.getsName
   console.log(stoken)
-  if (stoken) {
-    next()
-    //已经登录的
-    if(!to.meta.isLogin)
+  console.log(user)
+  if(to.meta.isLogin==true)
+  {
+    if(!user)
     {
-      console.log("已经登录过了，先退出登录")
+      //获取不到登录信息
+      next({path:'/login'})
     }
-    next()
-    // let srole = store.getters.getsRole
-    // if(srole==3)
-    // {
-    //   next('/home')
-    // }
-    // else if(srole==1)
-    // {
-    //   next('/admin')
-    // }
-    // next()
+    else
+    {
+      return next()
+    }
+  }else{
+    return next();
   }
-  else {
-    if(to.meta.isLogin){
-      next('/login')
-      console.log("需要登录")
-    }
-    else{
-      next()
 
-    }
-  }
+  // console.log(stoken)
+  // if (stoken) {
+  //   // next()
+  //   //已经登录的
+  //   if(!to.meta.isLogin==true)
+  //   {
+  //     console.log("已经登录过了，先退出登录")
+  //   }
+  //   next()
+  // }
+  // else {
+  //   if(to.meta.isLogin){
+  //     next('/login')
+  //     console.log("需要登录")
+  //   }
+  //   else{
+  //     next()
+  //   }
+  // }
 })
 Vue.use(VueResource)
 Vue.use(Vuerouter)

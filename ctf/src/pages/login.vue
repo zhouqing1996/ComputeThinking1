@@ -45,8 +45,22 @@
           {
             this.$store.dispatch('login',res.data.data)
             this.$store.dispatch('slogin',res.data.data)
+            let role = this.$store.getters.getsRole
             alert(message)
-            this.$router.push({path:'/home',params:{username:this.loginForm.username,password:this.loginForm.password}})
+            if(role==1)
+            {
+              //管理员
+              this.$router.push({path:'/admin/index'})
+            }
+            else if(role ==2)
+            {
+              //二级管理员
+
+            }
+            else
+            {
+              this.$router.push({path:'/home',params:{username:this.loginForm.username,password:this.loginForm.password}})
+            }
             console.log(this.$store.getters.getsToken)
           }
           else if(message=="该用户不存在")

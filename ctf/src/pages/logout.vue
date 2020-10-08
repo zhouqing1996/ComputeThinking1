@@ -1,13 +1,10 @@
 <template>
-    <!--用户信息-->
-  <div>
-    用户信息
-  </div>
+    <!--退出登录-->
 </template>
 
 <script>
     export default {
-        name: "Userinfo"
+        name: "logout"
     }
 </script>
 

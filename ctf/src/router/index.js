@@ -9,8 +9,20 @@ import Index from '../pages/index'
 import NotFound from '../pages/Notfound'
 
 //admin
+//全部公共页
 import adminHome from '../pages/admin/Home'
-import Userinfo from '../pages/admin/Userinfo'
+//首页
+import adminIndex from '../pages/admin/Index'
+//用户信息
+import Userinfo from '../pages/admin/user/Userinfo'
+//添加用户
+import Adduser from '../pages/admin/user/Adduser'
+
+//我的信息
+//修改密码
+import Changepwd from '../pages/admin/my/Changepwd'
+//我的资料
+import My from '../pages/admin/my/My'
 
 Vue.use(Router)
 const  router = new Router({
@@ -79,14 +91,51 @@ const  router = new Router({
       component:adminHome,
       children:[
         {
-          //用户信息
-          path:'/admin/userinfo',
+          //管理员首页
+          path:"/admin/index",
+          name:"adminindex",
+          meta:{
+            isLogin:true
+          },
+          component:adminIndex
+        },
+        {
+          //用户信息：用户信息
+          path:'/admin/user/userinfo',
           name:'userinfo',
           meta:{
             isLogin:true
           },
           component:Userinfo
         },
+        {
+          //用户信息：添加用户
+          path:'/admin/user/adduser',
+          name:'adduser',
+          meta:{
+            isLogin:true
+          },
+          component:Adduser
+        },
+        {
+          //我的信息:修改密码
+          path:'/admin/my/changepwd',
+          name:'changepwd',
+          meta:{
+            isLogin:true
+          },
+          component:Changepwd
+        },
+        {
+          //我的信息:我的资料
+          path:'/admin/my/my',
+          name:'my',
+          meta:{
+            isLogin:true
+          },
+          component:My
+        },
+
 
       ]
     }

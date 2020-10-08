@@ -16,12 +16,14 @@ export  default new Vuex.Store({
     // //status
     // Status:localStorage.getItem('Status')?localStorage.getItem('Status'):'',
     //全局变量
+    Id:JSON.parse(localStorage.getItem("vuex"))?JSON.parse(localStorage.getItem("vuex"))['Id']:"",
     Name:JSON.parse(localStorage.getItem("vuex"))?JSON.parse(localStorage.getItem("vuex"))['Name']:"",
     Pwd:JSON.parse(localStorage.getItem("vuex"))?JSON.parse(localStorage.getItem("vuex"))['Pwd']:"",
     Token:JSON.parse(localStorage.getItem("vuex"))?JSON.parse(localStorage.getItem("vuex"))['Token']:"",
     Role:JSON.parse(localStorage.getItem("vuex"))?JSON.parse(localStorage.getItem("vuex"))['Role']:"",
     Status:JSON.parse(localStorage.getItem("vuex"))?JSON.parse(localStorage.getItem("vuex"))['Status']:"",
 
+    sId:JSON.parse(sessionStorage.getItem("vuex"))?JSON.parse(sessionStorage.getItem("vuex"))['sId']:"",
     sName:JSON.parse(sessionStorage.getItem("vuex"))?JSON.parse(sessionStorage.getItem("vuex"))['sName']:"",
     sPwd:JSON.parse(sessionStorage.getItem("vuex"))?JSON.parse(sessionStorage.getItem("vuex"))['sPwd']:"",
     sToken:JSON.parse(sessionStorage.getItem("vuex"))?JSON.parse(sessionStorage.getItem("vuex"))['sToken']:"",
@@ -36,6 +38,10 @@ export  default new Vuex.Store({
       state.isLogin = flag
     },
     //set方法
+    setId:function (state,id) {
+      state.Id = id;
+      localStorage.setItem("vuex",JSON.stringify(state))
+    },
     setName:function (state,name) {
       state.Name = name;
       localStorage.setItem("vuex",JSON.stringify(state))
@@ -54,6 +60,11 @@ export  default new Vuex.Store({
     },
     setStatus:function (state,status) {
       state.Status = status;
+      localStorage.setItem("vuex",JSON.stringify(state))
+    },
+    delId(state)
+    {
+      state.Id= "";
       localStorage.setItem("vuex",JSON.stringify(state))
     },
     delName(state)
@@ -82,6 +93,10 @@ export  default new Vuex.Store({
       localStorage.setItem("vuex",JSON.stringify(state))
     },
 
+    setsId:function (state,id) {
+      state.sId = id;
+      sessionStorage.setItem("vuex",JSON.stringify(state))
+    },
     setsName:function (state,name) {
       state.sName = name;
       sessionStorage.setItem("vuex",JSON.stringify(state))
@@ -100,6 +115,11 @@ export  default new Vuex.Store({
     },
     setsStatus:function (state,status) {
       state.sStatus = status;
+      sessionStorage.setItem("vuex",JSON.stringify(state))
+    },
+    delsId(state)
+    {
+      state.sId = "";
       sessionStorage.setItem("vuex",JSON.stringify(state))
     },
     delsName(state)
@@ -131,6 +151,9 @@ export  default new Vuex.Store({
   getters:{
     isLogin: state => state.isLogin,
     //get方法
+    getId:(state)=>{
+      return state.Id
+    },
     getName:(state)=>{
       return state.Name
     },
@@ -147,6 +170,9 @@ export  default new Vuex.Store({
       return state.Status
     },
 
+    getsId:(state)=>{
+      return state.sId
+    },
     getsName:(state)=>{
       return state.sName
     },
@@ -169,33 +195,33 @@ export  default new Vuex.Store({
       commit("userStatus", flag)
     },
     login:({commit},obj)=>{
-      commit('setName',obj.username),commit('setPwd',obj.password),
+      commit('setId',obj.id),commit('setName',obj.username),commit('setPwd',obj.password),
       commit('setToken',obj.token),commit('setRole',obj.role),
       commit('setStatus',obj.status)
     },
     logout:({commit})=>{
-      commit('delName'),commit('delPwd'),
+      commit('delId'),commit('delName'),commit('delPwd'),
       commit('delToken'),commit('delRole'),
       commit('delStatus')
     },
     forget:({commit},obj)=>{
-      commit('setName',obj.username),commit('setPwd',obj.password),
+      commit('setId',obj.id),commit('setName',obj.username),commit('setPwd',obj.password),
       commit('setToken',obj.token),commit('setRole',obj.role),
       commit('setStatus',obj.status)
     },
 
     slogin:({commit},obj)=>{
-      commit('setsName',obj.username),commit('setsPwd',obj.password),
+      commit('setsId',obj.id),commit('setsName',obj.username),commit('setsPwd',obj.password),
         commit('setsToken',obj.token),commit('setsRole',obj.role),
         commit('setsStatus',obj.status)
     },
     slogout:({commit})=>{
-      commit('delsName'),commit('delsPwd'),
+      commit('delsId'),commit('delsName'),commit('delsPwd'),
         commit('delsToken'),commit('delsRole'),
         commit('delsStatus')
     },
     sforget:({commit},obj)=>{
-      commit('setsName',obj.username),commit('setsPwd',obj.password),
+      commit('setsId',obj.id),commit('setsName',obj.username),commit('setsPwd',obj.password),
         commit('setsToken',obj.token),commit('setsRole',obj.role),
         commit('setsStatus',obj.status)
     },

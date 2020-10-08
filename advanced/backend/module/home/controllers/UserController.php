@@ -1,6 +1,7 @@
 <?php
 namespace backend\module\home\controllers;
 
+use common\models\Exam;
 use yii\db\Exception;
 use yii\web\Controller;
 use yii\common\models\User;
@@ -12,6 +13,7 @@ use yii\helpers\ArrayHelper;
 use yii\filters\Cors;
 use yii\behaviors\TimestampBehavior;
 use backend\module\home\controllers\IndexController;
+use yii\data\Pagination;
 
 /**
  * Default controller for the `home` module
@@ -98,17 +100,60 @@ class UserController extends Controller
 
 
     /*
-    *查找所有用户，是有效的用户
+    *查找所有用户，
+     * 标志：flag
+     * 1:有效的用户
+     * 2:所有的用户
      * 显示用户信息时，不保存用户的密码信息，仅显示用户名、角色
      */
     public function actionQuery()
     {
-        $query = (new Query())
-            ->select('*')
-            ->from('user')
-            ->Where(['status'=> 1])
-            ->all();
-        return array("data"=>$query,"msg"=>"所有用户");
+        $request = \Yii::$app->request;
+        $flag = $request->post('flag');
+        $page = $request->post('page');
+        if($flag==1)
+        {
+            $query = (new Query())
+                ->select('*')
+                ->from('user')
+                ->Where(['status'=> 1])
+                ->all();
+//            $query1 = (new Query())
+//                ->select('*')
+//                ->from('user')
+//                ->Where(['status'=> 1]);
+//            $countQuery = clone $query1;
+//            $totalCount = $countQuery->count();
+//            $pages = new Pagination(['totalCount' => $countQuery->count(),'pageSize'=>'10']);
+//            $models = $query1->offset($pages->offset)
+//                ->limit($pages->limit)
+//                ->all();
+//            $pageNum = ceil($totalCount/10);
+//            return array("data"=>[$models,$pageNum],"msg"=>"所有有效的用户");
+            return array("data"=>$query,"msg"=>"所有有效的用户");
+        }
+        else if($flag==2)
+        {
+            $query = (new Query())
+                ->select('*')
+                ->from('user')
+                ->all();
+//            $query1 = (new Query())
+//                ->select('*')
+//                ->from('user');
+//            $countQuery = clone $query1;
+//            $totalCount = $countQuery->count();
+//            $pages = new Pagination(['totalCount' => $countQuery->count(),'pageSize'=>'10']);
+//            $models = $query1->offset($pages->offset)
+//                ->limit($pages->limit)
+//                ->all();
+//            $pageNum = ceil($totalCount/10);
+//            return array("data"=>[$models,$pageNum],"msg"=>"所有用户");
+            return array("data"=>$query,"msg"=>"所有用户");
+        }
+        else{
+            return array("data"=>[$flag,'0'],"msg"=>"输入错误");
+        }
     }
     /*
      * 查看管理层信息
@@ -144,30 +189,24 @@ class UserController extends Controller
      */
     public function actionAdduser()
     {
-        $id = '10';
-        $username="2019113058";
-        $password="123456";
-        $role = 3;
-        $status=1;
-//        $request = \Yii::$app->request;
-//        $username = $request->post('username');
-//        $password = $request->post('password');
-//        $role = $request->post('role');
-//        $userid = (new Query())
-//            ->select('*')
-//            ->from('user')
-//            ->andWhere(['status' =>1])
-//            ->count();
-//        $id = $userid +1;
+        $request = \Yii::$app->request;
+        $username = $request->post('addname');
+        $password = $request->post('addpwd');
+        $role = $request->post('addrole');
+        $status = $request->post('addstatus');
+        $userid = (new Query())
+            ->select('*')
+            ->from('user')
+            ->max('id');
+        $id = $userid +1;
         //如果用户名已存在判断该用户已经添加过了，不能添加
         $query = (new Query())
             ->select('*')
             ->from('user')
             ->Where(['username'=> $username])
-            ->andWhere(['status'=> 1])
             ->one();
         if($query){
-            return array("data"=>[$query],"msg"=>"该用户名已存在，不能再添加");
+            return array("data"=>[$query],"msg"=>"该用户名已存在");
         }
         $insertU = \Yii::$app->db->createCommand()->insert('user',array('id'=>$id,'username'=>$username,'password'=>$password,'role'=>$role,
             'status'=>$status))->execute();
@@ -183,106 +222,157 @@ class UserController extends Controller
     /*
      * 用户删除，删除分两种：暂时删除的和永久删除
      * 数据库中的数据很多时候不是直接删除，而是将其身份隐藏，是为了数据保持一定的有效期.即为暂时删除，
+     * 标志：flag
+     * 1:暂时删除
+     * 2：永久删除
      */
     public function actionDeleteuser()
     {
-//        $request=\Yii::$app->request;
-//        $userid=$request->post("userid");
-        $userid = '10';
-        $query = (new Query())
-            ->select('*')
-            ->from('user')
-            ->Where(['id'=>$userid])
-            ->andWhere(['status'=>1])
-            ->one();
-        if($query)
+        $request=\Yii::$app->request;
+        $flag =$request->post('flag');
+        $userid=$request->post("userid");
+        if($flag==1)
         {
-            $updateU = \Yii::$app->db->createCommand()->update('user', ['status' => 0], "id={$userid}")->execute();
-            if($updateU)
+            //暂时删除
+            $query = (new Query())
+                ->select('*')
+                ->from('user')
+                ->Where(['id'=>$userid])
+                ->andWhere(['status'=>1])
+                ->one();
+            if($query)
             {
-                return array("data"=>[$query,$updateU],"msg"=>"该用户已删除");
+                $updateU = \Yii::$app->db->createCommand()->update('user', ['status' => 0], "id={$userid}")->execute();
+                if($updateU)
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户已删除");
+                }
+                else
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户没有删除成功");
+                }
             }
-            else
+            else{
+                return array("data"=>[],"msg"=>"没有找到该用户");
+            }
+        }
+        else if($flag==2)
+        {
+            //永久删除
+            $querys = (new Query())
+                ->select('*')
+                ->from('user')
+                ->Where(['id'=>$userid])
+                ->one();
+            if($querys)
             {
-                return array("data"=>[$query,$updateU],"msg"=>"该用户没有删除成功");
+                $updateUs = \Yii::$app->db->createCommand()->delete('user',['id'=>$userid])->execute();
+                if($updateUs)
+                {
+                    return array("data"=>[$querys,$updateUs],"msg"=>"该用户已永久删除");
+                }
+                else
+                {
+                    return array("data"=>[$querys,$updateUs],"msg"=>"该用户没有永久删除成功");
+                }
+            }
+            else{
+                return array("data"=>[],"msg"=>"没有找到该用户");
             }
         }
         else{
-            return array("data"=>[],"msg"=>"没有找到该用户");
+            return array("data"=>[],"msg"=>"输入错误");
         }
     }
-    /*
-     * 用户永久删除，在数据库中永久删除
-     */
-    public function actionDeleteusers()
-    {
-//        $requests = \Yii::$app->request;
-//        $userids=$requests->post("userid");
-        $userids = "10";
-        $querys = (new Query())
-            ->select('*')
-            ->from('user')
-            ->Where(['id'=>$userids])
-//            ->andWhere(['status'=>1])
-            ->one();
-        if($querys)
-        {
-            $updateUs = \Yii::$app->db->createCommand()->delete('user',['id'=>$userids])->execute();
-            if($updateUs)
-            {
-                return array("data"=>[$querys,$updateUs],"msg"=>"该用户已永久删除");
-            }
-            else
-            {
-                return array("data"=>[$querys,$updateUs],"msg"=>"该用户没有永久删除成功");
-            }
-        }
-        else{
-            return array("data"=>[],"msg"=>"没有找到该用户");
-        }
-    }
+
     /*
      * 修改用户信息
+     * 修改某部分的内容：
+     * 标志：flag
+     * 1:用户名
+     * 2：角色
+     * 3：密码
+     * 4：状态
      */
     public function actionChangeuser()
     {
-        $userid = "10";
-        $username = "aaaasomethings";
-        $password="aaaaa人民出版社s";
-        $role="aasomes";
-//        $request = \Yii::$app->request;
-//        $userid=$request->post('userid');
-//        $username = $request->post('username');
-//        $publish = $request->post('publish');
-//        $author=$request->post("author");
-//        $about=$request->post("about");
-//        $userid = (new Query())
-//            ->select('*')
-//            ->from('user')
-//            ->andWhere(['status' =>1])
-//            ->count();
-//        $userid = $userid +1;
+        $request = \Yii::$app->request;
+        $userid = $request->post('userid');
+        $flag = $request->post('flag');
         $query = (new Query())
             ->select('*')
             ->from('user')
             ->Where(['id'=>$userid])
-            ->andWhere(['status'=>1])
             ->one();
         if($query)
         {
-            $updateU = \Yii::$app->db->createCommand()->update('user', ['username'=>$username,
-                'password'=>$password,'role'=>$role], "id={$userid}")->execute();
-            if($updateU)
+            if($flag==1)
             {
-                return array("data"=>[$query,$updateU],"msg"=>"该用户修改成功");
+                //修改用户名
+                $username = $request->post('username');
+                $updateU = \Yii::$app->db->createCommand()->update('user', ['username'=>$username], "id={$userid}")->execute();
+                if($updateU)
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户名修改成功");
+                }
+                else
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户名已经修改");
+                }
             }
-            else
+            else if($flag==2)
             {
-                return array("data"=>[$query,$updateU],"msg"=>"该用户已经修改");
+                //修改角色
+                $role = $request->post('role');
+                $updateU = \Yii::$app->db->createCommand()->update('user', ['role'=>$role], "id={$userid}")->execute();
+                if($updateU)
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户角色修改成功");
+                }
+                else
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户角色已经修改");
+                }
+            }
+            else if($flag==3)
+            {
+                //修改密码
+                $password =$request->post('password');
+                $passwordD = \backend\module\home\controllers\IndexController::PasswordDecry($query['password']);
+                if($password == $passwordD)
+                {
+                    return array("data"=>[$passwordD,$password],"msg"=>"和原始密码一致");
+                }
+                $updateU = \Yii::$app->db->createCommand()->update('user', ['password'=>$password], "id={$userid}")->execute();
+                if($updateU)
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户密码修改成功");
+                }
+                else
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户密码已经修改");
+                }
+            }
+            else if($flag==4)
+            {
+                //修改状态
+                $status=$request->post('status');
+                $updateU = \Yii::$app->db->createCommand()->update('user', ['status'=>$status], "id={$userid}")->execute();
+                if($updateU)
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户状态修改成功");
+                }
+                else
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该用户状态已经修改");
+                }
+            }
+            else{
+                return array("data"=>[$flag,$userid],"msg"=>"输入错误");
             }
         }
         else{
-            return array("data"=>[],"msg"=>"没有找到该用户");
+            return array("data"=>[$flag,$userid],"msg"=>"没找到该用户");
         }
     }
     /*
