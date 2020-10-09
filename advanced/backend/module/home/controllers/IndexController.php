@@ -93,8 +93,7 @@ class IndexController extends Controller
     		$queryid  = (new Query())
     				->select('*')
     				->from('user')
-    				->andWhere(['status' =>1])
-                    ->count();
+                    ->max('id');
     		$id = $queryid +1;
     		$insertU = \Yii::$app->db->createCommand()->insert('user',array('id'=>$id,'username'=>$username,'password'=>$passwordE,'role'=>$role,'status'=>$status))->execute();
     		if($insertU)
