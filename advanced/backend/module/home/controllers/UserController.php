@@ -310,15 +310,27 @@ class UserController extends Controller
             {
                 //修改用户名
                 $username = $request->post('username');
-                $updateU = \Yii::$app->db->createCommand()->update('user', ['username'=>$username], "id={$userid}")->execute();
-                if($updateU)
+                $query1 = (new Query())
+                    ->select('*')
+                    ->from('user')
+                    ->Where(['username'=>$username])
+                    ->one();
+                if($query1)
                 {
-                    return array("data"=>[$query,$updateU],"msg"=>"该用户名修改成功");
+                    return array("data"=>[$query,$query1],"msg"=>"已有该用户名用户存在");
                 }
-                else
-                {
-                    return array("data"=>[$query,$updateU],"msg"=>"该用户名已经修改");
+                else{
+                    $updateU = \Yii::$app->db->createCommand()->update('user', ['username'=>$username], "id={$userid}")->execute();
+                    if($updateU)
+                    {
+                        return array("data"=>[$query,$updateU],"msg"=>"该用户名修改成功");
+                    }
+                    else
+                    {
+                        return array("data"=>[$query,$updateU],"msg"=>"该用户名已经修改");
+                    }
                 }
+
             }
             else if($flag==2)
             {
@@ -356,8 +368,8 @@ class UserController extends Controller
             else if($flag==4)
             {
                 //修改状态
-                $status=$request->post('status');
-                $updateU = \Yii::$app->db->createCommand()->update('user', ['status'=>$status], "id={$userid}")->execute();
+                //只有被删除的用户才能修改状态
+                $updateU = \Yii::$app->db->createCommand()->update('user', ['status'=>1], "id={$userid}")->execute();
                 if($updateU)
                 {
                     return array("data"=>[$query,$updateU],"msg"=>"该用户状态修改成功");

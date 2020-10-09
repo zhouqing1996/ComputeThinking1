@@ -26,7 +26,7 @@
             <!--</el-submenu>-->
           </el-submenu>
           <el-menu-item index="4">
-            <router-link to="/admin/userinfo" >图书管理</router-link>
+            <router-link to="" >图书管理</router-link>
           </el-menu-item>
           <!--<el-submenu index="4">-->
             <!--<template slot="title">测评题库</template>-->

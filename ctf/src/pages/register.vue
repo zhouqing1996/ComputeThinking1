@@ -49,23 +49,25 @@
             password:this.registerForm.password
           }).then(res=>{
             console.log(res.data)
-            alert('注册成功')
-            this.$router.push({
-              path:'/login',
-              params:{
-                username:this.registerForm.username,
-                password:this.registerForm.password
-              }
-            })
+            if(res.data.message=="注册成功")
+            {
+              alert('注册成功')
+              this.$router.push({
+                path:'/login',
+                params:{
+                  username:this.registerForm.username,
+                  password:this.registerForm.password
+                }
+              })
+            }
+            else
+            {
+              alert(res.data.message)
+            }
           }).catch(function (error) {
             console.log(error)
           })
         },
-        // gotoLogin() {
-        //   this.$router.push({
-        //     path: "/login"
-        //   });
-        // }
       }
     }
 </script>

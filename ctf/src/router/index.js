@@ -6,7 +6,7 @@ import Forget from '../pages/forget'
 import Login from '../pages/login'
 import Index from '../pages/index'
 //404错误
-import NotFound from '../pages/Notfound'
+import NotFound from '../pages/404'
 
 //admin
 //全部公共页
