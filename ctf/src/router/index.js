@@ -26,6 +26,9 @@ import Fill from '../pages/admin/bank/Fill'
 //程序题
 import Program from '../pages/admin/bank/Program'
 
+//图书信息
+import Book from '../pages/admin/book/Book'
+
 //我的信息
 //修改密码
 import Changepwd from '../pages/admin/my/Changepwd'
@@ -149,6 +152,15 @@ const  router = new Router({
             isLogin:true
           },
           component:Program
+        },
+        //图书
+        {
+          path:'/admin/book',
+          name:'book',
+          meta:{
+            isLogin:true
+          },
+          component:Book
         },
         {
           //我的信息:修改密码

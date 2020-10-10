@@ -50,6 +50,7 @@
                 <th>答案</th>
                 <th>详解</th>
                 <th>相关知识</th>
+                <th>状态</th>
                 <th>操作</th>
               </tr>
               <tr v-for=" (fQuestion,key) in currentPageData" :key="key">
@@ -139,6 +140,8 @@
                     </div>
                   </el-dialog>
                 </td>
+                <td v-if="fQuestion.fqstatus==1">有效</td>
+                <td v-if="fQuestion.fqstatus==0">无效</td>
                 <td>
                   <span v-if="fQuestion.fqstatus==0" @click="changefill(5,fQuestion.fqid)" class="span2">修改状态</span>
                   <span v-if="fQuestion.fqstatus==1"@click="deletefill(1,fQuestion.fqid)" class="span1"><i class="el-icon-delete">删除题目</i></span>

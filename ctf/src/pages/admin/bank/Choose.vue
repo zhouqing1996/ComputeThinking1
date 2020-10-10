@@ -66,6 +66,7 @@
                 <th>答案</th>
                 <th>详解</th>
                 <th>相关知识</th>
+                <th>状态</th>
                 <th>操作</th>
               </tr>
               <tr v-for=" (cQuestion,key) in currentPageData" :key="key">
@@ -242,6 +243,8 @@
                     </div>
                   </el-dialog>
                 </td>
+                <td v-if="cQuestion.cqstatus==1">有效</td>
+                <td v-if="cQuestion.cqstatus==0">无效</td>
                 <td>
                   <span v-if="cQuestion.cqstatus==0" @click="changeChoose(9,cQuestion.cqid)" class="span2">修改状态</span>
                   <span v-if="cQuestion.cqstatus==1"@click="deleteChoose(1,cQuestion.cqid)" class="span1"><i class="el-icon-delete">删除题目</i></span>

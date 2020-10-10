@@ -32,19 +32,19 @@
             <!--</el-submenu>-->
           </el-submenu>
           <el-menu-item index="4">
-            <router-link to="" >图书管理</router-link>
+            <router-link to="/admin/book" >图书管理</router-link>
           </el-menu-item>
-          <!--<el-submenu index="4">-->
-            <!--<template slot="title">测评题库</template>-->
-            <!--<el-menu-item index="4-1">创建题库</el-menu-item>-->
-            <!--<el-menu-item index="4-2">查看题库</el-menu-item>-->
-          <!--</el-submenu>-->
           <el-submenu index="5">
-            <template slot="title">书籍管理</template>
-            <el-menu-item index="5-1">增添图书</el-menu-item>
-            <el-menu-item index="5-2">修改图书</el-menu-item>
-            <el-menu-item index="5-3">删除图书</el-menu-item>
+            <template slot="title">测评题库</template>
+            <el-menu-item index="5-1">创建题库</el-menu-item>
+            <el-menu-item index="5-2">查看题库</el-menu-item>
           </el-submenu>
+          <!--<el-submenu index="5">-->
+            <!--<template slot="title">书籍管理</template>-->
+            <!--<el-menu-item index="5-1">增添图书</el-menu-item>-->
+            <!--<el-menu-item index="5-2">修改图书</el-menu-item>-->
+            <!--<el-menu-item index="5-3">删除图书</el-menu-item>-->
+          <!--</el-submenu>-->
           <el-submenu index="6">
             <template slot="title">测评结果</template>
             <el-menu-item index="6-1">查看测评</el-menu-item>

@@ -23,15 +23,59 @@ class BookController extends Controller
     }
     /*
     *查找所有图书
+     * 1:有效图书
+     * 2：无效图书
+     * 3：所有图书
+     * 4：模糊查找
      */
-    public function actionQuery()
+    public function actionQuerybook()
     {
-        $query = (new Query())
-            ->select('*')
-            ->from('book')
-            ->Where(['status'=> 1])
-            ->all();
-        return array("data"=>$query,"msg"=>"所有图书");
+        $request = \Yii::$app->request;
+        $flag = $request->post('flag');
+        if($flag==1)
+        {
+            $query = (new Query())
+                ->select('*')
+                ->from('book')
+                ->Where(['status'=> 1])
+                ->all();
+            return array("data"=>$query,"msg"=>"所有有效图书");
+        }
+        else if($flag==2)
+        {
+            $query = (new Query())
+                ->select('*')
+                ->from('book')
+                ->Where(['status'=> 0])
+                ->all();
+            return array("data"=>$query,"msg"=>"所有无效图书");
+        }
+        else if($flag==3)
+        {
+            $query = (new Query())
+                ->select('*')
+                ->from('book')
+                ->all();
+            return array("data"=>$query,"msg"=>"所有图书");
+        }
+        else if($flag==4)
+        {
+            $name = $request->post('name');
+            $query = (new Query())
+                ->select("*")
+                ->from('book')
+                ->where(['or',
+                    ['like', 'bookname', $name],
+                    ['like', 'publish', $name],
+                    ['like', 'author', $name],
+                    ['like', 'about', $name],
+                ])
+                ->all();
+            return array("data" => $query, "msg" => $name . "查询");
+        }
+        else {
+            return array("data"=>$flag,"msg"=>"输入错误");
+        }
     }
     /*
      * 添加图书
@@ -40,36 +84,28 @@ class BookController extends Controller
      */
     public function actionAddbook()
     {
-        $bookid = "1";
-        $bookname = "something";
-        $publish="人民出版社";
-        $author="some";
-        $about="something in ss";
-        $status=1;
-//        $request = \Yii::$app->request;
-//        $bookname = $request->post('bookname');
-//        $publish = $request->post('publish');
-//        $author=$request->post("author");
-//        $about=$request->post("about");
-//        $bookid = (new Query())
-//            ->select('*')
-//            ->from('book')
-//            ->andWhere(['status' =>1])
-//            ->count();
-//        $bookid = $bookid +1;
+        $request = \Yii::$app->request;
+        $bookname = $request->post('bookname');
+        $publish = $request->post('publish');
+        $author=$request->post("author");
+        $about=$request->post("about");
+        $bookid = (new Query())
+            ->select('*')
+            ->from('book')
+            ->max('bookid');
+        $bookid = $bookid +1;
         //如果书名和作者相同判断该图书已经添加过了，不再添加
         $query = (new Query())
             ->select('*')
             ->from('book')
             ->Where(['bookname'=> $bookname])
             ->andWhere(['author'=>$author])
-            ->andWhere(['status'=> 1])
             ->one();
         if($query){
             return array("data"=>[$query],"msg"=>"该图书已经添加过了");
         }
         $insertU = \Yii::$app->db->createCommand()->insert('book',array('bookid'=>$bookid,'bookname'=>$bookname,'publish'=>$publish,'author'=>$author,
-            'about'=>$about,'status'=>$status))->execute();
+            'about'=>$about,'status'=>1))->execute();
         if($insertU)
         {
             return array("data"=>[$bookname,$bookid],"msg"=>"图书添加成功");
@@ -82,106 +118,128 @@ class BookController extends Controller
     /*
      * 图书删除，删除分两种：暂时删除的和永久删除
      * 数据库中的数据很多时候不是直接删除，而是将其身份隐藏，是为了数据保持一定的有效期.即为暂时删除，
+     * 1:暂时删除
+     * 2：永久删除
      */
     public function actionDeletebook()
     {
-//        $request=\Yii::$app->request;
-//        $bookid=$request->post("bookid");
-        $bookid = '1';
-        $query = (new Query())
-            ->select('*')
-            ->from('book')
-            ->Where(['bookid'=>$bookid])
-            ->andWhere(['status'=>1])
-            ->one();
-        if($query)
+        $request=\Yii::$app->request;
+        $bookid=$request->post("bookid");
+        $flag=$request->post('flag');
+        if($flag==1)
         {
-            $updateU = \Yii::$app->db->createCommand()->update('book', ['status' => 0], 'bookid=:bookid',[':bookid'=>$bookid])->execute();
-            if($updateU)
+            $query = (new Query())
+                ->select('*')
+                ->from('book')
+                ->Where(['bookid'=>$bookid])
+                ->andWhere(['status'=>1])
+                ->one();
+            if($query)
             {
-                return array("data"=>[$query,$updateU],"msg"=>"该图书已删除");
+                $updateU = \Yii::$app->db->createCommand()->update('book', ['status' => 0], 'bookid=:bookid',[':bookid'=>$bookid])->execute();
+                if($updateU)
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该图书已删除");
+                }
+                else
+                {
+                    return array("data"=>[$query,$updateU],"msg"=>"该图书已删除成功");
+                }
             }
-            else
+            else{
+                return array("data"=>[],"msg"=>"没有找到该图书");
+            }
+        }
+        else if($flag==2)
+        {
+            $querys = (new Query())
+                ->select('*')
+                ->from('book')
+                ->Where(['bookid'=>$bookid])
+                ->one();
+            if($querys)
             {
-                return array("data"=>[$query,$updateU],"msg"=>"该图书没有删除成功");
+                $updateUs = \Yii::$app->db->createCommand()->delete('book',['bookid'=>$bookid])->execute();
+                if($updateUs)
+                {
+                    return array("data"=>[$querys,$updateUs],"msg"=>"该图书已永久删除");
+                }
+                else
+                {
+                    return array("data"=>[$querys,$updateUs],"msg"=>"该图书已永久删除成功");
+                }
+            }
+            else{
+                return array("data"=>[],"msg"=>"没有找到该图书");
             }
         }
         else{
-            return array("data"=>[],"msg"=>"没有找到该图书");
-        }
-    }
-    /*
-     * 图书永久删除，在数据库中永久删除
-     */
-    public function actionDeletebooks()
-    {
-//        $requests = \Yii::$app->request;
-//        $bookids=$requests->post("bookid");
-        $bookids = "1";
-        $querys = (new Query())
-            ->select('*')
-            ->from('book')
-            ->Where(['bookid'=>$bookids])
-//            ->andWhere(['status'=>1])
-            ->one();
-        if($querys)
-        {
-            $updateUs = \Yii::$app->db->createCommand()->delete('book',['bookid'=>$bookids])->execute();
-            if($updateUs)
-            {
-                return array("data"=>[$querys,$updateUs],"msg"=>"该图书已永久删除");
-            }
-            else
-            {
-                return array("data"=>[$querys,$updateUs],"msg"=>"该图书没有永久删除成功");
-            }
-        }
-        else{
-            return array("data"=>[],"msg"=>"没有找到该图书");
+            return array("data"=>$flag,"msg"=>"错误");
         }
     }
     /*
      * 修改图书信息
+     * 1:书名
+     * 2：出版社
+     * 3：作者
+     * 4：关于
+     * 5：状态
      */
     public function actionChangebook()
     {
-        $bookid = "1";
-        $bookname = "aaaasomethings";
-        $publish="aaaaa人民出版社s";
-        $author="aasomes";
-        $about="aasomething in sedcda";
-//        $request = \Yii::$app->request;
-//        $bookid=$request->post('bookid');
-//        $bookname = $request->post('bookname');
-//        $publish = $request->post('publish');
-//        $author=$request->post("author");
-//        $about=$request->post("about");
-//        $bookid = (new Query())
-//            ->select('*')
-//            ->from('book')
-//            ->andWhere(['status' =>1])
-//            ->count();
-//        $bookid = $bookid +1;
+        $request = \Yii::$app->request;
+        $flag = $request->post('flag');
+        $bookid = $request->post('bookid');
         $query = (new Query())
             ->select('*')
             ->from('book')
-            ->Where(['bookid'=>$bookid])
-            ->andWhere(['status'=>1])
+            ->Where(['bookid' => $bookid])
             ->one();
-        if($query)
-        {
-            $updateU = \Yii::$app->db->createCommand()->update('book', ['bookname'=>$bookname,'publish'=>$publish,'author'=>$author,'about'=>$about], "bookid={$bookid}")->execute();
-            if($updateU)
-            {
-                return array("data"=>[$query,$updateU],"msg"=>"该图书修改成功");
+        if ($query) {
+            if ($flag == 1) {
+                $bookname = $request->post('bookname');
+                $updateU = \Yii::$app->db->createCommand()->update('book', ['bookname' => $bookname], "bookid={$bookid}")->execute();
+                if ($updateU) {
+                    return array("data" => [$query, $updateU], "msg" => "该图书名修改成功");
+                } else {
+                    return array("data" => [$query, $updateU], "msg" => "该图书名已经修改");
+                }
+            } else if ($flag == 2) {
+                $publish = $request->post('publish');
+                $updateU = \Yii::$app->db->createCommand()->update('book', ['publish' => $publish], "bookid={$bookid}")->execute();
+                if ($updateU) {
+                    return array("data" => [$query, $updateU], "msg" => "该图书出版社修改成功");
+                } else {
+                    return array("data" => [$query, $updateU], "msg" => "该图书出版社已经修改");
+                }
+            } else if ($flag == 3) {
+                $author = $request->post('author');
+                $updateU = \Yii::$app->db->createCommand()->update('book', ['author' => $author], "bookid={$bookid}")->execute();
+                if ($updateU) {
+                    return array("data" => [$query, $updateU], "msg" => "该图书作者修改成功");
+                } else {
+                    return array("data" => [$query, $updateU], "msg" => "该图书作者已经修改");
+                }
+            } else if ($flag == 4) {
+                $about = $request->post('about');
+                $updateU = \Yii::$app->db->createCommand()->update('book', ['about' => $about], "bookid={$bookid}")->execute();
+                if ($updateU) {
+                    return array("data" => [$query, $updateU], "msg" => "该图书关于修改成功");
+                } else {
+                    return array("data" => [$query, $updateU], "msg" => "该图书关于已经修改");
+                }
+            } else if ($flag == 5) {
+                $updateU = \Yii::$app->db->createCommand()->update('book', ['status' => 1], "bookid={$bookid}")->execute();
+                if ($updateU) {
+                    return array("data" => [$query, $updateU], "msg" => "该图书状态修改成功");
+                } else {
+                    return array("data" => [$query, $updateU], "msg" => "该图书状态已经修改");
+                }
+            } else {
+                return array("data" => $flag, "msg" => "错误");
             }
-            else
-            {
-                return array("data"=>[$query,$updateU],"msg"=>"该图书已经修改");
-            }
-        }
-        else{
-            return array("data"=>[],"msg"=>"没有找到该图书");
+        } else {
+            return array("data" => [], "msg" => "没有找到该图书");
         }
     }
 }
