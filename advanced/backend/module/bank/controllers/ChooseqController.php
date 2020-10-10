@@ -32,15 +32,59 @@ class ChooseqController extends Controller
      */
     /*
      * 查找全部的选择题
+     * 标志：flag
+     * 1:全部的选择题
+     * 2：有效的选择题
+     * 3：模糊查找某题
+     * 4：无效的选择题
      */
     public function actionQuerychoose()
     {
-        $query = (new Query())
-            ->select("*")
-            ->from('chooseq')
-            ->where(['cqstatus'=>1])
-            ->all();
-        return array("data"=>$query,"msg"=>"全部的选择题");
+        $request = \Yii::$app->request;
+        $flag = $request->post('flag');
+        if($flag==1)
+        {
+            $query = (new Query())
+                ->select("*")
+                ->from('chooseq')
+                ->all();
+            return array("data"=>$query,"msg"=>"全部的选择题");
+        }
+        else if($flag==2)
+        {
+            $query = (new Query())
+                ->select("*")
+                ->from('chooseq')
+                ->where(['cqstatus'=>1])
+                ->all();
+            return array("data"=>$query,"msg"=>"有效的选择题");
+        }
+        else if($flag==3)
+        {
+            $name = $request->post('name');
+            $query = (new Query())
+                ->select("*")
+                ->from('chooseq')
+                ->where(['or',
+                    ['like','cqitem',$name],
+                    ['like','cqcho',$name],
+                    ['like','cqtail',$name],
+                    ['like','cqrem',$name],
+                    ])
+                ->all();
+            return array("data"=>$query,"msg"=>$name."选择题");
+        }
+        else if($flag==4){
+            $query = (new Query())
+                ->select("*")
+                ->from('chooseq')
+                ->where(['cqstatus'=>0])
+                ->all();
+            return array("data"=>$query,"msg"=>"无效的选择题");
+        }
+        else{
+            return array("data"=>$flag,"msg"=>"输入错误");
+        }
     }
     /*
      * 增加选择题：参数(题干、选项、答案、详解、相关知识)
@@ -48,39 +92,27 @@ class ChooseqController extends Controller
      */
     public function actionAddchoose()
     {
-//        $id = (new Query())
-//            ->select("*")
-//            ->from('chooseq')
-//            ->where(['cqstatus'=>1])
-//            ->count();
-//        $id = $id+1;
-//        $request = \Yii::$app->request;
-//        $item = $request->post('qitem');
-//        $op1 = $request->post('op1');
-//        $op2 = $request->post('op2');
-//        $op3 = $request->post('op3');
-//        $op4 = $request->post('op4');
-//        $op = $op1+'---'+$op2+'---'+$op3+'---'+$op4;
-//        $ans = $request->post('ans');
-//        $tail = $request->post('tail');
-//        $rem=$request->post('rem');
-        $id ="2";
-        $item = "这是谁？";
-        $op1 = "A.张飞1";
-        $op2 = "B.张飞2";
-        $op3 = "C.张飞3";
-        $op4 = "D.张飞4";
-//        $op = implode('---',[$op1,$op2,$op3,$op4]);
+        $id = (new Query())
+            ->select("*")
+            ->from('chooseq')
+            ->where(['cqstatus'=>1])
+            ->max('cqid');
+        $id = $id+1;
+        $request = \Yii::$app->request;
+        $item = $request->post('qitem');
+        $op1 = $request->post('op1');
+        $op2 = $request->post('op2');
+        $op3 = $request->post('op3');
+        $op4 = $request->post('op4');
         $op = $op1.'---'.$op2.'---'.$op3.'---'.$op4;
-        $ans ="C.张飞3";
-        $tail = "人物形象";
-        $rem ="三国";
+        $ans = $request->post('ans');
+        $tail = $request->post('tail');
+        $rem=$request->post('rem');
         $query = (new Query())
             ->select('*')
             ->from('chooseq')
             ->where(['cqitem'=>$item])
             ->andWhere(['cqcho'=>$op])
-            ->andWhere(['cqstatus'=>1])
             ->one();
         if($query)
         {
@@ -100,64 +132,6 @@ class ChooseqController extends Controller
             }
         }
     }
-    /*
-     * 删除选择题：参数题干id,选择暂时删除和永久删除
-     */
-    public function actionDeletechoose()
-    {
-//        $requset = \Yii::$app->request;
-//        $id = $requset->post('cid');
-        $id ='2';
-        $query = (new Query())
-            ->select('*')
-            ->from('chooseq')
-            ->where(['cqid'=>$id])
-            ->andWhere(['cqstatus'=>1])
-            ->one();
-        if($query)
-        {
-            $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqstatus'=>0],"cqid={$id}")->execute();
-            if($updatec)
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题删除成功");
-            }
-            else
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题已删除，不用重复删除");
-            }
-        }
-        else
-        {
-            return array("data"=>$query,"msg"=>"没有找到该选择题");
-        }
-    }
-    public function actionDeletechooses()
-    {
-//        $requset = \Yii::$app->request;
-//        $id = $requset->post('cid');
-        $id ='2';
-        $query = (new Query())
-            ->select('*')
-            ->from('chooseq')
-            ->where(['cqid'=>$id])
-            ->one();
-        if($query)
-        {
-            $updatec = \Yii::$app->db->createCommand()->delete('chooseq',['cqid'=>$id])->execute();
-            if($updatec)
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题删除成功");
-            }
-            else
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题已删除，不用重复删除");
-            }
-        }
-        else
-        {
-            return array("data"=>$query,"msg"=>"没有找到该选择题");
-        }
-    }
 
     /*
      * 删除选择题：一个函数实现
@@ -170,7 +144,6 @@ class ChooseqController extends Controller
     {
         $requset = \Yii::$app->request;
         $id = $requset->post('cid');
-        $id ='2';
         $query = (new Query())
             ->select('*')
             ->from('chooseq')
@@ -179,7 +152,6 @@ class ChooseqController extends Controller
         if($query)
         {
             $flag = $requset->post('flag');
-            $flag ='2';
             if($flag==1)
             {
              //暂时删除
@@ -199,11 +171,11 @@ class ChooseqController extends Controller
                 $updatec = \Yii::$app->db->createCommand()->delete('chooseq',['cqid'=>$id])->execute();
                 if($updatec)
                 {
-                    return array("data"=>[$query,$updatec],"msg"=>"该选择题删除成功");
+                    return array("data"=>[$query,$updatec],"msg"=>"该选择题永久删除成功");
                 }
                 else
                 {
-                    return array("data"=>[$query,$updatec],"msg"=>"该选择题已删除，不用重复删除");
+                    return array("data"=>[$query,$updatec],"msg"=>"该选择题已永久删除，不用重复删除");
                 }
             }
             else{
@@ -216,206 +188,34 @@ class ChooseqController extends Controller
             return array("data"=>$query,"msg"=>"没有找到该选择题");
         }
     }
-    /*
-     * 修改题目：参数item
-     */
-    public function actionChangeitem()
-    {
-//        $requset = \Yii::$app->request;
-//        $id = $requset->post('cid');
-//        $item =$request->post('item');
-        $id ='2';
-        $item = "新的题目";
-        $query = (new Query())
-            ->select('*')
-            ->from('chooseq')
-            ->where(['cqid'=>$id])
-            ->andWhere(['cqstatus'=>1])
-            ->one();
-        if($query)
-        {
-            $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqitem'=>$item],"cqid={$id}")->execute();
-            if($updatec)
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题题干修改成功");
-            }
-            else
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题题干已修改，不用重复修改");
-            }
-        }
-        else
-        {
-            return array("data"=>$query,"msg"=>"没有找到该选择题");
-        }
-    }
-    /*
-     * 修改选项：参数op
-     */
-    public function actionChangeop()
-    {
-//        $requset = \Yii::$app->request;
-//        $id = $requset->post('cid');
-//        $op1=$request->post('op1');
-//        $op2=$request->post('op2');
-//        $op3=$request->post('op3');
-//        $op4=$request->post('op4');
-//        $op = $op1.'---'.$op2.'---'.$op3.'---'.$op4;
-        $id ='2';
-        $op = "新1---新2---新3---新4";
-        $query = (new Query())
-            ->select('*')
-            ->from('chooseq')
-            ->where(['cqid'=>$id])
-            ->andWhere(['cqstatus'=>1])
-            ->one();
-        if($query)
-        {
-            $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqcho'=>$op],"cqid={$id}")->execute();
-            if($updatec)
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题选项修改成功");
-            }
-            else
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题选项已修改，不用重复修改");
-            }
-        }
-        else
-        {
-            return array("data"=>$query,"msg"=>"没有找到该选择题");
-        }
-    }
-    /*
-     * 修改答案：参数ans
-     */
-    public function actionChangeans()
-    {
-//        $requset = \Yii::$app->request;
-//        $id = $requset->post('cid');
-//        $ans = $requset->post('ans');
-        $id ='2';
-        $ans = "新1";
-        $query = (new Query())
-            ->select('*')
-            ->from('chooseq')
-            ->where(['cqid'=>$id])
-            ->andWhere(['cqstatus'=>1])
-            ->one();
-        if($query)
-        {
-            $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqans'=>$ans],"cqid={$id}")->execute();
-            if($updatec)
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题答案修改成功");
-            }
-            else
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题答案已修改，不用重复修改");
-            }
-        }
-        else
-        {
-            return array("data"=>$query,"msg"=>"没有找到该选择题");
-        }
-    }
-    /*
-     * 修改详解：参数tail
-     */
-    public function actionChangetail()
-    {
-//        $requset = \Yii::$app->request;
-//        $id = $requset->post('cid');
-//        $tail = $requset->post('tail');
-        $id ='2';
-        $tail= "新xxxxxx";
-        $query = (new Query())
-            ->select('*')
-            ->from('chooseq')
-            ->where(['cqid'=>$id])
-            ->andWhere(['cqstatus'=>1])
-            ->one();
-        if($query)
-        {
-            $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqtail'=>$tail],"cqid={$id}")->execute();
-            if($updatec)
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题详解修改成功");
-            }
-            else
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题详解已修改，不用重复修改");
-            }
-        }
-        else
-        {
-            return array("data"=>$query,"msg"=>"没有找到该选择题");
-        }
-    }
-    /*
-     * 修改相关知识：参数rem
-     */
-    public function actionChangerem()
-    {
-//        $requset = \Yii::$app->request;
-//        $id = $requset->post('cid');
-//        $rem = $requset->post('rem');
-        $id ='2';
-        $rem= "三国演义";
-        $query = (new Query())
-            ->select('*')
-            ->from('chooseq')
-            ->where(['cqid'=>$id])
-            ->andWhere(['cqstatus'=>1])
-            ->one();
-        if($query)
-        {
-            $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqrem'=>$rem],"cqid={$id}")->execute();
-            if($updatec)
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题相关知识修改成功");
-            }
-            else
-            {
-                return array("data"=>[$query,$updatec],"msg"=>"该选择题相关知识已修改，不用重复修改");
-            }
-        }
-        else
-        {
-            return array("data"=>$query,"msg"=>"没有找到该选择题");
-        }
-    }
 
     /*
      * 修改选择题相关内容：一个函数实现
      * 给出标志：flag
      * 1:题干
-     * 2：选项
+     * 2：选项=>第i个选项
      * 3：正确选项
      * 4：详解
      * 5：相关知识推荐
+     * 6：状态
      * 实际的修改需删除变量
      */
     public function actionChange()
     {
         $request = \Yii::$app->request;
         $id = $request->post('cid');
-        $id = '2';
         $query = (new Query())
             ->select('*')
             ->from('chooseq')
             ->where(['cqid'=>$id])
-            ->andWhere(['cqstatus'=>1])
             ->one();
         if($query)
         {
             $flag = $request->post('flag');
-            $flag ='6';
             if($flag==1)
             {
                 //题干
                 $item = $request->post('item');
-                $item = "题干";
                 if($item==$query['cqitem']){
                     return array("data"=>[$query,$item],"msg"=>"两次题干一致，不能修改");
                 }
@@ -433,33 +233,107 @@ class ChooseqController extends Controller
             }
             else if ($flag==2)
             {
+                $top = $request->post('top');
                 //选项
-                $op1 = $request->post('op1');
-                $op2 = $request->post('op2');
-                $op3 = $request->post('op3');
-                $op4 = $request->post('op4');
-                $op = $op1.'---'.$op2.'---'.$op3.'---'.$op4;
-                $op="111111";
-                if($op==$query['cqcho']){
-                    return array("data"=>[$query,$op],"msg"=>"两次选项一致，不能修改");
+                if($top==1)
+                {
+                    $op1= $request->post('op1');
+                    $str = $query['cqcho'];
+                    $expl = explode('---',$str);
+                    $expl[0]=$op1;
+                    $op = implode('---',$expl);
+                    if($op==$query['cqcho']){
+                        return array("data"=>[$query,$op],"msg"=>"两次选项一致，不能修改");
+                    }
+                    else{
+                        $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqcho'=>$op],"cqid={$id}")->execute();
+                        if($updatec)
+                        {
+                            return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题选项1修改成功");
+                        }
+                        else
+                        {
+                            return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题1选项已修改，不用重复修改");
+                        }
+                    }
+                }
+                else if($top==2)
+                {
+
+                    $op2= $request->post('op2');
+                    $str = $query['cqcho'];
+                    $expl = explode('---',$str);
+                    $expl[1]=$op2;
+                    $op = implode('---',$expl);
+                    if($op==$query['cqcho']){
+                        return array("data"=>[$query,$op],"msg"=>"两次选项一致，不能修改");
+                    }
+                    else{
+                        $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqcho'=>$op],"cqid={$id}")->execute();
+                        if($updatec)
+                        {
+                            return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题选项2修改成功");
+                        }
+                        else
+                        {
+                            return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题2选项已修改，不用重复修改");
+                        }
+                    }
+
+                }
+                else if($top==3)
+                {
+                    $op3 = $request->post('op3');
+                    $str = $query['cqcho'];
+                    $expl = explode('---',$str);
+                    $expl[2]=$op3;
+                    $op = implode('---',$expl);
+                    if($op==$query['cqcho']){
+                        return array("data"=>[$query,$op],"msg"=>"两次选项一致，不能修改");
+                    }
+                    else{
+                        $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqcho'=>$op],"cqid={$id}")->execute();
+                        if($updatec)
+                        {
+                            return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题选项3修改成功");
+                        }
+                        else
+                        {
+                            return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题3选项已修改，不用重复修改");
+                        }
+                    }
+
+                }
+                else if($top==4)
+                {
+                    $op4= $request->post('op4');
+                    $str = $query['cqcho'];
+                    $expl = explode('---',$str);
+                    $expl[3]=$op4;
+                    $op = implode('---',$expl);
+                    if($op==$query['cqcho']){
+                        return array("data"=>[$query,$op],"msg"=>"两次选项一致，不能修改");
+                    }
+                    else{
+                        $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqcho'=>$op],"cqid={$id}")->execute();
+                        if($updatec)
+                        {
+                            return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题选项4修改成功");
+                        }
+                        else
+                        {
+                            return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题4选项已修改，不用重复修改");
+                        }
+                    }
                 }
                 else{
-                    $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqcho'=>$op],"cqid={$id}")->execute();
-                    if($updatec)
-                    {
-                        return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题选项修改成功");
-                    }
-                    else
-                    {
-                        return array("data"=>[$query,$op,$updatec],"msg"=>"该选择题选项已修改，不用重复修改");
-                    }
+                    return array("data"=>[$query,$top],"msg"=>"输入错误");
                 }
             }
             else if($flag==3)
             {
                 //正确答案
                 $ans = $request->post('ans');
-                $ans = "112223";
                 if($ans==$query['cqans']){
                     return array("data"=>[$query,$ans],"msg"=>"两次答案一致，不能修改");
                 }
@@ -479,7 +353,6 @@ class ChooseqController extends Controller
             {
                 //详解
                 $tail = $request->post('tail');
-                $tail="1111111111";
                 if($tail==$query['cqtail']){
                     return array("data"=>[$query,$tail],"msg"=>"两次详解一致，不能修改");
                 }
@@ -499,7 +372,6 @@ class ChooseqController extends Controller
             {
                 //相关知识
                 $rem = $request->post('rem');
-                $rem = "2344";
                 if($rem==$query['cqrem']){
                     return array("data"=>[$query,$rem],"msg"=>"两次相关知识一致，不能修改");
                 }
@@ -513,6 +385,19 @@ class ChooseqController extends Controller
                     {
                         return array("data"=>[$query,$rem,$updatec],"msg"=>"该选择题相关知识已修改，不用重复修改");
                     }
+                }
+            }
+            else if($flag==6)
+            {
+//                状态
+                $updatec = \Yii::$app->db->createCommand()->update('chooseq',['cqstatus'=>1],"cqid={$id}")->execute();
+                if($updatec)
+                {
+                    return array("data"=>[$query,$updatec],"msg"=>"该选择题状态修改成功");
+                }
+                else
+                {
+                    return array("data"=>[$query,$updatec],"msg"=>"该选择题状态已修改，不用重复修改");
                 }
             }
             else{

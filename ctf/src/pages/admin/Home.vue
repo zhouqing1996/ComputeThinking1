@@ -15,9 +15,15 @@
           </el-menu-item>
           <el-submenu index="3">
             <template slot="title">题库信息</template>
-            <el-menu-item index="3-1">选择题</el-menu-item>
-            <el-menu-item index="3-2">填空题</el-menu-item>
-            <el-menu-item index="3-3">程序题</el-menu-item>
+            <el-menu-item index="3-1">
+              <router-link to="/admin/bank/choose" >选择题</router-link>
+            </el-menu-item>
+            <el-menu-item index="3-2">
+              <router-link to="/admin/bank/fill" >填空题</router-link>
+            </el-menu-item>
+            <el-menu-item index="3-3">
+              <router-link to="/admin/bank/program" >程序题</router-link>
+            </el-menu-item>
             <!--<el-submenu index="3-4">-->
               <!--<template slot="title">选项4</template>-->
               <!--<el-menu-item index="3-4-1">选项1</el-menu-item>-->

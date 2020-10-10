@@ -18,6 +18,14 @@ import Userinfo from '../pages/admin/user/Userinfo'
 //添加用户
 import Adduser from '../pages/admin/user/Adduser'
 
+//题库信息
+//选择题
+import Choose from '../pages/admin/bank/Choose'
+//填空题
+import Fill from '../pages/admin/bank/Fill'
+//程序题
+import Program from '../pages/admin/bank/Program'
+
 //我的信息
 //修改密码
 import Changepwd from '../pages/admin/my/Changepwd'
@@ -116,6 +124,31 @@ const  router = new Router({
             isLogin:true
           },
           component:Adduser
+        },
+        //题库信息
+        {
+          path:'/admin/bank/choose',
+          name:'choose',
+          meta:{
+            isLogin:true
+          },
+          component:Choose
+        },
+        {
+          path:'/admin/bank/fill',
+          name:'fill',
+          meta:{
+            isLogin:true
+          },
+          component:Fill
+        },
+        {
+          path:'/admin/bank/program',
+          name:'program',
+          meta:{
+            isLogin:true
+          },
+          component:Program
         },
         {
           //我的信息:修改密码

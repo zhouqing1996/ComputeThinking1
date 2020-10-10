@@ -51,6 +51,9 @@
                   <el-button @click="addReset">重置</el-button>
                 </div>
               </el-dialog>
+              <button class="btn3 el-icon-circle-plus-outline" @click="getQueryY">有效用户</button>
+              <button class="btn3 el-icon-circle-plus-outline" @click="getQueryN">无效用户</button>
+              <button class="btn3 el-icon-circle-plus-outline" @click="getQuery">所有用户</button>
             </div>
             <table >
               <tr>
@@ -62,16 +65,26 @@
               </tr>
               <tr v-for=" (userinfo,key) in currentPageData" :key="key">
                 <td>{{userinfo.id}}</td>
-                <td>{{userinfo.username}}</td>
-                <td v-if="userinfo.role==1">超级管理员</td>
-                <td v-if="userinfo.role==2">二级管理员</td>
-                <td v-if="userinfo.role==3">普通用户</td>
+                <td>{{userinfo.username}}
+                  <span v-if="userinfo.status==1" @click="dialogFormVisibleName=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改用户名</i></span>
+                </td>
+                <td v-if="userinfo.role==1">超级管理员
+                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改角色</i></span>
+                </td>
+                <td v-if="userinfo.role==2">二级管理员
+                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改角色</i></span>
+                </td>
+                <td v-if="userinfo.role==3">普通用户
+                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改角色</i></span>
+                </td>
                 <!--<td>{{userinfo.role}}</td>-->
                 <!--<td>{{userinfo.status}}</td>-->
                 <td v-if="userinfo.status==1">有效</td>
-                <td v-if="userinfo.status==0">无效</td>
+                <td v-if="userinfo.status==0">无效
+                  <span v-if="userinfo.status==0" @click="changeStatus(userinfo.id)" class="span2"><i class="el-icon-edit">修改状态</i></span>
+                </td>
                 <td>
-                  <span v-if="userinfo.status==1" @click="dialogFormVisibleName=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改用户名</i></span>
+                  <!--<span v-if="userinfo.status==1" @click="dialogFormVisibleName=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改用户名</i></span>-->
                   <!--更改用户名的对话框-->
                   <el-dialog title="修改用户名" :visible.sync="dialogFormVisibleName">
                     <el-form :model="changeList">
@@ -84,7 +97,7 @@
                       <el-button @click="dialogFormVisibleName=false">退出</el-button>
                     </div>
                   </el-dialog>
-                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改角色</i></span>
+                  <!--<span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改角色</i></span>-->
                   <!--更改用户角色的对话框-->
                   <el-dialog title="修改角色" :visible.sync="dialogFormVisibleRole" >
                     <el-form :model="changeList">
@@ -101,7 +114,7 @@
                       <el-button @click="dialogFormVisibleRole=false">退出</el-button>
                     </div>
                   </el-dialog>
-                  <span v-if="userinfo.status==0" @click="changeStatus(userinfo.id)" class="span2"><i class="el-icon-edit">修改状态</i></span>
+                  <!--<span v-if="userinfo.status==0" @click="changeStatus(userinfo.id)" class="span2"><i class="el-icon-edit">修改状态</i></span>-->
                   <span v-if="userinfo.status==1"@click="deleteUser(userinfo.id)" class="span1"><i class="el-icon-delete">删除用户</i></span>
                   <span v-if="userinfo.status==0" @click="deleteUsers(userinfo.id)" class="span1"><i class="el-icon-delete">永久删除</i></span>
                 </td>
@@ -178,12 +191,58 @@
           this.currentPage++;
           this.setCurrentPageDate()
         },
+        //搜索
+        searchCom:function(){
+          console.log(this.inputname)
+          this.$http.post('/yii/home/user/queryname',
+            {
+              name:this.inputname
+            }).then(function (res) {
+            console.log(res.data)
+            this.userinfoList=res.data.data
+            this.totalPage =Math.ceil(this.userinfoList.length/this.pageSize)
+            this.totalPage=this.totalPage==0?1:this.totalPage
+            this.setCurrentPageDate()
+          })
+        },
         //获取全部的用户信息
         getQuery: function () {
           // let that = this
           this.$http.post('/yii/home/user/query',
             {
               flag: 2,
+              page: this.currentpage
+            }).then(function (res) {
+            console.log(res.data)
+            // that.userinfoList = res.data.data
+            this.userinfoList=res.data.data
+            this.totalPage =Math.ceil(this.userinfoList.length/this.pageSize)
+            this.totalPage=this.totalPage==0?1:this.totalPage
+            this.setCurrentPageDate()
+          })
+        },
+        //获取有效的用户信息
+        getQueryY: function () {
+          // let that = this
+          this.$http.post('/yii/home/user/query',
+            {
+              flag: 1,
+              page: this.currentpage
+            }).then(function (res) {
+            console.log(res.data)
+            // that.userinfoList = res.data.data
+            this.userinfoList=res.data.data
+            this.totalPage =Math.ceil(this.userinfoList.length/this.pageSize)
+            this.totalPage=this.totalPage==0?1:this.totalPage
+            this.setCurrentPageDate()
+          })
+        },
+        //获取无效的用户信息
+        getQueryN: function () {
+          // let that = this
+          this.$http.post('/yii/home/user/query',
+            {
+              flag: 3,
               page: this.currentpage
             }).then(function (res) {
             console.log(res.data)

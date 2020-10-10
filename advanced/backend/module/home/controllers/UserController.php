@@ -98,19 +98,33 @@ class UserController extends Controller
     //用户管理，用于管理员身份
     //设置功能：查看所有用户信息(所有信息、管理层信息、普通用户信息)、添加用户、修改（用户名、密码）、删除用户（暂时删除或者永久删除）、变更身份
 
+    /*
+     * 按照用户名查找用户
+     */
+    public function actionQueryname()
+    {
+        $request = \Yii::$app->request;
+        $name = $request->post('name');
+        $query = (new Query())
+            ->select('*')
+            ->from('user')
+            ->Where(['username'=> $name])
+            ->all();
+        return array("data"=>$query,"msg"=>$name."的信息");
+    }
 
     /*
     *查找所有用户，
      * 标志：flag
      * 1:有效的用户
      * 2:所有的用户
+     * 3:无效的用户
      * 显示用户信息时，不保存用户的密码信息，仅显示用户名、角色
      */
     public function actionQuery()
     {
         $request = \Yii::$app->request;
         $flag = $request->post('flag');
-        $page = $request->post('page');
         if($flag==1)
         {
             $query = (new Query())
@@ -118,18 +132,6 @@ class UserController extends Controller
                 ->from('user')
                 ->Where(['status'=> 1])
                 ->all();
-//            $query1 = (new Query())
-//                ->select('*')
-//                ->from('user')
-//                ->Where(['status'=> 1]);
-//            $countQuery = clone $query1;
-//            $totalCount = $countQuery->count();
-//            $pages = new Pagination(['totalCount' => $countQuery->count(),'pageSize'=>'10']);
-//            $models = $query1->offset($pages->offset)
-//                ->limit($pages->limit)
-//                ->all();
-//            $pageNum = ceil($totalCount/10);
-//            return array("data"=>[$models,$pageNum],"msg"=>"所有有效的用户");
             return array("data"=>$query,"msg"=>"所有有效的用户");
         }
         else if($flag==2)
@@ -138,18 +140,16 @@ class UserController extends Controller
                 ->select('*')
                 ->from('user')
                 ->all();
-//            $query1 = (new Query())
-//                ->select('*')
-//                ->from('user');
-//            $countQuery = clone $query1;
-//            $totalCount = $countQuery->count();
-//            $pages = new Pagination(['totalCount' => $countQuery->count(),'pageSize'=>'10']);
-//            $models = $query1->offset($pages->offset)
-//                ->limit($pages->limit)
-//                ->all();
-//            $pageNum = ceil($totalCount/10);
-//            return array("data"=>[$models,$pageNum],"msg"=>"所有用户");
             return array("data"=>$query,"msg"=>"所有用户");
+        }
+        else if($flag==3)
+        {
+            $query = (new Query())
+                ->select('*')
+                ->from('user')
+                ->Where(['status'=> 0])
+                ->all();
+            return array("data"=>$query,"msg"=>"所有无效的用户");
         }
         else{
             return array("data"=>[$flag,'0'],"msg"=>"输入错误");
