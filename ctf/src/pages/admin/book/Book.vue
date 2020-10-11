@@ -40,6 +40,10 @@
               <button class="btn2 el-icon-circle-plus-outline" @click="getBookList(1)">有效图书</button>
               <button class="btn2 el-icon-circle-plus-outline" @click="getBookList(2)">无效图书</button>
               <button class="btn2 el-icon-circle-plus-outline" @click="getBookList(3)">所有图书</button>
+              <button class="btn3" @click="AddB">批量添加</button>
+              <input type="file" @change="importExcel(this)" id="inputExcel"
+                       accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none"/>
+
             </div>
             <table >
               <tr>
@@ -56,7 +60,7 @@
                 <td>{{ key+1 }}</td>
                 <td>{{Book.bookid}}</td>
                 <td>{{Book.bookname}}
-                  <span v-if="Book.status==1" @click="dialogFormVisiblechangName=true;changeList.id=Book.bookid;item=Book.bookname" class="span2">修改书名</span>
+                  <span v-if="Book.status==1" @click="dialogFormVisiblechangName=true;changeList.id=Book.bookid;item=Book.bookname" class="span2">修改</span>
                   <el-dialog title="修改书名" :visible.sync="dialogFormVisiblechangName">
                     <el-form :model="changeList">
                       <el-form-item label="书名内容1" :label-width="formLabelWidth">
@@ -74,7 +78,7 @@
                 </td>
                 <td>
                   {{Book.publish}}
-                  <span v-if="Book.status==1" @click="dialogFormVisiblechangePublish=true;changeList.id=Book.bookid;item=Book.publish" class="span2">修改出版社</span>
+                  <span v-if="Book.status==1" @click="dialogFormVisiblechangePublish=true;changeList.id=Book.bookid;item=Book.publish" class="span2">修改</span>
                   <el-dialog title="修改出版社" :visible.sync="dialogFormVisiblechangePublish">
                     <el-form :model="changeList">
                       <el-form-item label="原始出版社" :label-width="formLabelWidth">
@@ -92,7 +96,7 @@
                 </td>
                 <td>
                   {{Book.author}}
-                  <span v-if="Book.status==1" @click="dialogFormVisiblechangeAuthor=true;changeList.id=Book.bookid;item=Book.author" class="span2">修改作者</span>
+                  <span v-if="Book.status==1" @click="dialogFormVisiblechangeAuthor=true;changeList.id=Book.bookid;item=Book.author" class="span2">修改</span>
                   <el-dialog title="修改作者" :visible.sync="dialogFormVisiblechangeAuthor">
                     <el-form :model="changeList">
                       <el-form-item label="原始作者" :label-width="formLabelWidth">
@@ -113,7 +117,7 @@
                   <div slot="content">{{Book.about}}</div>
                   <el-button class="btn1">关于</el-button>
                   </el-tooltip>
-                  <span v-if="Book.status==1" @click="dialogFormVisiblechangeAbout=true;changeList.id=Book.bookid;item=Book.about" class="span2">修改关于</span>
+                  <span v-if="Book.status==1" @click="dialogFormVisiblechangeAbout=true;changeList.id=Book.bookid;item=Book.about" class="span2">修改</span>
                   <el-dialog title="修改关于" :visible.sync="dialogFormVisiblechangeAbout">
                     <el-form :model="changeList">
                       <el-form-item label="原始关于" :label-width="formLabelWidth">
@@ -130,9 +134,12 @@
                   </el-dialog>
                 </td>
                 <td v-if="Book.status==1">有效</td>
-                <td v-if="Book.status==0">无效</td>
+                <td v-if="Book.status==0">无效
+                  <span v-if="Book.status==0" @click="changeBook(5,Book.bookid)" class="span2">修改</span>
+                </td>
+
                 <td>
-                  <span v-if="Book.status==0" @click="changeBook(5,Book.bookid)" class="span2">修改状态</span>
+
                   <span v-if="Book.status==1"@click="deleteBook(1,Book.bookid)" class="span1"><i class="el-icon-delete">删除图书</i></span>
                   <span v-if="Book.status==0" @click="deleteBook(2,Book.bookid)" class="span1"><i class="el-icon-delete">永久删除</i></span>
                 </td>
@@ -461,10 +468,80 @@
           {
             alert("错误")
           }
-        }
+        },
+
+        //批量添加
+        AddB:function () {
+          this.inputExcel.click()
+        },
+        importExcel (obj) {
+          let _this = this
+          let inputDOM = this.$refs.inputer   // 通过DOM取文件数据
+          this.file = event.currentTarget.files[0]
+          var rABS = false // 是否将文件读取为二进制字符串
+          var f = this.file
+          var reader = new FileReader()
+          // if (!FileReader.prototype.readAsBinaryString) {
+          FileReader.prototype.readAsBinaryString = function (f) {
+            var binary = ''
+            var rABS = false // 是否将文件读取为二进制字符串
+            var pt = this
+            var wb // 读取完成的数据
+            var outdata
+            var reader = new FileReader()
+            reader.onload = function (e) {
+              var bytes = new Uint8Array(reader.result)
+              var length = bytes.byteLength
+              for (var i = 0; i < length; i++) {
+                binary += String.fromCharCode(bytes[i])
+              }
+              var XLSX = require('xlsx')
+              if (rABS) {
+                wb = XLSX.read(btoa(fixdata(binary)), { // 手动转化
+                  type: 'base64'
+                })
+              } else {
+                wb = XLSX.read(binary, {
+                  type: 'binary'
+                })
+              }
+              // outdata就是你想要的东西 excel导入的数据
+              outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+              // excel 数据再处理
+              let arr = []
+                outdata.map(v => {
+                  let obj ={}
+                  obj.name = v.书籍名
+                  obj.publish= v.出版社
+                  obj.author= v.作者
+                  obj.about=v.关于
+                  arr.push(obj)
+                })
+              _this.memberList = [...arr]
+              let data = {
+                data: JSON.stringify(_this.memberList)
+              }
+              console.log(data)
+                _this.$http.post('/yii/book/book/importexcel', data).then(body => {
+                  alert(body.data.message)
+                  _this.getBookList(3)
+                })
+            }
+            reader.readAsArrayBuffer(f)
+          }
+          if (rABS) {
+            reader.readAsArrayBuffer(f)
+          } else {
+            reader.readAsBinaryString(f)
+          }
+        },
+
       },
       created(){
         this.getBookList(3)
+      },
+      mounted(){
+          this.inputExcel = document.getElementById('inputExcel')
       }
     }
 </script>

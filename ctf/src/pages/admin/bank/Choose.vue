@@ -53,6 +53,9 @@
               <button class="btn2 el-icon-circle-plus-outline" @click="getQuerycquestionY">有效题目</button>
               <button class="btn2 el-icon-circle-plus-outline" @click="getQuerycquestionN">无效题目</button>
               <button class="btn2 el-icon-circle-plus-outline" @click="getQuerycquestion">所有题目</button>
+              <button class="btn3" @click="addC">批量添加</button>
+              <input type="file" @change="importExcel(this)" id="inputExcel"
+                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none"/>
             </div>
             <table >
               <tr>
@@ -77,7 +80,7 @@
                     <div slot="content">{{cQuestion.cqitem}}</div>
                     <el-button class="btn1">{{cQuestion.cqid}}</el-button>
                   </el-tooltip>
-                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeitem=true;changeList.id=cQuestion.cqid;item=cQuestion.cqitem" class="span2">修改题干</span>
+                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeitem=true;changeList.id=cQuestion.cqid;item=cQuestion.cqitem" class="span2">修改</span>
                   <el-dialog title="修改题干" :visible.sync="dialogFormVisiblechangeitem">
                     <el-form :model="changeList">
                       <el-form-item label="题干内容1" :label-width="formLabelWidth">
@@ -98,7 +101,7 @@
                     <div slot="content">{{cQuestion.cqcho.split('---')[0]}}</div>
                     <el-button class="btn1">{{cQuestion.cqid}}</el-button>
                   </el-tooltip>
-                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeop1=true;changeList.id=cQuestion.cqid;item=cQuestion.cqcho.split('---')[0]" class="span2">修改选项</span>
+                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeop1=true;changeList.id=cQuestion.cqid;item=cQuestion.cqcho.split('---')[0]" class="span2">修改</span>
                   <el-dialog title="修改选项1" :visible.sync="dialogFormVisiblechangeop1">
                     <el-form :model="changeList">
                       <el-form-item label="选项内容1" :label-width="formLabelWidth">
@@ -119,7 +122,7 @@
                     <div slot="content">{{cQuestion.cqcho.split('---')[1]}}</div>
                     <el-button class="btn1">{{cQuestion.cqid}}</el-button>
                   </el-tooltip>
-                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeop2=true;changeList.id=cQuestion.cqid;item=cQuestion.cqcho.split('---')[1]" class="span2">修改选项</span>
+                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeop2=true;changeList.id=cQuestion.cqid;item=cQuestion.cqcho.split('---')[1]" class="span2">修改</span>
                   <el-dialog title="修改选项2" :visible.sync="dialogFormVisiblechangeop2">
                     <el-form :model="changeList">
                       <el-form-item label="选项内容2" :label-width="formLabelWidth">
@@ -140,7 +143,7 @@
                     <div slot="content">{{cQuestion.cqcho.split('---')[2]}}</div>
                     <el-button class="btn1">{{cQuestion.cqid}}</el-button>
                   </el-tooltip>
-                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeop3=true;changeList.id=cQuestion.cqid;item=cQuestion.cqcho.split('---')[2]" class="span2">修改选项</span>
+                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeop3=true;changeList.id=cQuestion.cqid;item=cQuestion.cqcho.split('---')[2]" class="span2">修改</span>
                   <el-dialog title="修改选项3" :visible.sync="dialogFormVisiblechangeop3">
                     <el-form :model="changeList">
                       <el-form-item label="选项内容3" :label-width="formLabelWidth">
@@ -161,7 +164,7 @@
                     <div slot="content">{{cQuestion.cqcho.split('---')[3]}}</div>
                     <el-button class="btn1">{{cQuestion.cqid}}</el-button>
                   </el-tooltip>
-                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeop4=true;changeList.id=cQuestion.cqid;item=cQuestion.cqcho.split('---')[3]" class="span2">修改选项</span>
+                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeop4=true;changeList.id=cQuestion.cqid;item=cQuestion.cqcho.split('---')[3]" class="span2">修改</span>
                   <el-dialog title="修改选项4" :visible.sync="dialogFormVisiblechangeop4">
                     <el-form :model="changeList">
                       <el-form-item label="选项内容4" :label-width="formLabelWidth">
@@ -183,7 +186,7 @@
                     <el-button class="btn1">{{cQuestion.cqid}}</el-button>
                   </el-tooltip>
                   <!--<span v-if="cQuestion.cqstatus==1" @click="" class="span2">修改答案</span>-->
-                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeans=true;changeList.id=cQuestion.cqid;item=cQuestion.cqans" class="span2">修改答案</span>
+                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangeans=true;changeList.id=cQuestion.cqid;item=cQuestion.cqans" class="span2">修改</span>
                   <el-dialog title="修改答案" :visible.sync="dialogFormVisiblechangeans">
                     <el-form :model="changeList">
                       <el-form-item label="选项内容4" :label-width="formLabelWidth">
@@ -205,7 +208,7 @@
                     <el-button class="btn1">{{cQuestion.cqid}}</el-button>
                   </el-tooltip>
                   <!--<span v-if="cQuestion.cqstatus==1" @click="" class="span2">修改详解</span>-->
-                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangetail=true;changeList.id=cQuestion.cqid;item=cQuestion.cqtail" class="span2">修改详解</span>
+                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangetail=true;changeList.id=cQuestion.cqid;item=cQuestion.cqtail" class="span2">修改</span>
                   <el-dialog title="修改详解" :visible.sync="dialogFormVisiblechangetail">
                     <el-form :model="changeList">
                       <el-form-item label="选项内容4" :label-width="formLabelWidth">
@@ -227,7 +230,7 @@
                     <el-button class="btn1">{{cQuestion.cqid}}</el-button>
                   </el-tooltip>
                   <!--<span v-if="cQuestion.cqstatus==1" @click="" class="span2">修改知识点</span>-->
-                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangerem=true;changeList.id=cQuestion.cqid;item=cQuestion.cqtail" class="span2">修改知识点</span>
+                  <span v-if="cQuestion.cqstatus==1" @click="dialogFormVisiblechangerem=true;changeList.id=cQuestion.cqid;item=cQuestion.cqtail" class="span2">修改</span>
                   <el-dialog title="修改知识点" :visible.sync="dialogFormVisiblechangerem">
                     <el-form :model="changeList">
                       <el-form-item label="选项内容4" :label-width="formLabelWidth">
@@ -244,9 +247,11 @@
                   </el-dialog>
                 </td>
                 <td v-if="cQuestion.cqstatus==1">有效</td>
-                <td v-if="cQuestion.cqstatus==0">无效</td>
+                <td v-if="cQuestion.cqstatus==0">无效
+                  <span v-if="cQuestion.cqstatus==0" @click="changeChoose(9,cQuestion.cqid)" class="span2">修改</span>
+                </td>
                 <td>
-                  <span v-if="cQuestion.cqstatus==0" @click="changeChoose(9,cQuestion.cqid)" class="span2">修改状态</span>
+
                   <span v-if="cQuestion.cqstatus==1"@click="deleteChoose(1,cQuestion.cqid)" class="span1"><i class="el-icon-delete">删除题目</i></span>
                   <span v-if="cQuestion.cqstatus==0" @click="deleteChoose(2,cQuestion.cqid)" class="span1"><i class="el-icon-delete">永久删除</i></span>
                 </td>
@@ -679,9 +684,81 @@
           else{
             alert("输入错误！")
           }
-        }
+        },
+        addC:function()
+        {
+          this.inputExcel.click()
+        },
+        importExcel (obj) {
+          let _this = this
+          let inputDOM = this.$refs.inputer   // 通过DOM取文件数据
+          this.file = event.currentTarget.files[0]
+          var rABS = false // 是否将文件读取为二进制字符串
+          var f = this.file
+          var reader = new FileReader()
+          // if (!FileReader.prototype.readAsBinaryString) {
+          FileReader.prototype.readAsBinaryString = function (f) {
+            var binary = ''
+            var rABS = false // 是否将文件读取为二进制字符串
+            var pt = this
+            var wb // 读取完成的数据
+            var outdata
+            var reader = new FileReader()
+            reader.onload = function (e) {
+              var bytes = new Uint8Array(reader.result)
+              var length = bytes.byteLength
+              for (var i = 0; i < length; i++) {
+                binary += String.fromCharCode(bytes[i])
+              }
+              var XLSX = require('xlsx')
+              if (rABS) {
+                wb = XLSX.read(btoa(fixdata(binary)), { // 手动转化
+                  type: 'base64'
+                })
+              } else {
+                wb = XLSX.read(binary, {
+                  type: 'binary'
+                })
+              }
+              // outdata就是你想要的东西 excel导入的数据
+              outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+              // excel 数据再处理
+              let arr = []
+              outdata.map(v => {
+                let obj ={}
+                obj.item = v.题干
+                obj.op1= v.选项一
+                obj.op2= v.选项二
+                obj.op3= v.选项三
+                obj.op4= v.选项四
+                obj.ans= v.答案
+                obj.tail= v.详解
+                obj.rem= v.相关点
+                arr.push(obj)
+              })
+              _this.memberList = [...arr]
+              let data = {
+                data: JSON.stringify(_this.memberList)
+              }
+              console.log(data)
+              _this.$http.post('/yii/bank/chooseq/importexcel', data).then(body => {
+                alert(body.data.message)
+                _this.getQuerycquestion()
+              })
+            }
+            reader.readAsArrayBuffer(f)
+          }
+          if (rABS) {
+            reader.readAsArrayBuffer(f)
+          } else {
+            reader.readAsBinaryString(f)
+          }
+        },
 
 
+      },
+      mounted(){
+        this.inputExcel = document.getElementById('inputExcel')
       },
       created(){
           this.getQuerycquestion()

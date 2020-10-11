@@ -29,6 +29,11 @@ import Program from '../pages/admin/bank/Program'
 //图书信息
 import Book from '../pages/admin/book/Book'
 
+//试卷信息
+//创建试卷
+import Create from '../pages/admin/exam/Create'
+
+
 //我的信息
 //修改密码
 import Changepwd from '../pages/admin/my/Changepwd'
@@ -162,6 +167,17 @@ const  router = new Router({
           },
           component:Book
         },
+        //试卷
+        //创建试卷
+        {
+          path:'/admin/exam/create',
+          name:'create',
+          meta:{
+            isLogin:true
+          },
+          component:Create
+        },
+
         {
           //我的信息:修改密码
           path:'/admin/my/changepwd',

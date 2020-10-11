@@ -54,6 +54,9 @@
               <button class="btn3 el-icon-circle-plus-outline" @click="getQueryY">有效用户</button>
               <button class="btn3 el-icon-circle-plus-outline" @click="getQueryN">无效用户</button>
               <button class="btn3 el-icon-circle-plus-outline" @click="getQuery">所有用户</button>
+              <button class="btn3" @click="addU">批量添加</button>
+              <input type="file" @change="importExcel(this)" id="inputExcel"
+                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none"/>
             </div>
             <table >
               <tr>
@@ -66,22 +69,22 @@
               <tr v-for=" (userinfo,key) in currentPageData" :key="key">
                 <td>{{userinfo.id}}</td>
                 <td>{{userinfo.username}}
-                  <span v-if="userinfo.status==1" @click="dialogFormVisibleName=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改用户名</i></span>
+                  <span v-if="userinfo.status==1" @click="dialogFormVisibleName=true;changeList.id=userinfo.id" class="span2">修改</span>
                 </td>
                 <td v-if="userinfo.role==1">超级管理员
-                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改角色</i></span>
+                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2">修改</span>
                 </td>
                 <td v-if="userinfo.role==2">二级管理员
-                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改角色</i></span>
+                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2">修改</span>
                 </td>
                 <td v-if="userinfo.role==3">普通用户
-                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改角色</i></span>
+                  <span v-if="userinfo.status==1" @click="dialogFormVisibleRole=true;changeList.id=userinfo.id" class="span2">修改</span>
                 </td>
                 <!--<td>{{userinfo.role}}</td>-->
                 <!--<td>{{userinfo.status}}</td>-->
                 <td v-if="userinfo.status==1">有效</td>
                 <td v-if="userinfo.status==0">无效
-                  <span v-if="userinfo.status==0" @click="changeStatus(userinfo.id)" class="span2"><i class="el-icon-edit">修改状态</i></span>
+                  <span v-if="userinfo.status==0" @click="changeStatus(userinfo.id)" class="span2">修改</span>
                 </td>
                 <td>
                   <!--<span v-if="userinfo.status==1" @click="dialogFormVisibleName=true;changeList.id=userinfo.id" class="span2"><i class="el-icon-edit">修改用户名</i></span>-->
@@ -414,11 +417,78 @@
             console.log(error)
           })
         },
+        addU:function()
+        {
+          this.inputExcel.click()
+        },
+        importExcel (obj) {
+          let _this = this
+          let inputDOM = this.$refs.inputer   // 通过DOM取文件数据
+          this.file = event.currentTarget.files[0]
+          var rABS = false // 是否将文件读取为二进制字符串
+          var f = this.file
+          var reader = new FileReader()
+          // if (!FileReader.prototype.readAsBinaryString) {
+          FileReader.prototype.readAsBinaryString = function (f) {
+            var binary = ''
+            var rABS = false // 是否将文件读取为二进制字符串
+            var pt = this
+            var wb // 读取完成的数据
+            var outdata
+            var reader = new FileReader()
+            reader.onload = function (e) {
+              var bytes = new Uint8Array(reader.result)
+              var length = bytes.byteLength
+              for (var i = 0; i < length; i++) {
+                binary += String.fromCharCode(bytes[i])
+              }
+              var XLSX = require('xlsx')
+              if (rABS) {
+                wb = XLSX.read(btoa(fixdata(binary)), { // 手动转化
+                  type: 'base64'
+                })
+              } else {
+                wb = XLSX.read(binary, {
+                  type: 'binary'
+                })
+              }
+              // outdata就是你想要的东西 excel导入的数据
+              outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+              // excel 数据再处理
+              let arr = []
+              outdata.map(v => {
+                let obj ={}
+                obj.name = v.用户名
+                obj.password= v.密码
+                obj.role= v.角色
+                arr.push(obj)
+              })
+              _this.memberList = [...arr]
+              let data = {
+                data: JSON.stringify(_this.memberList)
+              }
+              console.log(data)
+              _this.$http.post('/yii/home/user/importexcel', data).then(body => {
+                alert(body.data.message)
+                _this.getQuery()
+              })
+            }
+            reader.readAsArrayBuffer(f)
+          }
+          if (rABS) {
+            reader.readAsArrayBuffer(f)
+          } else {
+            reader.readAsBinaryString(f)
+          }
+        },
       },
       created(){
         this.getQuery()
 
       },
+      mounted(){
+        this.inputExcel = document.getElementById('inputExcel')
+      }
     }
 </script>
 
