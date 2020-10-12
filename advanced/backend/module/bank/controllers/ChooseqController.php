@@ -408,4 +408,41 @@ class ChooseqController extends Controller
             return array("data"=>$query,"msg"=>"未查找到该选择题");
         }
     }
+    public function actionImportexcel()
+    {
+        $request = \Yii::$app->request;
+        $data = $request->post('data');
+        $data = json_decode($data,true);
+        for($i=0;$i<count($data);$i++)
+        {
+            $item= isset($data[$i]['item'])?$data[$i]['item']:"";
+            $op1 = isset($data[$i]['op1'])?$data[$i]['op1']:"";
+            $op2 = isset($data[$i]['op2'])?$data[$i]['op2']:"";
+            $op3 = isset($data[$i]['op3'])?$data[$i]['op3']:"";
+            $op4 = isset($data[$i]['op4'])?$data[$i]['op4']:"";
+            $op = $op1.'---'.$op2.'---'.$op3.'---'.$op4;
+            $ans= isset($data[$i]['ans'])?$data[$i]['ans']:"";
+            $tail = isset($data[$i]['tail'])?$data[$i]['tail']:"";
+            $rem = isset($data[$i]['rem'])?$data[$i]['rem']:"";
+            $query = (new Query())
+                ->select('*')
+                ->from('chooseq')
+                ->where(['cqitem'=>$item])
+                ->andWhere(['cqcho'=>$op])
+                ->one();
+            $id = (new Query())
+                ->select("*")
+                ->from('chooseq')
+                ->where(['cqstatus'=>1])
+                ->max('cqid');
+            $id = $id+1;
+            if($query == null)
+            {
+                $updatec = \Yii::$app->db->createCommand()->insert('chooseq',
+                    array('cqid'=>$id,'cqitem'=>$item,'cqcho'=>$op,'cqans'=>$ans,'cqtail'=>$tail,
+                        'cqrem'=>$rem,'cqstatus'=>1))->execute();
+            }
+        }
+        return array("data"=>$data,"msg"=>"导入成功");
+    }
 }

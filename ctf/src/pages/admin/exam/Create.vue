@@ -9,17 +9,37 @@
     <div class="display1">
       <el-tabs type="border-card">
         <el-tab-pane>
-          <span slot="label"><i class="el-icon-date"></i> 图书列表</span>
+          <span slot="label"><i class="el-icon-date"></i> 试卷列表</span>
           <div class="display2">
             <div class="searchmem">
               <div class="meeting" >
                 <el-input v-model="inputname" placeholder="模糊查找" size="mini"></el-input>
               </div>
-              <button class="btn3 el-icon-search" v-on:click="search()">搜索试卷</button>
-              <button class="btn3 el-icon-circle-plus-outline" @click="">自动组卷</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getBookList(1)">有效图书</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getBookList(2)">无效图书</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getBookList(3)">所有图书</button>
+              <button class="btn3 el-icon-search" v-on:click="getExamList(4)">搜索试卷</button>
+              <button class="btn3 el-icon-circle-plus-outline" @click="dialogFormVisibleAdd=true">自动组卷</button>
+              <el-dialog title="自动组卷" :visible.sync="dialogFormVisibleAdd">
+                <el-form :model="addexam">
+                  <el-form-item label="试卷名称" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addexam.name" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="选择题数" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addexam.nc" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="填空题数" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addexam.nf" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="程序题数" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addexam.np" auto-complete="off"></el-input>
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" style="align-content: center" class="dialog-footer">
+                  <el-button type="primary" @click="AddExam">提交</el-button>
+                  <el-button @click="dialogFormVisibleAdd=false">退出</el-button>
+                </div>
+              </el-dialog>
+              <button class="btn2 el-icon-circle-plus-outline" @click="getExamList(1)">有效试卷</button>
+              <button class="btn2 el-icon-circle-plus-outline" @click="getExamList(2)">无效试卷</button>
+              <button class="btn2 el-icon-circle-plus-outline" @click="getExamList(3)">所有试卷</button>
             </div>
             <table >
               <tr>
@@ -27,96 +47,25 @@
                 <th>试卷编号 </th>
                 <th>试卷名</th>
                 <th>创建时间</th>
-                <th>作者</th>
+                <th>作者编号</th>
                 <th>状态</th>
                 <th>操作</th>
               </tr>
-              <tr v-for=" (Book,key) in currentPageData" :key="key">
+              <tr v-for=" (exam,key) in currentPageData" :key="key">
                 <td>{{ key+1 }}</td>
-                <td>{{Book.exid}}</td>ex
-                <td>{{Book.bookname}}
-                  <span v-if="Book.status==1" @click="dialogFormVisiblechangName=true;changeList.id=Book.bookid;item=Book.bookname" class="span2">修改</span>
-                  <el-dialog title="修改书名" :visible.sync="dialogFormVisiblechangName">
-                    <el-form :model="changeList">
-                      <el-form-item label="书名内容1" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="item" auto-complete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="书名内容" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="changeList.name" auto-complete="off"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changeBook(1,changeList)">提交</el-button>
-                      <el-button @click="dialogFormVisiblechangName=false">退出</el-button>
-                    </div>
-                  </el-dialog>
+                <td>{{exam.exid}}</td>
+                <td>{{exam.exname}}</td>
+                <td>{{exam.createtime}}</td>
+                <td>{{exam.auth}}</td>
+                <td v-if="exam.exstatus==1">有效</td>
+                <td v-if="exam.exstatus==0">无效
+                  <span @click="changeExamstatus(exam.exid)" class="span2">修改</span>
                 </td>
                 <td>
-                  {{Book.publish}}
-                  <span v-if="Book.status==1" @click="dialogFormVisiblechangePublish=true;changeList.id=Book.bookid;item=Book.publish" class="span2">修改</span>
-                  <el-dialog title="修改出版社" :visible.sync="dialogFormVisiblechangePublish">
-                    <el-form :model="changeList">
-                      <el-form-item label="原始出版社" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="item" auto-complete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="修改出版社" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="changeList.publish" auto-complete="off"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changeBook(2,changeList)">提交</el-button>
-                      <el-button @click="dialogFormVisiblechangePublish=false">退出</el-button>
-                    </div>
-                  </el-dialog>
-                </td>
-                <td>
-                  {{Book.author}}
-                  <span v-if="Book.status==1" @click="dialogFormVisiblechangeAuthor=true;changeList.id=Book.bookid;item=Book.author" class="span2">修改</span>
-                  <el-dialog title="修改作者" :visible.sync="dialogFormVisiblechangeAuthor">
-                    <el-form :model="changeList">
-                      <el-form-item label="原始作者" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="item" auto-complete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="修改作者" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="changeList.author" auto-complete="off"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changeBook(3,changeList)">提交</el-button>
-                      <el-button @click="dialogFormVisiblechangeAuthor=false">退出</el-button>
-                    </div>
-                  </el-dialog>
-                </td>
-                <td>
-                  <el-tooltip placement="top" effect="light">
-                    <div slot="content">{{Book.about}}</div>
-                    <el-button class="btn1">关于</el-button>
-                  </el-tooltip>
-                  <span v-if="Book.status==1" @click="dialogFormVisiblechangeAbout=true;changeList.id=Book.bookid;item=Book.about" class="span2">修改</span>
-                  <el-dialog title="修改关于" :visible.sync="dialogFormVisiblechangeAbout">
-                    <el-form :model="changeList">
-                      <el-form-item label="原始关于" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="item" auto-complete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="修改关于" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="changeList.about" auto-complete="off"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changeBook(4,changeList)">提交</el-button>
-                      <el-button @click="dialogFormVisiblechangeAbout=false">退出</el-button>
-                    </div>
-                  </el-dialog>
-                </td>
-                <td v-if="Book.status==1">有效</td>
-                <td v-if="Book.status==0">无效
-                  <span v-if="Book.status==0" @click="changeBook(5,Book.bookid)" class="span2">修改</span>
-                </td>
-
-                <td>
-
-                  <span v-if="Book.status==1"@click="deleteBook(1,Book.bookid)" class="span1"><i class="el-icon-delete">删除图书</i></span>
-                  <span v-if="Book.status==0" @click="deleteBook(2,Book.bookid)" class="span1"><i class="el-icon-delete">永久删除</i></span>
+                  <span v-if="exam.exstatus==1" class="span2" @click="lookexam(exam.exid)">查看试卷
+                  </span>
+                  <span v-if="exam.exstatus==1"@click="deleteExam(1,exam.exid)" class="span1"><i class="el-icon-delete">删除试卷</i></span>
+                  <span v-if="exam.exstatus==0" @click="deleteExam(2,exam.exid)" class="span1"><i class="el-icon-delete">永久删除</i></span>
                 </td>
               </tr>
             </table>
@@ -145,8 +94,19 @@
         name: "create",
       data(){
           return{
+            formLabelWidth: '120px',
             examList:[],
             inputname:'',
+            authname:"",
+            //组卷
+            dialogFormVisibleAdd:false,
+            addexam:{
+              id:"",
+              name:"",
+              nc:0,
+              nf:0,
+              np:0
+            },
             // 翻页相关
             currentPage: 1,
             totalPage: 1,
@@ -155,6 +115,29 @@
           }
       },
       methods:{
+        //  查看试卷
+        lookexam:function(id){
+          console.log(id)
+          // this.$router.push({ name:'viewexam', params: { id: id }})
+          this.$router.push({
+            path:'/admin/exam/viewexam',
+            query:{
+              id:id
+            }
+          })
+        },
+        //  查询人
+        getUser(id)
+        {
+          this.$http.post('/yii/home/user/queryid',{
+            id:id
+          }).then(function (res) {
+            console.log(res.data)
+            this.authname = res.data.data.username
+          }).catch(function (error) {
+            console.log(error)
+          })
+        },
         //分页
         setCurrentPageDate: function () {
           let begin = (this.currentPage - 1) * this.pageSize;
@@ -173,9 +156,169 @@
           this.currentPage++;
           this.setCurrentPageDate()
         },
+        Reset:function(){
+          this.addexam.name="";
+          this.addexam.nc=0;
+          this.addexam.np=0;
+          this.addexam.nf=0;
+        },
+      //  组卷
+      //  1：自动组卷
+      //  2：手动组卷
+        AddExam:function () {
+          this.$http.post('/yii/exam/index/addexam',{
+            flag:1,
+            exname:this.addexam.name,
+            numc:this.addexam.nc,
+            numf:this.addexam.nf,
+            nump:this.addexam.np,
+            auth:this.$store.getters.getsId
+          }).then(function (res) {
+            console.log(res.data)
+            if(res.data.message=="自动组卷成功")
+            {
+              this.getExamList(3)
+            }
+            this.dialogFormVisibleAdd=false
+            this.Reset();
+            alert(res.data.message)
+          }).catch(function (error) {
+            console.log(error)
+          })
+        },
+        //返回试卷信息
+        //1：有效试卷
+        //2：无效试卷
+        //3：所有试卷
+        //4:模糊查找
+        getExamList:function (item) {
+          console.log(item)
+          if(item==1)
+          {
+            this.$http.post('/yii/exam/index/queryexam',{
+              flag:1
+            }).then(function (res) {
+              console.log(res.data)
+              this.examList = res.data.data
+              this.totalPage =Math.ceil(this.examList.length/this.pageSize)
+              this.totalPage=this.totalPage==0?1:this.totalPage
+              this.setCurrentPageDate()
+            }).catch(function (error) {
+              console.log(error)
+            })
+          }
+          else if(item==2)
+          {
+            this.$http.post('/yii/exam/index/queryexam',{
+              flag:2
+            }).then(function (res) {
+              console.log(res.data)
+              this.examList = res.data.data
+              this.totalPage =Math.ceil(this.examList.length/this.pageSize)
+              this.totalPage=this.totalPage==0?1:this.totalPage
+              this.setCurrentPageDate()
+            }).catch(function (error) {
+              console.log(error)
+            })
+          }
+          else if(item==3)
+          {
+            this.$http.post('/yii/exam/index/queryexam',{
+              flag:3
+            }).then(function (res) {
+              console.log(res.data)
+              this.examList = res.data.data
+              this.totalPage =Math.ceil(this.examList.length/this.pageSize)
+              this.totalPage=this.totalPage==0?1:this.totalPage
+              this.setCurrentPageDate()
+            }).catch(function (error) {
+              console.log(error)
+            })
+          }
+          else if(item==4)
+          {
+            this.$http.post('/yii/exam/index/queryexam',{
+              flag:4,
+              name:this.inputname
+            }).then(function (res) {
+              console.log(res.data)
+              this.examList = res.data.data
+              this.totalPage =Math.ceil(this.examList.length/this.pageSize)
+              this.totalPage=this.totalPage==0?1:this.totalPage
+              this.setCurrentPageDate()
+            }).catch(function (error) {
+              console.log(error)
+            })
+          }
+          else{
+            console.log("输入错误")
+          }
+        },
+        //修改状态
+        changeExamstatus:function (id) {
+          this.$http.post('/yii/exam/index/changestatus',{
+            exid:id
+          }).then(function (res) {
+            console.log(res.data)
+            this.getExamList(3)
+            alert(res.data.message)
+          }).catch(function (error) {
+            console.log(error)
+          })
+        },
+      //  删除
+        deleteExam:function (item,id) {
+          if(item==1)
+          {
+            this.$confirm("删除该试卷，是否继续？", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              this.$http.post('/yii/exam/index/deleteexam',{
+                flag:1,
+                exid:id
+              }).then(function (res) {
+                console.log(res.data)
+                if(res.data.message=="删除成功")
+                {
+                  this.getExamList(3)
+                }
+                alert(res.data.message)
+              })
+            }).catch(function (error) {
+              console.log(error)
+            })
+          }
+          else if(item==2)
+          {
+            this.$confirm("完全删除该试卷，是否继续？", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              this.$http.post('/yii/exam/index/deleteexam',{
+                flag:2,
+                exid:id
+              }).then(function (res) {
+                console.log(res.data)
+                if(res.data.message=="完全删除成功")
+                {
+                  this.getExamList(3)
+                }
+                alert(res.data.message)
+              })
+            }).catch(function (error) {
+              console.log(error)
+            })
+          }
+          else{
+            console.log("输入错误")
+          }
+        }
       },
       created(){
-
+          this.getExamList(3)
       },
       mounted(){
 
@@ -184,6 +327,12 @@
 </script>
 
 <style scoped>
+  a {
+    text-decoration: none;
+  }
+  .router-link-active {
+    text-decoration: none;
+  }
   .btn1 {
     font-size: 10px;
     padding: 7px 7px;

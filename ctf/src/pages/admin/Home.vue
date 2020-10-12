@@ -34,11 +34,14 @@
           <el-menu-item index="4">
             <router-link to="/admin/book" >图书管理</router-link>
           </el-menu-item>
-          <el-submenu index="5">
-            <template slot="title">测评题库</template>
-            <el-menu-item index="5-1">创建题库</el-menu-item>
-            <el-menu-item index="5-2">查看题库</el-menu-item>
-          </el-submenu>
+          <!--<el-submenu index="5">-->
+
+            <!--<template slot="title">测评题库</template>-->
+            <el-menu-item index="5">
+              <router-link to="/admin/exam/create" >测评题库</router-link>
+            </el-menu-item>
+            <!--<el-menu-item index="5-2">查看题库</el-menu-item>-->
+          <!--</el-submenu>-->
           <!--<el-submenu index="5">-->
             <!--<template slot="title">书籍管理</template>-->
             <!--<el-menu-item index="5-1">增添图书</el-menu-item>-->

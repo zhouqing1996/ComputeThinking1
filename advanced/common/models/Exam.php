@@ -13,6 +13,7 @@ use yii\web\IdentityInterface;
  * @property integer $exid
  * @property string $exname
  * @property string $createtime
+ * @property string $ayth
  * @property string $exstatus
  */
 class Exam extends ActiveRecord
@@ -25,7 +26,7 @@ class Exam extends ActiveRecord
     {
         return [
             [['exid','exname','exstatus','createtime'],'required'],
-            [['exid','exstatus'],'integer'],
+            [['exid','exstatus','auth'],'integer'],
             [['createtime','exname'],'string',max=>255],
         ];
     }
@@ -35,6 +36,7 @@ class Exam extends ActiveRecord
             'exid'=>'Exid',
             'exname'=>'Exname',
             'createtime'=>'Createtime',
+            'auth'=>'Auth',
             'exstatus'=>'Exstatus',
         ];
     }

@@ -33,6 +33,7 @@ class IndexController extends Controller
      * 1：有效试卷
      * 2：已删除试卷
      * 3：所有试卷
+     * 4:模糊查找
      */
     public function actionQueryexam()
     {
@@ -64,6 +65,17 @@ class IndexController extends Controller
                 ->all();
             return array("data"=>$query,"msg"=>"全部试卷");
         }
+        else if($flag==4)
+        {
+            $name = $request->post('name');
+            $query = (new Query())
+                ->select("*")
+                ->from('exam')
+                ->where(['or',
+                    ['like', 'exname', $name],])
+                ->all();
+
+        }
         else{
             return array("data"=>$flag,"msg"=>"输入错误");
         }
@@ -80,7 +92,7 @@ class IndexController extends Controller
         {
             $result[]=mt_rand($min,$max);
             $result =array_flip(array_flip($result));
-            $count = $count+1;
+            $count = count($result);
         }
         //打乱数组，重新赋予数组的新的下标
         shuffle($result);
@@ -89,8 +101,8 @@ class IndexController extends Controller
     public function actionTest()
     {
         $min = 1;
-        $max = 10;
-        $num =5;
+        $max = 20;
+        $num =15;
         $arr = $this->Rand($min,$max,$num);
         return array("data"=>$arr,"msg"=>"产生的随机数");
     }
@@ -105,17 +117,17 @@ class IndexController extends Controller
      */
     public function actionAddexam()
     {
+
         $request = \Yii::$app->request;
         $flag = $request->post("flag");
         $id = (new Query())
-            ->select("exid")
+            ->select("*")
             ->from("exam")
             ->where(['exstatus'=>1])
-            ->max();
+            ->max('exid');
         $id = $id+1;
         $exname = $request->post('exname');
-        if($flag==1)
-        {
+        if($flag==1) {
             //自动组卷
             /*
              * 自动组卷中设定选择题，填空题，程序题的个数
@@ -131,118 +143,150 @@ class IndexController extends Controller
             $queryc = (new Query())
                 ->select("*")
                 ->from("chooseq")
-                ->where(['cqstatus'=>1])
-                ->max();
-            $i = 0;
-            while ($i<$numc)
-            {
-                //每次产生一个随机数
-                $arrc = $this->Rand($min,$queryc,1);
-                //在题库中查找对应的cqid,
-                //如果存在该id将其插入到题库中，
-                //如果不存在需要继续产生随机数
-                $queryc1 = (new Query())
-                    ->select("*")
-                    ->from("chooseq")
-                    ->where(['cqid'=>$arrc[0]])
-                    ->andWhere(['cqstatus'=>1])
-                    ->one();
-                if($queryc1)
-                {
-                    $i = $i+1;
-                    //插入试卷详情表中其中
-                    $insertc = \Yii::$app->db->createCommand()->insert('examtail',array('exid'=>$id,
-                        'qid'=>$arrc[0],'qtypeid'=>1,'exsatus'=>1))->execute();
-                    if($insertc)
-                    {
-                        return array("data"=>$insertc,"msg"=>$i."插入填空题".$arrc[0]."成功");
-                    }
-                    else
-                    {
-                        return array("data"=>$insertc,"msg"=>$i."填空题".$arrc[0]."已插入");
-                    }
-                }
-                else{
-                    //继续产生随机数
-//                    $i = $i;
-                    //$i值不变
-                }
+                ->where(['cqstatus' => 1])
+                ->max('cqid');
+            $arrc = $this->Rand($min, $queryc, $numc);
+
+            for ($x = 0; $x < $numc; $x++) {
+                $insertc = \Yii::$app->db->createCommand()->insert('examtail', array('exid' => $id,
+                    'qid' => $arrc[$x], 'qtypeid' => 1, 'exstatus' => 1))->execute();
             }
-            //选择填空题
             $queryf = (new Query())
                 ->select("*")
                 ->from("fillq")
-                ->where(['fqstatus'=>1])
-                ->max();
-            $j=0;
-            while ($j<$numf)
-            {
-                $arrf = $this->Rand($min,$queryf,1);
-                $queryf1=(new Query())
-                    ->select("*")
-                    ->from('fillq')
-                    ->where(['fqid'=>$arrf[0]])
-                    ->andWhere(['fqstatus'=>1])
-                    ->one();
-                if($queryf1)
-                {
-                    $j=$j+1;
-                    //插入试卷详情表中其中
-                    $insertf = \Yii::$app->db->createCommand()->insert('examtail',array('exid'=>$id,
-                        'qid'=>$arrc[0],'qtypeid'=>2,'exsatus'=>1))->execute();
-                    if($insertf)
-                    {
-                        return array("data"=>$insertf,"msg"=>$j."插入填空题".$arrf[0]."成功");
-                    }
-                    else
-                    {
-                        return array("data"=>$insertf,"msg"=>$j."填空题".$arrf[0]."已插入");
-                    }
-                }
-                else
-                {
-                    //表中没有随机数产生的内容，需要重新产生数据数
-                }
+                ->where(['fqstatus' => 1])
+                ->max('fqid');
+            $arrf = $this->Rand($min, $queryf, $numf);
+            for ($x = 0; $x < $numf; $x++) {
+                $insertf= \Yii::$app->db->createCommand()->insert('examtail', array('exid' => $id,
+                    'qid' => $arrf[$x], 'qtypeid' => 2, 'exstatus' => 1))->execute();
             }
-            //选择程序题
             $queryp = (new Query())
                 ->select("*")
                 ->from("programq")
-                ->where(['pqstatus'=>1])
-                ->max();
-            $k =0;
-            while ($k<$nump)
-            {
-                $arrp = $this->Rand($min,$queryp,$nump);
-                $queryp1=(new Query())
-                    ->select("*")
-                    ->from('programq')
-                    ->where(['pqid'=>$arrp[0]])
-                    ->andWhere(['pqstatus'=>1])
-                    ->one();
-                if($queryp1)
-                {
-                    $k=$k+1;
-                    //插入试卷详情表中其中
-                    $insertp = \Yii::$app->db->createCommand()->insert('examtail',array('exid'=>$id,
-                        'qid'=>$arrp[0],'qtypeid'=>3,'exsatus'=>1))->execute();
-                    if($insertp)
-                    {
-                        return array("data"=>$insertp,"msg"=>$k."插入程序题".$arrp[0]."成功");
-                    }
-                    else
-                    {
-                        return array("data"=>$insertp,"msg"=>$k."程序题".$arrp[0]."已插入");
-                    }
-                }
-                else
-                {
-                    //表中没有随机数产生的内容，需要重新产生数据数
-                }
+                ->where(['pqstatus' => 1])
+                ->max('pqid');
+            $arrp = $this->Rand($min, $queryp, $nump);
+            for ($x = 0; $x < $nump; $x++) {
+                $insertp = \Yii::$app->db->createCommand()->insert('examtail', array('exid' => $id,
+                    'qid' => $arrp[$x], 'qtypeid' => 3, 'exstatus' => 1))->execute();
             }
+//            while ($i<$numc)
+//            {
+//                //每次产生一个随机数
+//                $arrc = $this->Rand($min,$queryc,1);
+//                //在题库中查找对应的cqid,
+//                //如果存在该id将其插入到题库中，
+//                //如果不存在需要继续产生随机数
+//                $queryc1 = (new Query())
+//                    ->select("*")
+//                    ->from("examtail")
+//                    ->where(['qid'=>$arrc[0]])
+//                    ->andWhere(['qtypeid'=>1])
+//                    ->andWhere(['exstatus'=>1])
+//                    ->one();
+//                if($queryc1==null)
+//                {
+//                    $i = $i+1;
+//                    //插入试卷详情表中其中
+//                    $insertc = \Yii::$app->db->createCommand()->insert('examtail',array('exid'=>$id,
+//                        'qid'=>$arrc[0],'qtypeid'=>1,'exstatus'=>1))->execute();
+////                    if($insertc)
+////                    {
+////                        return array("data"=>$insertc,"msg"=>$i."插入填空题".$arrc[0]."成功");
+////                    }
+////                    else
+////                    {
+////                        return array("data"=>$insertc,"msg"=>$i."填空题".$arrc[0]."已插入");
+////                    }
+//                }
+//                else{
+//                    //继续产生随机数
+////                    $i = $i;
+//                    //$i值不变
+//                }
+//            }
+//            ob_clean();
+//            ob_flush();
+//            //选择填空题
+//            $queryf = (new Query())
+//                ->select("*")
+//                ->from("fillq")
+//                ->where(['fqstatus'=>1])
+//                ->max('fqid');
+//            $j=0;
+//            while ($j<$numf)
+//            {
+//                $arrf = $this->Rand($min,$queryf,1);
+//                $queryf1 = (new Query())
+//                    ->select("*")
+//                    ->from("examtail")
+//                    ->where(['qid'=>$arrf[0]])
+//                    ->andWhere(['qtypeid'=>2])
+//                    ->andWhere(['exstatus'=>1])
+//                    ->one();
+//                if($queryf1)
+//                {
+//                    $j=$j+1;
+//                    //插入试卷详情表中其中
+//                    $insertf = \Yii::$app->db->createCommand()->insert('examtail',array('exid'=>$id,
+//                        'qid'=>$arrf[0],'qtypeid'=>2,'exstatus'=>1))->execute();
+////                    if($insertf)
+////                    {
+////                        return array("data"=>$insertf,"msg"=>$j."插入填空题".$arrf[0]."成功");
+////                    }
+////                    else
+////                    {
+////                        return array("data"=>$insertf,"msg"=>$j."填空题".$arrf[0]."已插入");
+////                    }
+//                }
+//                else
+//                {
+//                    //表中没有随机数产生的内容，需要重新产生数据数
+//                }
+//            }
+//            ob_clean();
+//            ob_flush();
+//            //选择程序题
+//            $queryp = (new Query())
+//                ->select("*")
+//                ->from("programq")
+//                ->where(['pqstatus'=>1])
+//                ->max('pqid');
+//            $k =0;
+//            while ($k<$nump)
+//            {
+//                $arrp = $this->Rand($min,$queryp,$nump);
+//                $queryp1 = (new Query())
+//                    ->select("*")
+//                    ->from("examtail")
+//                    ->where(['qid'=>$arrp[0]])
+//                    ->andWhere(['qtypeid'=>3])
+//                    ->andWhere(['exstatus'=>1])
+//                    ->one();
+//                if($queryp1)
+//                {
+//                    $k=$k+1;
+//                    //插入试卷详情表中其中
+//                    $insertp = \Yii::$app->db->createCommand()->insert('examtail',array('exid'=>$id,
+//                        'qid'=>$arrp[0],'qtypeid'=>3,'exstatus'=>1))->execute();
+////                    if($insertp)
+////                    {
+////                        return array("data"=>$insertp,"msg"=>$k."插入程序题".$arrp[0]."成功");
+////                    }
+////                    else
+////                    {
+////                        return array("data"=>$insertp,"msg"=>$k."程序题".$arrp[0]."已插入");
+////                    }
+//                }
+//                else
+//                {
+//                    //表中没有随机数产生的内容，需要重新产生数据数
+//                }
+            $auth = $request->post('auth');
             $createtime = date('Y-m-d H:i:s',time());
             $insertexam = \Yii::$app->db->createCommand()->insert('exam',array('exid'=>$id,'exname'=>$exname,
-                'createtime'=>$createtime,'exsatus'=>1))->execute();
+                'createtime'=>$createtime,'auth'=>$auth,'exstatus'=>1))->execute();
             if($insertexam)
             {
                 return array("data"=>$insertexam,"msg"=>"自动组卷成功");
@@ -274,13 +318,14 @@ class IndexController extends Controller
         $request = \Yii::$app->request;
         $flag = $request->post('flag');
         $id =$request->post('exid');
-        $query = (new Query())
-            ->select("*")
-            ->from('exam')
-            ->where(['exid'=>$id])
-            ->one();
         if($flag==1)
         {
+            $query = (new Query())
+                ->select("*")
+                ->from('exam')
+                ->where(['exid'=>$id])
+                ->andWhere(['exstatus'=>1])
+                ->one();
             //暂时删除
             if($query)
             {
@@ -300,6 +345,12 @@ class IndexController extends Controller
         }
         else if($flag==2)
         {
+            $query = (new Query())
+                ->select("*")
+                ->from('exam')
+                ->where(['exid'=>$id])
+                ->andWhere(['exstatus'=>0])
+                ->one();
             //永久删除
             if($query)
             {
@@ -319,6 +370,29 @@ class IndexController extends Controller
         }
         else{
             return array("data"=>$flag,"msg"=>"输入错误");
+        }
+    }
+    /*
+     * 修改
+     * 1：状态
+     */
+    public function actionChangestatus(){
+        $request = \Yii::$app->request;
+        $id = $request->post('exid');
+        $query = (new Query())
+            ->select("*")
+            ->from('exam')
+            ->where(['exid'=>$id])
+            ->andWhere(['exstatus'=>0])
+            ->one();
+        if($query)
+        {
+            $update2 = \Yii::$app->db->createCommand()->update('examtail',['exstatus'=>1],"exid={$id}")->execute();
+            $update1 = \Yii::$app->db->createCommand()->update('exam',['exstatus'=>1],"exid={$id}")->execute();
+            return array("data"=>$query,"msg"=>"修改状态成功");
+        }
+        else{
+            return array("data"=>$id,"msg"=>"未找到");
         }
     }
     /*

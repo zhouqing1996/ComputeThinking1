@@ -242,4 +242,35 @@ class BookController extends Controller
             return array("data" => [], "msg" => "没有找到该图书");
         }
     }
+
+    public function actionImportexcel()
+    {
+        $request = \Yii::$app->request;
+        $data = $request->post('data');
+        $data = json_decode($data,true);
+        for($i=0;$i<count($data);$i++)
+        {
+            $name = isset($data[$i]['name'])?$data[$i]['name']:"";
+            $publish = isset($data[$i]['publish'])?$data[$i]['publish']:"";
+            $author = isset($data[$i]['author'])?$data[$i]['author']:"";
+            $about = isset($data[$i]['about'])?$data[$i]['about']:"";
+            $query = (new Query())
+                ->select("*")
+                ->from('book')
+                ->where(['bookname'=>$name])
+                ->andWhere(['author'=>$author])
+                ->one();
+            $query2 = (new Query())
+                ->select("*")
+                ->from('book')
+                ->max('bookid');
+            $id = $query2+1;
+            if($query == null)
+            {
+                $insertU = \Yii::$app->db->createCommand()->insert('book',array('bookid'=>$id,'bookname'=>$name,'publish'=>$publish,'author'=>$author,
+                    'about'=>$about,'status'=>1))->execute();
+            }
+        }
+        return array("data"=>$data,"msg"=>"导入成功");
+    }
 }

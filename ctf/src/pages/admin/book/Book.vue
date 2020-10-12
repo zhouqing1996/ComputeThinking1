@@ -297,9 +297,9 @@
             if(res.data.message=="图书添加成功")
             {
               this.getBookList(3)
-              this.dialogFormVisibleadd=false
-              this.Reset()
             }
+            this.dialogFormVisibleadd=false
+            this.Reset()
             alert(res.data.message)
           })
         },

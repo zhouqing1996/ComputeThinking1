@@ -32,6 +32,8 @@ import Book from '../pages/admin/book/Book'
 //试卷信息
 //创建试卷
 import Create from '../pages/admin/exam/Create'
+//查看试卷
+import View from '../pages/admin/exam/Viewexam'
 
 
 //我的信息
@@ -176,6 +178,15 @@ const  router = new Router({
             isLogin:true
           },
           component:Create
+        },
+        //查看试卷
+        {
+          path:'/admin/exam/viewexam',
+          name:'viewexam',
+          meta:{
+            isLogin:true
+          },
+          component:View
         },
 
         {

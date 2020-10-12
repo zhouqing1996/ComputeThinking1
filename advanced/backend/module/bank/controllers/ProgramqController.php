@@ -245,5 +245,35 @@ class ProgramqController extends Controller
             return array("data" => $query, "msg" => "未查找到该程序题");
         }
     }
-
+    public function actionImportexcel()
+    {
+        $request = \Yii::$app->request;
+        $data = $request->post('data');
+        $data = json_decode($data,true);
+        for($i=0;$i<count($data);$i++)
+        {
+            $item= isset($data[$i]['item'])?$data[$i]['item']:"";
+            $ans= isset($data[$i]['ans'])?$data[$i]['ans']:"";
+            $tail = isset($data[$i]['tail'])?$data[$i]['tail']:"";
+            $rem = isset($data[$i]['rem'])?$data[$i]['rem']:"";
+            $query = (new Query())
+                ->select('*')
+                ->from('programq')
+                ->where(['pqitem'=>$item])
+                ->one();
+            $id = (new Query())
+                ->select("*")
+                ->from('programq')
+                ->where(['pqstatus'=>1])
+                ->max('pqid');
+            $id = $id+1;
+            if($query == null)
+            {
+                $updatec = \Yii::$app->db->createCommand()->insert('programq',
+                    array('pqid'=>$id,'pqitem'=>$item,'pqans'=>$ans,'pqtail'=>$tail,
+                        'pqrem'=>$rem,'pqstatus'=>1))->execute();
+            }
+        }
+        return array("data"=>$data,"msg"=>"导入成功");
+    }
 }

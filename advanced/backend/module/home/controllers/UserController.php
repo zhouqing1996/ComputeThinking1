@@ -182,6 +182,20 @@ class UserController extends Controller
         return array("data"=>$query,"msg"=>"普通用户信息");
     }
     /*
+     * 按照id查找人
+     */
+    public function Queryid($id)
+    {
+//        $request =\Yii::$app->request;
+//        $id = $request->post('id');
+        $query = (new Query())
+            ->select('*')
+            ->from('user')
+            ->where(['id'=>$id])
+            ->one();
+        return array("data"=>$query,"msg"=>"id为：".$id."用户信息");
+    }
+    /*
      * 添加用户
      * 其中用户id、用户名、password、role、status是必不可少的内容
      * id为关键码，不可重复
@@ -192,6 +206,7 @@ class UserController extends Controller
         $request = \Yii::$app->request;
         $username = $request->post('addname');
         $password = $request->post('addpwd');
+        $passwordE = \backend\module\home\controllers\IndexController::PasswordEncry($password);
         $role = $request->post('addrole');
         $status = $request->post('addstatus');
         $userid = (new Query())
@@ -208,7 +223,7 @@ class UserController extends Controller
         if($query){
             return array("data"=>[$query],"msg"=>"该用户名已存在");
         }
-        $insertU = \Yii::$app->db->createCommand()->insert('user',array('id'=>$id,'username'=>$username,'password'=>$password,'role'=>$role,
+        $insertU = \Yii::$app->db->createCommand()->insert('user',array('id'=>$id,'username'=>$username,'password'=>$passwordE,'role'=>$role,
             'status'=>$status))->execute();
         if($insertU)
         {
@@ -387,36 +402,33 @@ class UserController extends Controller
             return array("data"=>[$flag,$userid],"msg"=>"没找到该用户");
         }
     }
-    /*
-     * 变更用户身份：role
-     * 参数：role
-     */
-    public function actionChangerole()
+    public function actionImportexcel()
     {
-//        $request = \Yii::$app->request;
-//        $userid=$request->post('userid');
-//        $role = $request->post('role');
-        $userid = "1";
-        $role =1;
-        $query = (new Query())
-            ->select("*")
-            ->from("user")
-            ->where(['id'=>$userid])
-            ->andWhere(['status'=>1])
-            ->one();
-        if($query)
+        $request = \Yii::$app->request;
+        $data = $request->post('data');
+        $data = json_decode($data,true);
+        for($i=0;$i<count($data);$i++)
         {
-            $update = \Yii::$app->db->createCommand()->update('user',['role'=>$role],"id={$userid}")->execute();
-            if($update)
+            $name = isset($data[$i]['name'])?$data[$i]['name']:"";
+            $password = isset($data[$i]['password'])?$data[$i]['password']:"";
+            $passwordE = \backend\module\home\controllers\IndexController::PasswordEncry($password);
+            $role = isset($data[$i]['role'])?$data[$i]['role']:"";
+            $query = (new Query())
+                ->select("*")
+                ->from('user')
+                ->where(['username'=>$name])
+                ->one();
+            $query2 = (new Query())
+                ->select("*")
+                ->from('user')
+                ->max('id');
+            $id = $query2+1;
+            if($query == null)
             {
-                return array("data"=>[$query,$update],"msg"=>"用户角色修改完成");
-            }
-            else{
-                return array("data"=>[$query,$update],"msg"=>"用户角色修改失败,该用户已是该身份");
+                $insertU = \Yii::$app->db->createCommand()->insert('user',array('id'=>$id,'username'=>$name,
+                    'password'=>$passwordE,'role'=>$role,'status'=>1))->execute();
             }
         }
-        else{
-            return array("data"=>$query,"msg"=>"未找到该用户");
-        }
+        return array("data"=>$data,"msg"=>"导入成功");
     }
 }
