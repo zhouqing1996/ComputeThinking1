@@ -6,8 +6,13 @@
       <el-input type="text" v-model="forgetForm.username" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
 
+    <!--<el-form-item>-->
+      <!--<el-input type="password" v-model="forgetForm.password" auto-complete="off" placeholder="重置密码"></el-input>-->
+    <!--</el-form-item>-->
     <el-form-item>
-      <el-input type="password" v-model="forgetForm.password" auto-complete="off" placeholder="重置密码"></el-input>
+      <el-input :type="passwordVisible" v-model="forgetForm.password" auto-complete="off" placeholder="密码">
+        <i slot="suffix" :class="icon" @click="showPass"></i>
+      </el-input>
     </el-form-item>
 
     <el-form-item style="width: 100%">
@@ -24,6 +29,8 @@
     name: "forget",
     data() {
       return {
+        passwordVisible:'password',
+        icon:"el-icon-view",
         forgetForm: {
           username: '',
           password: ''
@@ -32,20 +39,37 @@
       }
     },
     methods: {
+      showPass() {
+        if (this.passwordVisible === "text") {
+          this.passwordVisible = "password";
+          //更换图标
+          this.icon = "el-icon-view";
+        } else {
+          this.passwordVisible = "text";
+          this.icon = "el-icon-lock";
+        }
+      },
       forget() {
         this.$http.post('/yii/home/index/forget',{
           username:this.forgetForm.username,
           password:this.forgetForm.password
         }).then(res=>{
           console.log(res.data)
-          console.log(res.msg)
-          alert('修改密码成功')
-          this.$router.push({
-            path:'/login',
-            params:{
-              username:this.forgetForm.username
-            }
-          })
+          if(res.data.message=="修改密码成功")
+          {
+            alert('修改密码成功')
+            this.$store.dispatch('logout')
+            this.$store.dispatch('slogout')
+            this.$router.push({
+              path:'/login',
+              params:{
+                username:this.forgetForm.username
+              }
+            })
+          }
+          else {
+            alert(res.data.message)
+          }
         }).catch(function (error) {
           console.log(error)
         })

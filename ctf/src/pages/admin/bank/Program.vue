@@ -1,7 +1,7 @@
 <template>
   <!--程序题-->
   <div>
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css" style="font-size: 0.25rem">
       <el-breadcrumb-item :to="{ path: '/admin/index' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>题库信息</el-breadcrumb-item>
       <el-breadcrumb-item>程序题</el-breadcrumb-item>
@@ -16,21 +16,39 @@
               <div class="meeting" >
                 <el-input v-model="inputname" placeholder="模糊查找" size="mini"></el-input>
               </div>
-              <button class="btn3 el-icon-search" v-on:click="searchF()">搜索</button>
+              <button class="btn3 el-icon-search" v-on:click="searchP()">搜索</button>
               <button class="btn3 el-icon-circle-plus-outline" @click="dialogFormVisibleadd = true">添加</button>
               <el-dialog title="添加程序题" :visible.sync="dialogFormVisibleadd">
                 <el-form :model="addList">
-                  <el-form-item label="题干" :label-width="formLabelWidth">
-                    <el-input style="width: 350px;" v-model="addList.item" auto-complete="off"></el-input>
+                  <el-form-item label="题目标题" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addList.title" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="题目背景" :label-width="formLabelWidth">
+                  <el-input style="width: 350px;" v-model="addList.back" auto-complete="off"></el-input>
+                </el-form-item>
+                  <el-form-item label="题目描述" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addList.descri" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="输入格式" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addList.inputB" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="输出格式" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addList.outputB" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="输入输出样例" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addList.case" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="说明/提示" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addList.other" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="标签" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addList.label" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="推荐相关" :label-width="formLabelWidth">
+                    <el-input style="width: 350px;" v-model="addList.rem" auto-complete="off"></el-input>
                   </el-form-item>
                   <el-form-item label="答案" :label-width="formLabelWidth">
                     <el-input style="width: 350px;" v-model="addList.ans" auto-complete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item label="详解" :label-width="formLabelWidth">
-                    <el-input style="width: 350px;" v-model="addList.tail" auto-complete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item label="知识点" :label-width="formLabelWidth">
-                    <el-input style="width: 350px;" v-model="addList.rem" auto-complete="off"></el-input>
                   </el-form-item>
                 </el-form>
                 <div slot="footer" style="align-content: center" class="dialog-footer">
@@ -38,10 +56,10 @@
                   <el-button @click="Reset">重置</el-button>
                 </div>
               </el-dialog>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getQuerypQuestionY">有效题目</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getQuerypQuestionN">无效题目</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getQuerypQuestion">所有题目</button>
-              <button class="btn3" @click="addP">批量添加</button>
+              <button class="btn2 el-icon-folder" @click="getQuerypQuestionY">有效题目</button>
+              <button class="btn2 el-icon-folder-remove" @click="getQuerypQuestionN">无效题目</button>
+              <button class="btn2 el-icon-folder-checked" @click="getQuerypQuestion">所有题目</button>
+              <button class="btn2 el-icon-document" @click="addP">批量添加</button>
               <input type="file" @change="importExcel(this)" id="inputExcel"
                      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none"/>
             </div>
@@ -49,106 +67,20 @@
               <tr>
                 <th>序号</th>
                 <th>题编号 </th>
-                <th>题干</th>
-                <th>答案</th>
-                <th>详解</th>
-                <th>相关知识</th>
+                <th>题目标题</th>
                 <th>状态</th>
                 <th>操作</th>
               </tr>
               <tr v-for=" (pQuestion,key) in currentPageData" :key="key">
                 <td>{{ key+1 }}</td>
                 <td>{{pQuestion.pqid}}</td>
-                <td>
-                  <el-tooltip placement="top" effect="light">
-                    <div slot="content">{{pQuestion.pqitem}}</div>
-                    <el-button class="btn1">{{pQuestion.pqid}}</el-button>
-                  </el-tooltip>
-                  <span v-if="pQuestion.pqstatus==1" @click="dialogFormVisiblechangeitem=true;changeList.id=pQuestion.pqid;item=pQuestion.pqitem" class="span2">修改</span>
-                  <el-dialog title="修改题干" :visible.sync="dialogFormVisiblechangeitem">
-                    <el-form :model="changeList">
-                      <el-form-item label="题干内容1" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="item" auto-complete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="题干内容" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="changeList.item" auto-complete="off"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changefill(1,changeList)">提交</el-button>
-                      <el-button @click="dialogFormVisiblechangeitem=false">退出</el-button>
-                    </div>
-                  </el-dialog>
-                </td>
-                <td>
-                  <el-tooltip placement="top" effect="light">
-                    <div slot="content">{{pQuestion.pqans}}</div>
-                    <el-button class="btn1">{{pQuestion.pqid}}</el-button>
-                  </el-tooltip>
-                  <span v-if="pQuestion.pqstatus==1" @click="dialogFormVisiblechangeans=true;changeList.id=pQuestion.pqid;item=pQuestion.pqans" class="span2">修改</span>
-                  <el-dialog title="修改答案" :visible.sync="dialogFormVisiblechangeans">
-                    <el-form :model="changeList">
-                      <el-form-item label="原始答案" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="item" auto-complete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="修改答案" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="changeList.ans" auto-complete="off"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changefill(2,changeList)">提交</el-button>
-                      <el-button @click="dialogFormVisiblechangeans=false">退出</el-button>
-                    </div>
-                  </el-dialog>
-                </td>
-                <td>
-                  <el-tooltip placement="top" effect="light">
-                    <div slot="content">{{pQuestion.pqtail}}</div>
-                    <el-button class="btn1">{{pQuestion.pqid}}</el-button>
-                  </el-tooltip>
-                  <span v-if="pQuestion.pqstatus==1" @click="dialogFormVisiblechangetail=true;changeList.id=pQuestion.pqid;item=pQuestion.pqtail" class="span2">修改</span>
-                  <el-dialog title="修改详解" :visible.sync="dialogFormVisiblechangetail">
-                    <el-form :model="changeList">
-                      <el-form-item label="原始详解" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="item" auto-complete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="修改详解" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="changeList.tail" auto-complete="off"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changefill(3,changeList)">提交</el-button>
-                      <el-button @click="dialogFormVisiblechangetail=false">退出</el-button>
-                    </div>
-                  </el-dialog>
-                </td>
-                <td>
-                  <el-tooltip placement="top" effect="light">
-                    <div slot="content">{{pQuestion.pqrem}}</div>
-                    <el-button class="btn1">{{pQuestion.pqid}}</el-button>
-                  </el-tooltip>
-                  <span v-if="pQuestion.pqstatus==1" @click="dialogFormVisiblechangerem=true;changeList.id=pQuestion.pqid;item=pQuestion.pqtail" class="span2">修改</span>
-                  <el-dialog title="修改知识点" :visible.sync="dialogFormVisiblechangerem">
-                    <el-form :model="changeList">
-                      <el-form-item label="原始知识点" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="item" auto-complete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="修改知识点" :label-width="formLabelWidth">
-                        <el-input style="width: 350px;" v-model="changeList.rem" auto-complete="off"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changefill(4,changeList)">提交</el-button>
-                      <el-button @click="dialogFormVisiblechangerem=false">退出</el-button>
-                    </div>
-                  </el-dialog>
-                </td>
+                <td>{{pQuestion.pqtitle}}</td>
                 <td v-if="pQuestion.pqstatus==1">有效</td>
                 <td v-if="pQuestion.pqstatus==0">无效
                   <span v-if="pQuestion.pqstatus==0" @click="changefill(5,pQuestion.pqid)" class="span2">修改</span>
                 </td>
-
                 <td>
+                  <span @click="viewProgram(pQuestion.pqid)" class="span2">查看</span>
                   <span v-if="pQuestion.pqstatus==1"@click="deletefill(1,pQuestion.pqid)" class="span1"><i class="el-icon-delete">删除题目</i></span>
                   <span v-if="pQuestion.pqstatus==0" @click="deletefill(2,pQuestion.pqid)" class="span1"><i class="el-icon-delete">永久删除</i></span>
                 </td>
@@ -187,18 +119,29 @@
         //添加
         dialogFormVisibleadd:false,
         addList:{
-          item:'',
-          ans:'',
-          tail:'',
-          rem:''
+          title:'',
+          back:'',
+          descri:'',
+          inputB:'',
+          outputB:'',
+          case:'',
+          other:'',
+          label:'',
+          rem:'',
+          ans:''
         },
         //修改
         changeList:{
           id:'',
-          item:'',
-          ans:'',
-          tail:'',
+          back:'',
+          descri:'',
+          inputB:'',
+          outputB:'',
+          case:'',
+          other:'',
+          label:'',
           rem:'',
+          ans:'',
           status:''
         },
         item:'',
@@ -209,11 +152,21 @@
         // 翻页相关
         currentPage: 1,
         totalPage: 1,
-        pageSize: 10,
+        pageSize: 15,
         currentPageData:[]
       }
     },
     methods:{
+      viewProgram:function(id){
+        console.log(id)
+        // this.$router.push({ name:'viewexam', params: { id: id }})
+        this.$router.push({
+          path:'/admin/bank/viewP',
+          query:{
+            id:id
+          }
+        })
+      },
       //分页
       setCurrentPageDate: function () {
         let begin = (this.currentPage - 1) * this.pageSize;
@@ -234,7 +187,7 @@
       },
       //获取程序题列表
       getQuerypQuestion:function(){
-        this.$http.post('/yii/bank/programq/queryfill',{
+        this.$http.post('/yii/bank/programq/queryprogram',{
           flag:1
         }).then(function (res) {
           console.log(res.data)
@@ -248,7 +201,7 @@
       },
       //获取有效程序题列表
       getQuerypQuestionY:function(){
-        this.$http.post('/yii/bank/programq/queryfill',{
+        this.$http.post('/yii/bank/programq/queryprogram',{
           flag:2
         }).then(function (res) {
           console.log(res.data)
@@ -262,7 +215,7 @@
       },
       //获取无效程序题列表
       getQuerypQuestionN:function(){
-        this.$http.post('/yii/bank/programq/queryfill',{
+        this.$http.post('/yii/bank/programq/queryprogram',{
           flag:4
         }).then(function (res) {
           console.log(res.data)
@@ -275,9 +228,9 @@
         })
       },
       //搜索
-      searchF:function () {
+      searchP:function () {
         console.log(this.name)
-        this.$http.post('/yii/bank/programq/queryfill',{
+        this.$http.post('/yii/bank/programq/queryprogram',{
           flag:3,
           name:this.inputname
         }).then(function (res) {
@@ -293,11 +246,18 @@
       //添加题库
       addpQuestion:function (List) {
         console.log(List)
-        this.$http.post('/yii/bank/programq/addfill',{
-          qitem:List.item,
-          ans:List.ans,
-          tail:List.tail,
-          rem:List.rem
+        this.$http.post('/yii/bank/programq/addprogram',{
+          qtitle:this.addList.title,
+          qback:this.addList.back,
+          qdescri:this.addList.descri,
+          qinputB:this.addList.inputB,
+          qoutputB:this.addList.outputB,
+          qcase:this.addList.case,
+          qother:this.addList.other,
+          qlabel:this.addList.label,
+          qrem:this.addList.rem,
+          qans:this.addList.ans,
+          qauth:this.$store.getters.getsId
         }).then(function (res) {
           console.log(res.data)
           if(res.data.message=="插入程序题成功")
@@ -410,7 +370,7 @@
           console.log(id)
           this.$http.post('/yii/bank/programq/change',{
             cid:id,
-            flag:5
+            flag:10
           }).then(function (res) {
 
             console.log(res.data)
@@ -519,10 +479,17 @@
             let arr = []
             outdata.map(v => {
               let obj ={}
-              obj.item = v.题干
-              obj.ans= v.答案
-              obj.tail= v.详解
-              obj.rem= v.相关点
+              obj.title = v.标题
+              obj.back = v.题目背景
+              obj.descri = v.题目描述
+              obj.inputB = v.输入格式
+              obj.outputB =v.输出格式
+              obj.case = v.输入输出样例
+              obj.other = v.说明
+              obj.auth = _this.$store.getters.getsId
+              obj.label = v.标签
+              obj.rem = v.推荐相关
+              obj.ans = v.答案
               arr.push(obj)
             })
             _this.memberList = [...arr]
@@ -585,7 +552,7 @@
     background-color: #5FA7FE;
   }
   .btn3 {
-    width: 80px;
+    width: 80px;/*no*/
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -636,22 +603,21 @@
   table {
     border-collapse: collapse;
     width: 100%;
-    margin-top: 10px;
-
+    margin-top: 10px;/*no*/
   }
 
   th {
-    font-size: 14px;
+    font-size: 16px;/*px*/
     border: solid 1px #ccc;
     font-weight: bold;
-    padding: 5px;
+    padding: 5px;/*no*/
     background-color: #F1F1F1;
     text-align: center;
   }
 
   table, td {
     border: solid 1px #ccc;
-    padding: 5px;
+    padding: 5px;/*no*/
     text-align: center;
     font-size: 18px;
   }

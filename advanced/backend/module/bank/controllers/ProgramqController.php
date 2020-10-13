@@ -21,13 +21,20 @@ class ProgramqController extends Controller
      */
 
     /**
-     * programq model
+     * Programq model
+     *
      * @property integer $pqid
-     * @property string $pqitem
-     * @property string $pqans
-     * @property string $pqtail
-     * @property string $pqrem
-     * @property string $pqstatus
+     * @property string $pqback  题目背景
+     * @property string $pqdescri 题目描述
+     * @property string $pqinputB 输入格式
+     * @property string $pqoutputB 输出格式
+     * @property string $pqcase 输入输出样例
+     * @property string $pqother 说明
+     * @property string $pqauth 题目提供者
+     * @property string $pqlabel 题目标签
+     * @property string $pqrem 相关推荐
+     * @property string $pqstatus 状态
+     * @property string $pqans 答案
      */
     /*
      * 查找全部的程序题
@@ -36,8 +43,9 @@ class ProgramqController extends Controller
      * 2：有效的程序题
      * 3：模糊查找某题
      * 4：无效的程序题
+     * 5：根据id查找
      */
-    public function actionQueryfill()
+    public function actionQueryprogram()
     {
         $request = \Yii::$app->request;
         $flag = $request->post('flag');
@@ -47,34 +55,55 @@ class ProgramqController extends Controller
                 ->from('programq')
                 ->all();
             return array("data" => $query, "msg" => "全部的程序题");
-        } else if ($flag == 2) {
+        }
+        else if ($flag == 2) {
             $query = (new Query())
                 ->select("*")
                 ->from('programq')
                 ->where(['pqstatus' => 1])
                 ->all();
             return array("data" => $query, "msg" => "有效的程序题");
-        } else if ($flag == 3) {
+        }
+        else if ($flag == 3) {
             $name = $request->post('name');
             $query = (new Query())
                 ->select("*")
                 ->from('programq')
                 ->where(['or',
-                    ['like', 'pqitem', $name],
-                    ['like', 'pqans', $name],
-                    ['like', 'pqtail', $name],
+                    ['like', 'pqback', $name],
+                    ['like', 'pqdescri', $name],
+                    ['like', 'pqinputB', $name],
+                    ['like', 'pqoutputB', $name],
+                    ['like', 'pqcase', $name],
+                    ['like', 'pqother', $name],
+                    ['like', 'pqlabel', $name],
                     ['like', 'pqrem', $name],
+                    ['like','pqans',$name],
                 ])
                 ->all();
             return array("data" => $query, "msg" => $name . "程序题");
-        } else if ($flag == 4) {
+        }
+        else if ($flag == 4) {
             $query = (new Query())
                 ->select("*")
                 ->from('programq')
                 ->where(['pqstatus' => 0])
                 ->all();
             return array("data" => $query, "msg" => "无效的程序题");
-        } else {
+        }
+        else if($flag==5)
+        {
+            $id = $request->post('id');
+            $query = (new Query())
+                ->select("*")
+                ->from('programq')
+                ->where(['pqid' => $id])
+                ->one();
+            $auth = \backend\module\home\controllers\UserController::Queryid($query['pqauth']);
+
+            return array("data" =>[$query,$auth], "msg" => $id."程序题");
+        }
+        else {
             return array("data" => $flag, "msg" => "输入错误");
         }
     }
@@ -83,7 +112,7 @@ class ProgramqController extends Controller
      * 增加程序题：参数(题干、答案、详解、相关知识)
      * 选择：设置为四个选项，固定的模式
      */
-    public function actionAddfill()
+    public function actionAddprogram()
     {
         $id = (new Query())
             ->select("*")
@@ -91,21 +120,30 @@ class ProgramqController extends Controller
             ->max('pqid');
         $id = $id + 1;
         $request = \Yii::$app->request;
-        $item = $request->post('qitem');
-        $ans = $request->post('ans');
-        $tail = $request->post('tail');
-        $rem = $request->post('rem');
+        $title = $request->post('qtitle');
+        $back = $request->post('qback');
+        $descri = $request->post('qdescri');
+        $inputB = $request->post('qinputB');
+        $outputB = $request->post('qoutputB');
+        $case = $request->post('qcase');
+        $other = $request->post('qother');
+        $label = $request->post('qlabel');
+        $rem = $request->post('qrem');
+        $ans = $request->post('qans');
+        $auth = $request->post('qauth');
         $query = (new Query())
             ->select('*')
             ->from('programq')
-            ->where(['pqitem' => $item])
+            ->where(['pqback' => $back])
+            ->andWhere(['pqdescri'=>$descri])
             ->one();
         if ($query) {
             return array("data" => $query, "msg" => "该题已在题库中，请勿重复添加");
         } else {
             $updatec = \Yii::$app->db->createCommand()->insert('programq',
-                array('pqid' => $id, 'pqitem' => $item, 'pqans' => $ans, 'pqtail' => $tail,
-                    'pqrem' => $rem, 'pqstatus' => 1))->execute();
+                array('pqid' => $id, 'pqtitle'=>$title,'pqback' => $back, 'pqdescri'=>$descri,'pqinputB'=>$inputB,'pqoutputB'=>$outputB,
+                    'pqcase'=>$case,'pqother'=>$other,'pqlabel'=>$label,'pqrem' => $rem, 'pqans' => $ans, 'pqauth'=>$auth,
+                    'pqstatus' => 1))->execute();
             if ($updatec) {
                 return array("data" => $updatec, "msg" => "插入程序题成功");
             } else {
@@ -160,12 +198,17 @@ class ProgramqController extends Controller
     /*
      * 修改程序题相关内容：一个函数实现
      * 给出标志：flag
-     * 1:题干
-     * 2：正确选项
-     * 3：详解
-     * 4：相关知识推荐
-     * 5：状态
-     * 实际的修改需删除变量
+     * 1:题目背景
+     * 2：题目描述
+     * 3：输入格式
+     * 4：输出格式
+     * 5：输入输出样例
+     * 6：说明
+     * 7：标签
+     * 8：推荐
+     * 9：答案
+     * 10：状态
+     * 11:题目
      */
     public function actionChange()
     {
@@ -179,46 +222,97 @@ class ProgramqController extends Controller
         if ($query) {
             $flag = $request->post('flag');
             if ($flag == 1) {
-                //题干
-                $item = $request->post('item');
-                if ($item == $query['pqitem']) {
-                    return array("data" => [$query, $item], "msg" => "两次题干一致，不能修改");
+                $back = $request->post('back');
+                if ($back == $query['pqback']) {
+                    return array("data" => [$query, $back], "msg" => "两次题目背景一致，不能修改");
                 } else {
-                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqitem' => $item], "pqid={$id}")->execute();
+                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqback' => $back], "pqid={$id}")->execute();
                     if ($updatec) {
-                        return array("data" => [$query, $item, $updatec], "msg" => "该程序题题干修改成功");
+                        return array("data" => [$query, $back, $updatec], "msg" => "该程序题题目背景修改成功");
                     } else {
-                        return array("data" => [$query, $item, $updatec], "msg" => "该程序题题干已修改，不用重复修改");
+                        return array("data" => [$query, $back, $updatec], "msg" => "该程序题题目背景已修改，不用重复修改");
                     }
                 }
-            } else if ($flag == 2) {
-                //正确答案
-                $ans = $request->post('ans');
-                if ($ans == $query['pqans']) {
-                    return array("data" => [$query, $ans], "msg" => "两次答案一致，不能修改");
+            }
+            else if($flag==2){
+                $descri = $request->post('descri');
+                if ($descri== $query['pqdescri']) {
+                    return array("data" => [$query, $descri], "msg" => "两次题目描述一致，不能修改");
                 } else {
-                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqans' => $ans], "pqid={$id}")->execute();
+                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqdescri' => $descri], "pqid={$id}")->execute();
                     if ($updatec) {
-                        return array("data" => [$query, $ans, $updatec], "msg" => "该程序题答案修改成功");
+                        return array("data" => [$query, $descri, $updatec], "msg" => "该程序题题目描述修改成功");
                     } else {
-                        return array("data" => [$query, $ans, $updatec], "msg" => "该程序题答案已修改，不用重复修改");
+                        return array("data" => [$query, $descri, $updatec], "msg" => "该程序题题目描述已修改，不用重复修改");
                     }
                 }
-            } else if ($flag == 3) {
-                //详解
-                $tail = $request->post('tail');
-                if ($tail == $query['pqtail']) {
-                    return array("data" => [$query, $tail], "msg" => "两次详解一致，不能修改");
+            }
+            else if($flag==3){
+                $intputB = $request->post('inputB');
+                if ($intputB == $query['pqinputB']) {
+                    return array("data" => [$query, $intputB], "msg" => "两次输入格式一致，不能修改");
                 } else {
-                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqtail' => $tail], "pqid={$id}")->execute();
+                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqinputB' => $intputB], "pqid={$id}")->execute();
                     if ($updatec) {
-                        return array("data" => [$query, $tail, $updatec], "msg" => "该程序题详解修改成功");
+                        return array("data" => [$query, $intputB, $updatec], "msg" => "该程序题输入格式修改成功");
                     } else {
-                        return array("data" => [$query, $tail, $updatec], "msg" => "该程序题详解已修改，不用重复修改");
+                        return array("data" => [$query, $intputB, $updatec], "msg" => "该程序题输入格式已修改，不用重复修改");
                     }
                 }
-            } else if ($flag == 4) {
-                //相关知识
+            }
+            else if($flag==4){
+                $outputB = $request->post('outputB');
+                if ($outputB == $query['pqoutputB']) {
+                    return array("data" => [$query, $outputB], "msg" => "两次输出格式一致，不能修改");
+                } else {
+                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqoutputB' => $outputB], "pqid={$id}")->execute();
+                    if ($updatec) {
+                        return array("data" => [$query, $outputB, $updatec], "msg" => "该程序题输出格式修改成功");
+                    } else {
+                        return array("data" => [$query, $outputB, $updatec], "msg" => "该程序题输出格式已修改，不用重复修改");
+                    }
+                }
+            }
+            else if($flag==5){
+                $case = $request->post('case');
+                if ($case == $query['pqcase']) {
+                    return array("data" => [$query, $case], "msg" => "两次输入输出样例一致，不能修改");
+                } else {
+                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqcase' => $case], "pqid={$id}")->execute();
+                    if ($updatec) {
+                        return array("data" => [$query, $case, $updatec], "msg" => "该程序题输入输出样例修改成功");
+                    } else {
+                        return array("data" => [$query, $case, $updatec], "msg" => "该程序题输入输出样例已修改，不用重复修改");
+                    }
+                }
+            }
+            else if($flag==6){
+                $other = $request->post('other');
+                if ($other == $query['pqother']) {
+                    return array("data" => [$query, $other], "msg" => "两次说明/提示一致，不能修改");
+                } else {
+                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqother' => $other], "pqid={$id}")->execute();
+                    if ($updatec) {
+                        return array("data" => [$query, $other, $updatec], "msg" => "该程序题说明/提示修改成功");
+                    } else {
+                        return array("data" => [$query, $other, $updatec], "msg" => "该程序题说明/提示已修改，不用重复修改");
+                    }
+                }
+            }
+            else if($flag==7){
+                $label = $request->post('label');
+                if ($label == $query['pqlabel']) {
+                    return array("data" => [$query, $label], "msg" => "两次标签一致，不能修改");
+                } else {
+                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqlabel' => $label], "pqid={$id}")->execute();
+                    if ($updatec) {
+                        return array("data" => [$query, $label, $updatec], "msg" => "该程序题标签修改成功");
+                    } else {
+                        return array("data" => [$query, $label, $updatec], "msg" => "该程序题标签已修改，不用重复修改");
+                    }
+                }
+            }
+            else if ($flag == 8) {
                 $rem = $request->post('rem');
                 if ($rem == $query['pqrem']) {
                     return array("data" => [$query, $rem], "msg" => "两次相关知识一致，不能修改");
@@ -230,7 +324,21 @@ class ProgramqController extends Controller
                         return array("data" => [$query, $rem, $updatec], "msg" => "该程序题相关知识已修改，不用重复修改");
                     }
                 }
-            } else if ($flag == 5) {
+            }
+            else if ($flag == 9) {
+                $ans = $request->post('ans');
+                if ($ans == $query['pqans']) {
+                    return array("data" => [$query, $ans], "msg" => "两次答案一致，不能修改");
+                } else {
+                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqans' => $ans], "pqid={$id}")->execute();
+                    if ($updatec) {
+                        return array("data" => [$query, $ans, $updatec], "msg" => "该程序题答案修改成功");
+                    } else {
+                        return array("data" => [$query, $ans, $updatec], "msg" => "该程序题答案已修改，不用重复修改");
+                    }
+                }
+            }
+            else if ($flag == 10) {
 //                状态
                 $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqstatus' => 1], "pqid={$id}")->execute();
                 if ($updatec) {
@@ -238,9 +346,24 @@ class ProgramqController extends Controller
                 } else {
                     return array("data" => [$query, $updatec], "msg" => "该程序题状态已修改，不用重复修改");
                 }
-            } else {
+            }
+            else if($flag==11) {
+                $title = $request->post('title');
+                if ($title == $query['pqtitle']) {
+                    return array("data" => [$query, $title], "msg" => "两次标题一致，不能修改");
+                } else {
+                    $updatec = \Yii::$app->db->createCommand()->update('programq', ['pqtitle' => $title], "pqid={$id}")->execute();
+                    if ($updatec) {
+                        return array("data" => [$query, $title, $updatec], "msg" => "该程序题标题修改成功");
+                    } else {
+                        return array("data" => [$query, $title, $updatec], "msg" => "该程序题标题已修改，不用重复修改");
+                    }
+                }
+            }
+            else {
                 return array("data" => $query, "msg" => "输入错误");
             }
+
         } else {
             return array("data" => $query, "msg" => "未查找到该程序题");
         }
@@ -250,16 +373,24 @@ class ProgramqController extends Controller
         $request = \Yii::$app->request;
         $data = $request->post('data');
         $data = json_decode($data,true);
+//        $auth = $request->post('auth');
         for($i=0;$i<count($data);$i++)
         {
-            $item= isset($data[$i]['item'])?$data[$i]['item']:"";
+            $title = isset($data[$i]['title'])?$data[$i]['title']:"";
+            $back= isset($data[$i]['back'])?$data[$i]['back']:"";
+            $descri= isset($data[$i]['descri'])?$data[$i]['descri']:"";
+            $inputB= isset($data[$i]['inputB'])?$data[$i]['inputB']:"";
+            $outputB= isset($data[$i]['outputB'])?$data[$i]['outputB']:"";
+            $case = isset($data[$i]['case'])?$data[$i]['case']:"";
+            $other= isset($data[$i]['other'])?$data[$i]['other']:"";
+            $label= isset($data[$i]['label'])?$data[$i]['label']:"";
             $ans= isset($data[$i]['ans'])?$data[$i]['ans']:"";
-            $tail = isset($data[$i]['tail'])?$data[$i]['tail']:"";
             $rem = isset($data[$i]['rem'])?$data[$i]['rem']:"";
+            $auth =isset($data[$i]['auth'])?$data[$i]['auth']:"";
             $query = (new Query())
                 ->select('*')
                 ->from('programq')
-                ->where(['pqitem'=>$item])
+                ->where(['pqdescri'=>$descri])
                 ->one();
             $id = (new Query())
                 ->select("*")
@@ -270,8 +401,9 @@ class ProgramqController extends Controller
             if($query == null)
             {
                 $updatec = \Yii::$app->db->createCommand()->insert('programq',
-                    array('pqid'=>$id,'pqitem'=>$item,'pqans'=>$ans,'pqtail'=>$tail,
-                        'pqrem'=>$rem,'pqstatus'=>1))->execute();
+                    array('pqid' => $id, 'pqtitle'=>$title,'pqback' => $back, 'pqdescri'=>$descri,'pqinputB'=>$inputB,'pqoutputB'=>$outputB,
+                        'pqcase'=>$case,'pqother'=>$other,'pqlabel'=>$label,'pqrem' => $rem, 'pqans' => $ans, 'pqauth'=>$auth,
+                        'pqstatus' => 1))->execute();
             }
         }
         return array("data"=>$data,"msg"=>"导入成功");

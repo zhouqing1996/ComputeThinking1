@@ -365,12 +365,12 @@ class UserController extends Controller
             {
                 //修改密码
                 $password =$request->post('password');
-                $passwordD = \backend\module\home\controllers\IndexController::PasswordDecry($query['password']);
-                if($password == $passwordD)
-                {
-                    return array("data"=>[$passwordD,$password],"msg"=>"和原始密码一致");
-                }
-                $updateU = \Yii::$app->db->createCommand()->update('user', ['password'=>$password], "id={$userid}")->execute();
+                $passwordD = \backend\module\home\controllers\IndexController::PasswordEncry($password);
+//                if($password == $passwordD)
+//                {
+//                    return array("data"=>[$passwordD,$password],"msg"=>"和原始密码一致");
+//                }
+                $updateU = \Yii::$app->db->createCommand()->update('user', ['password'=>$passwordD], "id={$userid}")->execute();
                 if($updateU)
                 {
                     return array("data"=>[$query,$updateU],"msg"=>"该用户密码修改成功");

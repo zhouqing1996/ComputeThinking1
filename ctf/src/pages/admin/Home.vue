@@ -1,12 +1,9 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header >
         <el-menu
-          class="el-menu-demo"
-          mode="horizontal"
-          background-color="	#1E90FF"
-          text-color="#fff"
-          active-text-color="#ffd04b">
+          class="el-menu"
+          mode="horizontal">
           <el-menu-item index="1">
             <router-link to="/admin/index">首页</router-link>
           </el-menu-item>
@@ -24,30 +21,13 @@
             <el-menu-item index="3-3">
               <router-link to="/admin/bank/program" >程序题</router-link>
             </el-menu-item>
-            <!--<el-submenu index="3-4">-->
-              <!--<template slot="title">选项4</template>-->
-              <!--<el-menu-item index="3-4-1">选项1</el-menu-item>-->
-              <!--<el-menu-item index="3-4-2">选项2</el-menu-item>-->
-              <!--<el-menu-item index="3-4-3">选项3</el-menu-item>-->
-            <!--</el-submenu>-->
           </el-submenu>
           <el-menu-item index="4">
             <router-link to="/admin/book" >图书管理</router-link>
           </el-menu-item>
-          <!--<el-submenu index="5">-->
-
-            <!--<template slot="title">测评题库</template>-->
             <el-menu-item index="5">
               <router-link to="/admin/exam/create" >测评题库</router-link>
             </el-menu-item>
-            <!--<el-menu-item index="5-2">查看题库</el-menu-item>-->
-          <!--</el-submenu>-->
-          <!--<el-submenu index="5">-->
-            <!--<template slot="title">书籍管理</template>-->
-            <!--<el-menu-item index="5-1">增添图书</el-menu-item>-->
-            <!--<el-menu-item index="5-2">修改图书</el-menu-item>-->
-            <!--<el-menu-item index="5-3">删除图书</el-menu-item>-->
-          <!--</el-submenu>-->
           <el-submenu index="6">
             <template slot="title">测评结果</template>
             <el-menu-item index="6-1">查看测评</el-menu-item>
@@ -149,26 +129,37 @@
 </script>
 
 <style scoped>
-  .header-css{
-    position: fixed;
-    top: 0px;
-    margin: auto;
-    opacity: 0.8;
-    float: right;
+  .el-menu{
+    color: white;
+    background-color: dodgerblue;
+    height:1rem;
+    font-size: 1rem;
+    font-family: "Times New Roman";
+    text-align: center;
+    text-decoration-color: white;
   }
-  .header-menu{
-
+  .el-submenu__title {
+    font-size: 0.186667rem;
+    color: #303133;
+    padding: 0 0.266667rem;
+    cursor: pointer;
+    -webkit-transition: border-color .3s, background-color .3s, color .3s;
+    transition: border-color .3s, background-color .3s, color .3s;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
   }
+  .el-menu--horizontal>.el-submenu .el-submenu__title {
+    height: 0.8rem;
+    line-height: 0.8rem;
+    border-bottom: 0.026667rem solid transparent;
+    color:white;
+    }
   .main-css{
     width: 100%;
-    height: 600px;
+    height: 12rem;
     /*position: absolute;*/
   }
   a {
     text-decoration: none;
   }
-  .router-link-active {
-    text-decoration: none;
-  }
-
 </style>

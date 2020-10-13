@@ -51,15 +51,20 @@
                   <el-button @click="addReset">重置</el-button>
                 </div>
               </el-dialog>
-              <button class="btn3 el-icon-circle-plus-outline" @click="getQueryY">有效用户</button>
-              <button class="btn3 el-icon-circle-plus-outline" @click="getQueryN">无效用户</button>
-              <button class="btn3 el-icon-circle-plus-outline" @click="getQuery">所有用户</button>
-              <button class="btn3" @click="addU">批量添加</button>
+              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryY">有效用户</button>-->
+              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryN">无效用户</button>-->
+              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQuery">所有用户</button>-->
+              <!--<button class="btn2" @click="addU">批量添加</button>-->
+              <button class="btn2 el-icon-folder" @click="getQueryY">有效题目</button>
+              <button class="btn2 el-icon-folder-remove" @click="getQueryN">无效题目</button>
+              <button class="btn2 el-icon-folder-checked" @click="getQuery">所有题目</button>
+              <button class="btn2 el-icon-document" @click="addU">批量添加</button>
               <input type="file" @change="importExcel(this)" id="inputExcel"
                      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none"/>
             </div>
             <table >
               <tr>
+                <th>序号</th>
                 <th>用户编号 </th>
                 <th>用户名</th>
                 <th>用户角色</th>
@@ -67,6 +72,7 @@
                 <th>操作</th>
               </tr>
               <tr v-for=" (userinfo,key) in currentPageData" :key="key">
+                <td>{{key+1}}</td>
                 <td>{{userinfo.id}}</td>
                 <td>{{userinfo.username}}
                   <span v-if="userinfo.status==1" @click="dialogFormVisibleName=true;changeList.id=userinfo.id" class="span2">修改</span>
@@ -171,7 +177,7 @@
           // 翻页相关
           currentPage: 1,
           totalPage: 1,
-          pageSize: 10,
+          pageSize: 15,
           currentPageData: []
         }
       },
@@ -509,6 +515,23 @@
   .active {
     color: #01A6FE;
   }
+  .btn2 {
+    width: 100px;
+    padding: 7px;
+    font-size: 14px;
+    border-radius: 3px;
+    border: none;
+    color: white;
+    background-color: #7F96FE;
+    float: left;
+    margin-left: 5px;
+    margin-top: 17px;
+    margin-bottom: 5px;
+  }
+
+  .btn2:hover {
+    background-color: #5FA7FE;
+  }
   .btn3 {
     width: 80px;
     padding: 7px;
@@ -566,17 +589,17 @@
   }
 
   th {
-    font-size: 14px;
+    font-size: 14px;/*px*/
     border: solid 1px #ccc;
     font-weight: bold;
-    padding: 5px;
+    padding: 5px;/*no*/
     background-color: #F1F1F1;
     text-align: center;
   }
 
   table, td {
-    border: solid 1px #ccc;
-    padding: 5px;
+    border: solid 1px #ccc;/*no*/
+    padding: 5px;/*no*/
     text-align: center;
     font-size: 18px;
   }

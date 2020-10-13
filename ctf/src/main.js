@@ -9,20 +9,8 @@ import store from './store/index'
 import Vuerouter from 'vue-router'
 import VueResource from 'vue-resource'
 import axios from 'axios'
-// axios.defaults.baseURL ='/yii'
-import baseConfig from '../config/dev.env'
-// axios.interceptors.request.use(function (config) {
-// //   if(config.url.indexOf("/translate")<0)
-// //     config.url = baseConfig.apiBaseUrl +config.url
-// //   return config
-// // },function (error) {
-// //   return Promise.reject(error)
-// // });
-// // axios.interceptors.response.use(function (response) {
-// //   return response
-// // },function (error) {
-// //   return Promise.reject(error)
-// // });
+//适配
+import 'lib-flexible/flexible'
 // 添加请求拦截器，在请求头加token
 axios.interceptors.request.use(
   config=>{

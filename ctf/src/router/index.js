@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import Register from '../pages/register'
 import Forget from '../pages/forget'
 import Login from '../pages/login'
@@ -25,6 +24,7 @@ import Choose from '../pages/admin/bank/Choose'
 import Fill from '../pages/admin/bank/Fill'
 //程序题
 import Program from '../pages/admin/bank/Program'
+import ViewP from '../pages/admin/bank/ViewP'
 
 //图书信息
 import Book from '../pages/admin/book/Book'
@@ -36,11 +36,31 @@ import Create from '../pages/admin/exam/Create'
 import View from '../pages/admin/exam/Viewexam'
 
 
+
+
+//用户身份
+//框架
+import UserHome from '../pages/user/Home'
+//首页
+import UserIndex from '../pages/user/Index'
+//测评
+import UserEvaluate from '../pages/user/evaluate/Evaluate'
+//排名
+import UserRank from '../pages/user/rank/Rank'
+//练习
+import UserExercise from '../pages/user/exercise/Exercise'
+//我的
+import UserMy from '../pages/user/my/My'
+import Userchangepwd from '../pages/user/my/Changepwd'
+
+
+
 //我的信息
 //修改密码
 import Changepwd from '../pages/admin/my/Changepwd'
 //我的资料
 import My from '../pages/admin/my/My'
+
 
 Vue.use(Router)
 const  router = new Router({
@@ -55,15 +75,6 @@ const  router = new Router({
       },
       component: Index
     },
-    // {
-    //   //主页
-    //   path: '/home',
-    //   name: 'Home',
-    //   meta:{
-    //     isLogin:true,//需要登录
-    //   },
-    //   component: Home
-    // },
     {
       //注册
       path: '/register',
@@ -160,6 +171,14 @@ const  router = new Router({
           },
           component:Program
         },
+        {
+          path:'/admin/bank/viewP',
+          name:'viewP',
+          meta:{
+            isLogin:true
+          },
+          component:ViewP
+        },
         //图书
         {
           path:'/admin/book',
@@ -188,7 +207,6 @@ const  router = new Router({
           },
           component:View
         },
-
         {
           //我的信息:修改密码
           path:'/admin/my/changepwd',
@@ -208,7 +226,70 @@ const  router = new Router({
           component:My
         },
 
-
+      ]
+    },
+    {
+      path:'/user',
+      name:'UserHome',
+      meta:{
+        isLogin:true
+      },
+      component:UserHome,
+      children: [
+        {
+          //首页
+          path:'/user/index',
+          name:'userindex',
+          meta:{
+            isLogin:true
+          },
+          component:UserIndex
+        },
+        {
+        //  测评
+          path:'/user/evaluate',
+          name:'evaluate',
+          meta:{
+            isLogin:true
+          },
+          component:UserEvaluate
+        },
+        {
+        //  练习
+          path:'/user/exercise',
+          name:'exercise',
+          meta:{
+            isLogin:true
+          },
+          component:UserExercise
+        },
+        {
+        //  我的
+          path:'/user/my',
+          name:'usermy',
+          meta:{
+            isLogin:true
+          },
+          component:UserMy
+        },
+        {
+        //  我的密码
+          path:'/user/my/changepwd',
+          name:'userchangepwd',
+          meta:{
+            isLogin:true
+          },
+          component:Userchangepwd
+        },
+        {
+        //  排名
+          path:'/user/rank',
+          name:'userRank',
+          meta:{
+            isLogin:true
+          },
+          component:UserRank
+        }
       ]
     }
   ]

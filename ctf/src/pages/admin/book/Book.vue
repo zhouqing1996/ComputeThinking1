@@ -578,7 +578,7 @@
     background-color: #5FA7FE;
   }
   .btn3 {
-    width: 80px;
+    width: 2rem;
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -643,7 +643,7 @@
   }
 
   table, td {
-    border: solid 1px #ccc;
+    border: solid 1px #ccc;/*no*/
     padding: 5px;
     text-align: center;
     font-size: 18px;

@@ -6,10 +6,14 @@
       <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
 
+    <!--<el-form-item>-->
+      <!--<el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>-->
+    <!--</el-form-item>-->
     <el-form-item>
-      <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>
+      <el-input :type="passwordVisible" v-model="loginForm.password" auto-complete="off" placeholder="密码">
+        <i slot="suffix" :class="icon" @click="showPass"></i>
+      </el-input>
     </el-form-item>
-
     <el-form-item style="width: 100%">
       <el-button type="primary" style="width: 100%;background: dodgerblue;border: none" v-on:click="login">登录</el-button>
     </el-form-item>
@@ -25,6 +29,8 @@
     name: "Login",
     data() {
       return {
+        passwordVisible:'password',
+        icon:"el-icon-view",
         loginForm: {
           username: '',
           password: ''
@@ -33,7 +39,16 @@
       }
     },
     methods: {
-
+      showPass() {
+        if (this.passwordVisible === "text") {
+          this.passwordVisible = "password";
+          //更换图标
+          this.icon = "el-icon-view";
+        } else {
+          this.passwordVisible = "text";
+          this.icon = "el-icon-lock";
+        }
+      },
       login() {
         this.$http.post('/yii/home/index/login',{
           username:this.loginForm.username,
@@ -59,7 +74,7 @@
             }
             else
             {
-              this.$router.push({path:'/home',params:{username:this.loginForm.username,password:this.loginForm.password}})
+              this.$router.push({path:'/user/index'})
             }
             console.log(this.$store.getters.getsToken)
           }

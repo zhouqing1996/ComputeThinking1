@@ -1,7 +1,7 @@
 <template>
   <!--填空题-->
   <div>
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css" style="font-size: 0.25rem">
       <el-breadcrumb-item :to="{ path: '/admin/index' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>题库信息</el-breadcrumb-item>
       <el-breadcrumb-item>填空题</el-breadcrumb-item>
@@ -38,10 +38,14 @@
                   <el-button @click="Reset">重置</el-button>
                 </div>
               </el-dialog>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getQueryfQuestionY">有效题目</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getQueryfQuestionN">无效题目</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getQueryfQuestion">所有题目</button>
-              <button class="btn3" @click="addF">批量添加</button>
+              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryfQuestionY">有效题目</button>-->
+              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryfQuestionN">无效题目</button>-->
+              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryfQuestion">所有题目</button>-->
+              <!--<button class="btn3" @click="addF">批量添加</button>-->
+              <button class="btn2 el-icon-folder" @click="getQueryfQuestionY">有效题目</button>
+              <button class="btn2 el-icon-folder-remove" @click="getQueryfQuestionN">无效题目</button>
+              <button class="btn2 el-icon-folder-checked" @click="getQueryfQuestion">所有题目</button>
+              <button class="btn2 el-icon-document" @click="addF">批量添加</button>
               <input type="file" @change="importExcel(this)" id="inputExcel"
                      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none"/>
             </div>
@@ -210,7 +214,7 @@
         // 翻页相关
         currentPage: 1,
         totalPage: 1,
-        pageSize: 10,
+        pageSize: 15,
         currentPageData:[]
       }
     },
@@ -652,7 +656,7 @@
   }
 
   table, td {
-    border: solid 1px #ccc;
+    border: solid 1px #ccc;/*no*/
     padding: 5px;
     text-align: center;
     font-size: 18px;

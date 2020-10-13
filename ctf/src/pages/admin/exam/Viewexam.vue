@@ -35,13 +35,46 @@
     <h2>三、程序题</h2>
     <div>
       <span v-for="(p,key3) in programqList":key="key3">
-      <li class="item">({{key3+1}}){{p.pqitem}}<br>
-        <textarea name="key5.1" value="" rows="5" cols="30"></textarea>
-      </li>
-      <p class="ans">答案：{{p.pqans}}</p>
-      <p class="tail">详解：{{p.pqtail}}</p>
-      <p class="rem">相关知识点：{{p.pqrem}}</p>
-    </span>
+        <hr/>
+        ({{key3+1}})<strong>题目：{{p.pqtitle}}</strong>
+
+    <div>
+      <p><strong>题目背景</strong></p>
+      <p>{{p.pqback}}</p>
+    </div>
+    <div>
+      <p><strong>题目描述</strong></p>
+      <p>{{p.pqdescri}}</p>
+    </div>
+    <div>
+      <p><strong>输入格式</strong></p>
+      <p>{{p.pqinputB}}</p>
+    </div>
+    <div>
+      <p><strong>输出格式</strong></p>
+      <p>{{p.pqoutputB}}</p>
+    </div>
+    <div>
+      <p><strong>输入输出样例</strong></p>
+      <p>{{p.pqcase}}</p>
+    </div>
+    <div>
+      <p><strong>说明</strong></p>
+      <p>{{p.pqother}}</p>
+    </div>
+    <div>
+      <p><strong>标签</strong></p>
+      <p>{{p.pqlabel}}</p>
+    </div>
+    <div>
+      <p><strong>推荐相关</strong></p>
+      <p>{{p.pqrem}}</p>
+    </div>
+    <div>
+      <p><strong>答案</strong></p>
+      <p>{{p.pqans}}</p>
+    </div>
+      </span>
     </div>
   </div>
 </template>
