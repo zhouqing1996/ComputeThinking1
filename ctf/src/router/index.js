@@ -26,6 +26,13 @@ import Fill from '../pages/admin/bank/Fill'
 import Program from '../pages/admin/bank/Program'
 import ViewP from '../pages/admin/bank/ViewP'
 
+import ProgramN from  '../pages/admin/bank/Programn'
+//判断题
+import Judge from '../pages/admin/bank/Judge'
+//多选题
+import ChooseM from '../pages/admin/bank/Choosem'
+
+
 //图书信息
 import Book from '../pages/admin/book/Book'
 
@@ -35,6 +42,12 @@ import Create from '../pages/admin/exam/Create'
 //查看试卷
 import View from '../pages/admin/exam/Viewexam'
 
+
+//教师用户
+import TeacherHome from '../pages/teacher/Home'
+import TeacherIndex from '../pages/teacher/Index'
+import Teachermy from '../pages/teacher/my/My'
+import Teacherchgpwd from '../pages/teacher/my/Changepwd'
 
 
 
@@ -179,6 +192,30 @@ const  router = new Router({
           },
           component:ViewP
         },
+        {
+          path:'/admin/bank/programn',
+          name:'programn',
+          meta:{
+            isLogin:true
+          },
+          component:ProgramN
+        },
+        {
+          path:'/admin/bank/judge',
+          name:'judge',
+          meta:{
+            isLogin:true
+          },
+          component:Judge
+        },
+        {
+          path:'/admin/bank/choosem',
+          name:'choosem',
+          meta:{
+            isLogin:true
+          },
+          component:ChooseM
+        },
         //图书
         {
           path:'/admin/book',
@@ -226,6 +263,43 @@ const  router = new Router({
           component:My
         },
 
+      ]
+    },
+    {
+      path:'/teacher',
+      name:'TeacherHome',
+      meta:{
+        isLogin:true
+      },
+      component:TeacherHome,
+      children:[
+        {
+          //首页
+          path:'/teacher/index',
+          name:'Teacherindex',
+          meta:{
+            isLogin:true
+          },
+          component:TeacherIndex
+        },
+        {
+          //我的信息
+          path:'/teacher/my',
+          name:'Teachermy',
+          meta:{
+            isLogin:true
+          },
+          component:Teachermy
+        },
+        {
+          //修改密码
+          path:'/teacher/changepwd',
+          name:'Teacherchapwd',
+          meta:{
+            isLogin:true
+          },
+          component:Teacherchgpwd
+        }
       ]
     },
     {

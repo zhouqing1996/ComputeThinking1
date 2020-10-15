@@ -70,7 +70,7 @@
             else if(role ==2)
             {
               //二级管理员
-
+              this.$router.push({path:'/teacher/index'})
             }
             else
             {

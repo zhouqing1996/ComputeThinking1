@@ -1,10 +1,12 @@
 <template>
     <!--用户信息-->
   <div>
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css">
-      <!--<el-breadcrumb-item :to="{ path: '/admin/index' }">首页</el-breadcrumb-item>-->
-      <el-breadcrumb-item>用户信息</el-breadcrumb-item>
-    </el-breadcrumb>
+    <el-page-header @click="history.back()" content="用户信息">
+    </el-page-header>
+    <!--<el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css">-->
+      <!--&lt;!&ndash;<el-breadcrumb-item :to="{ path: '/admin/index' }">首页</el-breadcrumb-item>&ndash;&gt;-->
+      <!--<el-breadcrumb-item>用户信息</el-breadcrumb-item>-->
+    <!--</el-breadcrumb>-->
     <div><hr/></div>
     <div class="display1">
       <el-tabs type="border-card">
@@ -51,17 +53,16 @@
                   <el-button @click="addReset">重置</el-button>
                 </div>
               </el-dialog>
-              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryY">有效用户</button>-->
-              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryN">无效用户</button>-->
-              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQuery">所有用户</button>-->
-              <!--<button class="btn2" @click="addU">批量添加</button>-->
-              <button class="btn2 el-icon-folder" @click="getQueryY">有效题目</button>
-              <button class="btn2 el-icon-folder-remove" @click="getQueryN">无效题目</button>
-              <button class="btn2 el-icon-folder-checked" @click="getQuery">所有题目</button>
+              <button class="btn2 el-icon-folder" @click="getQueryY">有效用户</button>
+              <button class="btn2 el-icon-folder-remove" @click="getQueryN">无效用户</button>
+              <button class="btn2 el-icon-folder-checked" @click="getQuery">所有用户</button>
               <button class="btn2 el-icon-document" @click="addU">批量添加</button>
               <input type="file" @change="importExcel(this)" id="inputExcel"
                      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none"/>
             </div>
+            <br>
+            <br>
+            <el-divider></el-divider>
             <table >
               <tr>
                 <th>序号</th>
@@ -177,7 +178,7 @@
           // 翻页相关
           currentPage: 1,
           totalPage: 1,
-          pageSize: 15,
+          pageSize: 10,
           currentPageData: []
         }
       },
@@ -203,8 +204,9 @@
         //搜索
         searchCom:function(){
           console.log(this.inputname)
-          this.$http.post('/yii/home/user/queryname',
+          this.$http.post('/yii/home/user/query',
             {
+              flag:4,
               name:this.inputname
             }).then(function (res) {
             console.log(res.data)
@@ -499,24 +501,27 @@
 </script>
 
 <style scoped>
+  a {
+    text-decoration: none;
+  }
+  .router-link-active {
+    text-decoration: none;
+  }
   .btn1 {
-    font-size: 16px;
-    padding: 10px 10px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border: 1px solid #E5E7E9;
+    font-size: 10px;/*px*/
+    padding: 7px 7px;
+    border: 1px solid #E5E7E9;/*no*/
     cursor: pointer;
     background: #fff;
     margin-bottom: -1px;
-    color: #000;
-    width: 120px;
-    /*margin-right: 0px;*/
+    color: black;
+    width: 40px;
   }
   .active {
     color: #01A6FE;
   }
   .btn2 {
-    width: 100px;
+    width: 100px;/*px*/
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -533,7 +538,7 @@
     background-color: #5FA7FE;
   }
   .btn3 {
-    width: 80px;
+    width: 80px;/*px*/
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -551,7 +556,7 @@
   }
   /*删除*/
   .span1{
-    width: 100px;
+    width: 100px;/*px*/
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -567,7 +572,7 @@
   }
   /*修改*/
   .span2{
-    width: 100px;
+    width: 50px;/*px*/
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -589,10 +594,10 @@
   }
 
   th {
-    font-size: 14px;/*px*/
+    font-size: 14px;
     border: solid 1px #ccc;
     font-weight: bold;
-    padding: 5px;/*no*/
+    padding: 5px;
     background-color: #F1F1F1;
     text-align: center;
   }
@@ -601,7 +606,7 @@
     border: solid 1px #ccc;/*no*/
     padding: 5px;/*no*/
     text-align: center;
-    font-size: 18px;
+    font-size: 18px;/*px*/
   }
   .display{
     padding-left: 5px;

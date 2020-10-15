@@ -10,7 +10,9 @@ import Vuerouter from 'vue-router'
 import VueResource from 'vue-resource'
 import axios from 'axios'
 //适配
-import 'lib-flexible/flexible'
+// import 'lib-flexible/flexible'
+// import less from 'less'
+// Vue.use(less)
 // 添加请求拦截器，在请求头加token
 axios.interceptors.request.use(
   config=>{

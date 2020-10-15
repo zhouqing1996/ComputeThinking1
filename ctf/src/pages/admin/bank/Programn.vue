@@ -1,16 +1,16 @@
 <template>
-  <!--填空题-->
+  <!--程序题-->
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css" style="font-size: 0.25rem">
       <el-breadcrumb-item :to="{ path: '/admin/index' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>题库信息</el-breadcrumb-item>
-      <el-breadcrumb-item>填空题</el-breadcrumb-item>
+      <el-breadcrumb-item>程序题</el-breadcrumb-item>
     </el-breadcrumb>
     <div><hr/></div>
     <div class="display1">
       <el-tabs type="border-card">
         <el-tab-pane>
-          <span slot="label"><i class="el-icon-date"></i> 填空题列表</span>
+          <span slot="label"><i class="el-icon-date"></i> 程序题列表</span>
           <div class="display2">
             <div class="searchmem">
               <div class="meeting" >
@@ -18,7 +18,7 @@
               </div>
               <button class="btn3 el-icon-search" v-on:click="searchF()">搜索</button>
               <button class="btn3 el-icon-circle-plus-outline" @click="dialogFormVisibleadd = true">添加</button>
-              <el-dialog title="添加填空题" :visible.sync="dialogFormVisibleadd">
+              <el-dialog title="添加程序题" :visible.sync="dialogFormVisibleadd">
                 <el-form :model="addList">
                   <el-form-item label="题干" :label-width="formLabelWidth">
                     <el-input style="width: 350px;" v-model="addList.item" auto-complete="off"></el-input>
@@ -34,17 +34,13 @@
                   </el-form-item>
                 </el-form>
                 <div slot="footer" style="align-content: center" class="dialog-footer">
-                  <el-button type="primary" @click="addfQuestion(addList)">提交</el-button>
+                  <el-button type="primary" @click="addP(addList)">提交</el-button>
                   <el-button @click="Reset">重置</el-button>
                 </div>
               </el-dialog>
-              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryfQuestionY">有效题目</button>-->
-              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryfQuestionN">无效题目</button>-->
-              <!--<button class="btn2 el-icon-circle-plus-outline" @click="getQueryfQuestion">所有题目</button>-->
-              <!--<button class="btn3" @click="addF">批量添加</button>-->
-              <button class="btn2 el-icon-folder" @click="getQueryfQuestionY">有效题目</button>
-              <button class="btn2 el-icon-folder-remove" @click="getQueryfQuestionN">无效题目</button>
-              <button class="btn2 el-icon-folder-checked" @click="getQueryfQuestion">所有题目</button>
+              <button class="btn2 el-icon-folder" @click="getQueryPY">有效题目</button>
+              <button class="btn2 el-icon-folder-remove" @click="getQueryPN">无效题目</button>
+              <button class="btn2 el-icon-folder-checked" @click="getQueryP">所有题目</button>
               <button class="btn2 el-icon-document" @click="addF">批量添加</button>
               <input type="file" @change="importExcel(this)" id="inputExcel"
                      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none"/>
@@ -60,15 +56,15 @@
                 <th>状态</th>
                 <th>操作</th>
               </tr>
-              <tr v-for=" (fQuestion,key) in currentPageData" :key="key">
+              <tr v-for=" (P,key) in currentPageData" :key="key">
                 <td>{{ key+1 }}</td>
-                <td>{{fQuestion.fqid}}</td>
+                <td>{{P.pqid}}</td>
                 <td>
                   <el-tooltip placement="top" effect="light">
-                    <div slot="content">{{fQuestion.fqitem}}</div>
-                    <el-button class="btn1">{{fQuestion.fqid}}</el-button>
+                    <div slot="content">{{P.pqitem}}</div>
+                    <el-button class="btn1">{{P.pqid}}</el-button>
                   </el-tooltip>
-                  <span v-if="fQuestion.fqstatus==1" @click="dialogFormVisiblechangeitem=true;changeList.id=fQuestion.fqid;item=fQuestion.fqitem" class="span2">修改</span>
+                  <span v-if="P.pqstatus==1" @click="dialogFormVisiblechangeitem=true;changeList.id=P.pqid;item=P.pqitem" class="span2">修改</span>
                   <el-dialog title="修改题干" :visible.sync="dialogFormVisiblechangeitem">
                     <el-form :model="changeList">
                       <el-form-item label="题干内容1" :label-width="formLabelWidth">
@@ -79,17 +75,17 @@
                       </el-form-item>
                     </el-form>
                     <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changefill(1,changeList)">提交</el-button>
+                      <el-button type="primary" @click="changeprogram(1,changeList)">提交</el-button>
                       <el-button @click="dialogFormVisiblechangeitem=false">退出</el-button>
                     </div>
                   </el-dialog>
                 </td>
                 <td>
                   <el-tooltip placement="top" effect="light">
-                    <div slot="content">{{fQuestion.fqans}}</div>
-                    <el-button class="btn1">{{fQuestion.fqid}}</el-button>
+                    <div slot="content">{{P.pqans}}</div>
+                    <el-button class="btn1">{{P.pqid}}</el-button>
                   </el-tooltip>
-                  <span v-if="fQuestion.fqstatus==1" @click="dialogFormVisiblechangeans=true;changeList.id=fQuestion.fqid;item=fQuestion.fqans" class="span2">修改</span>
+                  <span v-if="P.pqstatus==1" @click="dialogFormVisiblechangeans=true;changeList.id=P.pqid;item=P.pqans" class="span2">修改</span>
                   <el-dialog title="修改答案" :visible.sync="dialogFormVisiblechangeans">
                     <el-form :model="changeList">
                       <el-form-item label="原始答案" :label-width="formLabelWidth">
@@ -100,17 +96,17 @@
                       </el-form-item>
                     </el-form>
                     <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changefill(2,changeList)">提交</el-button>
+                      <el-button type="primary" @click="changeprogram(2,changeList)">提交</el-button>
                       <el-button @click="dialogFormVisiblechangeans=false">退出</el-button>
                     </div>
                   </el-dialog>
                 </td>
                 <td>
                   <el-tooltip placement="top" effect="light">
-                    <div slot="content">{{fQuestion.fqtail}}</div>
-                    <el-button class="btn1">{{fQuestion.fqid}}</el-button>
+                    <div slot="content">{{P.pqtail}}</div>
+                    <el-button class="btn1">{{P.pqid}}</el-button>
                   </el-tooltip>
-                  <span v-if="fQuestion.fqstatus==1" @click="dialogFormVisiblechangetail=true;changeList.id=fQuestion.fqid;item=fQuestion.fqtail" class="span2">修改</span>
+                  <span v-if="P.pqstatus==1" @click="dialogFormVisiblechangetail=true;changeList.id=P.pqid;item=P.pqtail" class="span2">修改</span>
                   <el-dialog title="修改详解" :visible.sync="dialogFormVisiblechangetail">
                     <el-form :model="changeList">
                       <el-form-item label="原始详解" :label-width="formLabelWidth">
@@ -121,17 +117,17 @@
                       </el-form-item>
                     </el-form>
                     <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changefill(3,changeList)">提交</el-button>
+                      <el-button type="primary" @click="changeprogram(3,changeList)">提交</el-button>
                       <el-button @click="dialogFormVisiblechangetail=false">退出</el-button>
                     </div>
                   </el-dialog>
                 </td>
                 <td>
                   <el-tooltip placement="top" effect="light">
-                    <div slot="content">{{fQuestion.fqrem}}</div>
-                    <el-button class="btn1">{{fQuestion.fqid}}</el-button>
+                    <div slot="content">{{P.pqrem}}</div>
+                    <el-button class="btn1">{{P.pqid}}</el-button>
                   </el-tooltip>
-                  <span v-if="fQuestion.fqstatus==1" @click="dialogFormVisiblechangerem=true;changeList.id=fQuestion.fqid;item=fQuestion.fqtail" class="span2">修改</span>
+                  <span v-if="P.pqstatus==1" @click="dialogFormVisiblechangerem=true;changeList.id=P.pqid;item=P.pqtail" class="span2">修改</span>
                   <el-dialog title="修改知识点" :visible.sync="dialogFormVisiblechangerem">
                     <el-form :model="changeList">
                       <el-form-item label="原始知识点" :label-width="formLabelWidth">
@@ -142,20 +138,20 @@
                       </el-form-item>
                     </el-form>
                     <div slot="footer" style="align-content: center" class="dialog-footer">
-                      <el-button type="primary" @click="changefill(4,changeList)">提交</el-button>
+                      <el-button type="primary" @click="changeprogram(4,changeList)">提交</el-button>
                       <el-button @click="dialogFormVisiblechangerem=false">退出</el-button>
                     </div>
                   </el-dialog>
                 </td>
-                <td v-if="fQuestion.fqstatus==1">有效</td>
-                <td v-if="fQuestion.fqstatus==0">无效
-                  <span v-if="fQuestion.fqstatus==0" @click="changefill(5,fQuestion.fqid)" class="span2">修改</span>
+                <td v-if="P.pqstatus==1">有效</td>
+                <td v-if="P.pqstatus==0">无效
+                  <span v-if="P.pqstatus==0" @click="changeprogram(5,P.pqid)" class="span2">修改</span>
                 </td>
 
                 <td>
 
-                  <span v-if="fQuestion.fqstatus==1"@click="deletefill(1,fQuestion.fqid)" class="span1"><i class="el-icon-delete">删除题目</i></span>
-                  <span v-if="fQuestion.fqstatus==0" @click="deletefill(2,fQuestion.fqid)" class="span1"><i class="el-icon-delete">永久删除</i></span>
+                  <span v-if="P.pqstatus==1"@click="deleteprogram(1,P.pqid)" class="span1"><i class="el-icon-delete">删除题目</i></span>
+                  <span v-if="P.pqstatus==0" @click="deleteprogram(2,P.pqid)" class="span1"><i class="el-icon-delete">永久删除</i></span>
                 </td>
               </tr>
             </table>
@@ -181,12 +177,12 @@
 
 <script>
   export default {
-    name: "fill",
+    name: "program",
     data(){
       return{
         formLabelWidth: '120px',
         //题库列表
-        fQuestionList:[],
+        PList:[],
         //搜索
         inputname:'',
         //添加
@@ -214,7 +210,7 @@
         // 翻页相关
         currentPage: 1,
         totalPage: 1,
-        pageSize: 10,
+        pageSize: 15,
         currentPageData:[]
       }
     },
@@ -223,7 +219,7 @@
       setCurrentPageDate: function () {
         let begin = (this.currentPage - 1) * this.pageSize;
         let end = this.currentPage * this.pageSize;
-        this.currentPageData = this.fQuestionList.slice(begin, end)
+        this.currentPageData = this.PList.slice(begin, end)
       },
       prePage() {
         console.log(this.currentPage)
@@ -237,42 +233,42 @@
         this.currentPage++;
         this.setCurrentPageDate()
       },
-      //获取填空题列表
-      getQueryfQuestion:function(){
-        this.$http.post('/yii/bank/fillq/queryfill',{
+      //获取程序题列表
+      getQueryP:function(){
+        this.$http.post('/yii/bank/program/queryprogram',{
           flag:1
         }).then(function (res) {
           console.log(res.data)
-          this.fQuestionList = res.data.data
-          this.totalPage =Math.ceil(this.fQuestionList.length/this.pageSize)
+          this.PList = res.data.data
+          this.totalPage =Math.ceil(this.PList.length/this.pageSize)
           this.totalPage=this.totalPage==0?1:this.totalPage
           this.setCurrentPageDate()
         }).catch(function (error) {
           console.log(error)
         })
       },
-      //获取有效填空题列表
-      getQueryfQuestionY:function(){
-        this.$http.post('/yii/bank/fillq/queryfill',{
+      //获取有效程序题列表
+      getQueryPY:function(){
+        this.$http.post('/yii/bank/program/queryprogram',{
           flag:2
         }).then(function (res) {
           console.log(res.data)
-          this.fQuestionList = res.data.data
-          this.totalPage =Math.ceil(this.fQuestionList.length/this.pageSize)
+          this.PList = res.data.data
+          this.totalPage =Math.ceil(this.PList.length/this.pageSize)
           this.totalPage=this.totalPage==0?1:this.totalPage
           this.setCurrentPageDate()
         }).catch(function (error) {
           console.log(error)
         })
       },
-      //获取无效填空题列表
-      getQueryfQuestionN:function(){
-        this.$http.post('/yii/bank/fillq/queryfill',{
+      //获取无效程序题列表
+      getQueryPN:function(){
+        this.$http.post('/yii/bank/program/queryprogram',{
           flag:4
         }).then(function (res) {
           console.log(res.data)
-          this.fQuestionList = res.data.data
-          this.totalPage =Math.ceil(this.fQuestionList.length/this.pageSize)
+          this.PList = res.data.data
+          this.totalPage =Math.ceil(this.PList.length/this.pageSize)
           this.totalPage=this.totalPage==0?1:this.totalPage
           this.setCurrentPageDate()
         }).catch(function (error) {
@@ -282,13 +278,13 @@
       //搜索
       searchF:function () {
         console.log(this.name)
-        this.$http.post('/yii/bank/fillq/queryfill',{
+        this.$http.post('/yii/bank/program/queryprogram',{
           flag:3,
           name:this.inputname
         }).then(function (res) {
           console.log(res.data)
-          this.fQuestionList = res.data.data
-          this.totalPage =Math.ceil(this.fQuestionList.length/this.pageSize)
+          this.PList = res.data.data
+          this.totalPage =Math.ceil(this.PList.length/this.pageSize)
           this.totalPage=this.totalPage==0?1:this.totalPage
           this.setCurrentPageDate()
         }).catch(function (error) {
@@ -296,19 +292,19 @@
         })
       },
       //添加题库
-      addfQuestion:function (List) {
+      addP:function (List) {
         console.log(List)
-        this.$http.post('/yii/bank/fillq/addfill',{
+        this.$http.post('/yii/bank/program/addprogram',{
           qitem:List.item,
           ans:List.ans,
           tail:List.tail,
           rem:List.rem
         }).then(function (res) {
           console.log(res.data)
-          if(res.data.message=="插入填空题成功")
+          if(res.data.message=="插入程序题成功")
           {
-            this.getQueryfQuestion()
-            alert("插入填空题成功")
+            this.getQueryP()
+            alert("插入程序题成功")
             this.dialogFormVisibleadd=false
             this.Reset()
           }
@@ -333,18 +329,18 @@
       //3：详解
       //4：知识点
       //5:状态
-      changefill:function (item,id) {
+      changeprogram:function (item,id) {
         console.log(item)
         if(item==1) {
-          this.$http.post('/yii/bank/fillq/change',{
+          this.$http.post('/yii/bank/program/change',{
             cid:this.changeList.id,
             flag:1,
             item:this.changeList.item,
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该填空题题干修改成功")
+            if(res.data.message=="该程序题题干修改成功")
             {
-              this.getQueryfQuestion()
+              this.getQueryP()
             }
             alert(res.data.message)
             this.dialogFormVisiblechangeitem=false
@@ -355,15 +351,15 @@
           })
         }
         else if(item==2){
-          this.$http.post('/yii/bank/fillq/change',{
+          this.$http.post('/yii/bank/program/change',{
             cid:this.changeList.id,
             flag:2,
             ans:this.changeList.ans
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该填空题答案修改成功")
+            if(res.data.message=="该程序题答案修改成功")
             {
-              this.getQueryfQuestion()
+              this.getQueryP()
             }
             alert(res.data.message)
             this.dialogFormVisiblechangeans=false
@@ -374,15 +370,15 @@
           })
         }
         else if(item==3){
-          this.$http.post('/yii/bank/fillq/change',{
+          this.$http.post('/yii/bank/program/change',{
             cid:this.changeList.id,
             flag:3,
             tail:this.changeList.tail
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该填空题详解修改成功")
+            if(res.data.message=="该程序题详解修改成功")
             {
-              this.getQueryfQuestion()
+              this.getQueryP()
             }
             alert(res.data.message)
             this.dialogFormVisiblechangetail=false
@@ -393,15 +389,15 @@
           })
         }
         else if(item==4){
-          this.$http.post('/yii/bank/fillq/change',{
+          this.$http.post('/yii/bank/program/change',{
             cid:this.changeList.id,
             flag:4,
             rem:this.changeList.rem
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该填空题相关知识修改成功")
+            if(res.data.message=="该程序题相关知识修改成功")
             {
-              this.getQueryfQuestion()
+              this.getQueryP()
             }
             alert(res.data.message)
             this.dialogFormVisiblechangerem=false
@@ -413,15 +409,15 @@
         }
         else if(item==5){
           console.log(id)
-          this.$http.post('/yii/bank/fillq/change',{
+          this.$http.post('/yii/bank/program/change',{
             cid:id,
             flag:5
           }).then(function (res) {
 
             console.log(res.data)
-            if(res.data.message=="该填空题状态修改成功")
+            if(res.data.message=="该程序题状态修改成功")
             {
-              this.getQueryfQuestion()
+              this.getQueryP()
             }
             alert(res.data.message)
           })
@@ -433,23 +429,23 @@
       //删除
       //1:暂时删除
       //2：永久删除
-      deletefill:function (item,id) {
+      deleteprogram:function (item,id) {
         console.log(item)
         if(item==1)
         {
-          this.$confirm("删除该用户填空题，是否继续？", "提示", {
+          this.$confirm("删除该用户程序题，是否继续？", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
           }).then(() => {
-            this.$http.post('/yii/bank/fillq/delete',{
+            this.$http.post('/yii/bank/program/delete',{
               fid:id,
               flag:1
             }).then(function (res) {
               console.log(res.data)
-              if(res.data.message=="该填空题删除成功")
+              if(res.data.message=="该程序题删除成功")
               {
-                this.getQueryfQuestion()
+                this.getQueryP()
               }
               alert(res.data.message)
             })
@@ -459,19 +455,19 @@
         }
         else if(item==2)
         {
-          this.$confirm("永久删除该用户填空题，是否继续？", "提示", {
+          this.$confirm("永久删除该用户程序题，是否继续？", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
           }).then(() => {
-            this.$http.post('/yii/bank/fillq/delete',{
+            this.$http.post('/yii/bank/program/delete',{
               fid:id,
               flag:2
             }).then(function (res) {
               console.log(res.data)
-              if(res.data.message=="该填空题永久删除成功")
+              if(res.data.message=="该程序题永久删除成功")
               {
-                this.getQueryfQuestion()
+                this.getQueryP()
               }
               alert(res.data.message)
             })
@@ -535,9 +531,9 @@
               data: JSON.stringify(_this.memberList)
             }
             console.log(data)
-            _this.$http.post('/yii/bank/fillq/importexcel', data).then(body => {
+            _this.$http.post('/yii/bank/program/importexcel', data).then(body => {
               alert(body.data.message)
-              _this.getQueryfQuestion()
+              _this.getQueryP()
             })
           }
           reader.readAsArrayBuffer(f)
@@ -554,7 +550,7 @@
       this.inputExcel = document.getElementById('inputExcel')
     },
     created(){
-      this.getQueryfQuestion()
+      this.getQueryP()
     }
   }
 </script>

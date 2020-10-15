@@ -37,10 +37,11 @@
                   <el-button @click="Reset">重置</el-button>
                 </div>
               </el-dialog>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getBookList(1)">有效图书</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getBookList(2)">无效图书</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getBookList(3)">所有图书</button>
-              <button class="btn3" @click="AddB">批量添加</button>
+              <button class="btn2 el-icon-folder" @click="getBookList(1)">有效图书</button>
+              <button class="btn2 el-icon-folder-remove" @click="getBookList(2)">无效图书</button>
+              <button class="btn2 el-icon-folder-checked" @click="getBookList(3)">所有图书</button>
+              <!--<button class="btn3" @click="AddB">批量添加</button>-->
+              <button class="btn2 el-icon-document" @click="AddB">批量添加</button>
               <input type="file" @change="importExcel(this)" id="inputExcel"
                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none"/>
 
@@ -578,7 +579,7 @@
     background-color: #5FA7FE;
   }
   .btn3 {
-    width: 2rem;
+    width: 100px;
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -643,7 +644,7 @@
   }
 
   table, td {
-    border: solid 1px #ccc;/*no*/
+    border: solid 1px #ccc;
     padding: 5px;
     text-align: center;
     font-size: 18px;

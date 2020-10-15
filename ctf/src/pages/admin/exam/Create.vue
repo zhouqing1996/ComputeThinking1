@@ -15,8 +15,8 @@
               <div class="meeting" >
                 <el-input v-model="inputname" placeholder="模糊查找" size="mini"></el-input>
               </div>
-              <button class="btn3 el-icon-search" v-on:click="getExamList(4)">搜索试卷</button>
-              <button class="btn3 el-icon-circle-plus-outline" @click="dialogFormVisibleAdd=true">自动组卷</button>
+              <button class="btn2 el-icon-search" v-on:click="getExamList(4)">搜索试卷</button>
+              <button class="btn2 el-icon-circle-plus-outline" @click="dialogFormVisibleAdd=true">自动组卷</button>
               <el-dialog title="自动组卷" :visible.sync="dialogFormVisibleAdd">
                 <el-form :model="addexam">
                   <el-form-item label="试卷名称" :label-width="formLabelWidth">
@@ -37,9 +37,9 @@
                   <el-button @click="dialogFormVisibleAdd=false">退出</el-button>
                 </div>
               </el-dialog>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getExamList(1)">有效试卷</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getExamList(2)">无效试卷</button>
-              <button class="btn2 el-icon-circle-plus-outline" @click="getExamList(3)">所有试卷</button>
+              <button class="btn2 el-icon-folder" @click="getExamList(1)">有效试卷</button>
+              <button class="btn2 el-icon-folder-remove" @click="getExamList(2)">无效试卷</button>
+              <button class="btn2 el-icon-folder-checked" @click="getExamList(3)">所有试卷</button>
             </div>
             <table >
               <tr>
@@ -334,9 +334,9 @@
     text-decoration: none;
   }
   .btn1 {
-    font-size: 10px;
+    font-size: 10px;/*px*/
     padding: 7px 7px;
-    border: 1px solid #E5E7E9;
+    border: 1px solid #E5E7E9;/*no*/
     cursor: pointer;
     background: #fff;
     margin-bottom: -1px;
@@ -347,7 +347,7 @@
     color: #01A6FE;
   }
   .btn2 {
-    width: 100px;
+    width: 100px;/*px*/
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -364,7 +364,7 @@
     background-color: #5FA7FE;
   }
   .btn3 {
-    width: 80px;
+    width: 80px;/*px*/
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -382,7 +382,7 @@
   }
   /*删除*/
   .span1{
-    width: 100px;
+    width: 100px;/*px*/
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -398,7 +398,7 @@
   }
   /*修改*/
   .span2{
-    width: 50px;
+    width: 50px;/*px*/
     padding: 7px;
     font-size: 14px;
     border-radius: 3px;
@@ -429,10 +429,10 @@
   }
 
   table, td {
-    border: solid 1px #ccc;
-    padding: 5px;
+    border: solid 1px #ccc;/*no*/
+    padding: 5px;/*no*/
     text-align: center;
-    font-size: 18px;
+    font-size: 18px;/*px*/
   }
   .display{
     padding-left: 5px;

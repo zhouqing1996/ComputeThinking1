@@ -2,7 +2,6 @@
   <el-container>
     <el-header >
         <el-menu
-          class="el-menu"
           mode="horizontal">
           <el-menu-item index="1">
             <router-link to="/admin/index">首页</router-link>
@@ -20,6 +19,15 @@
             </el-menu-item>
             <el-menu-item index="3-3">
               <router-link to="/admin/bank/program" >程序题</router-link>
+            </el-menu-item>
+            <el-menu-item index="3-4">
+              <router-link to="/admin/bank/programn" >程序题新</router-link>
+            </el-menu-item>
+            <el-menu-item index="3-5">
+              <router-link to="/admin/bank/judge" >判断题</router-link>
+            </el-menu-item>
+            <el-menu-item index="3-6">
+              <router-link to="/admin/bank/choosem" >多选题</router-link>
             </el-menu-item>
           </el-submenu>
           <el-menu-item index="4">
@@ -47,7 +55,7 @@
           </el-submenu>
         </el-menu>
     </el-header>
-    <el-main  class="main-css">
+    <el-main  class="main-css" v-if="isN">
       <router-view />
     </el-main>
     <el-footer>
@@ -87,10 +95,20 @@
       data() {
         return{
           // userForm:[]
+          isN:true
 
         }
       },
       methods:{
+          reload1:function(index){
+            if(index === this.$rotuer.path)
+            {
+              this.isN=false
+              this.$nextTick(function () {
+                this.isN=true
+              })
+            }
+          },
           //退出登录
           logout:function () {
             let suserid=this.$store.getters.getsId
@@ -128,36 +146,10 @@
     }
 </script>
 
-<style scoped>
-  .el-menu{
-    color: white;
-    background-color: dodgerblue;
-    height:1rem;
-    font-size: 1rem;
-    font-family: "Times New Roman";
-    text-align: center;
-    text-decoration-color: white;
-  }
-  .el-submenu__title {
-    font-size: 0.186667rem;
-    color: #303133;
-    padding: 0 0.266667rem;
-    cursor: pointer;
-    -webkit-transition: border-color .3s, background-color .3s, color .3s;
-    transition: border-color .3s, background-color .3s, color .3s;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-  .el-menu--horizontal>.el-submenu .el-submenu__title {
-    height: 0.8rem;
-    line-height: 0.8rem;
-    border-bottom: 0.026667rem solid transparent;
-    color:white;
-    }
+<style >
   .main-css{
     width: 100%;
-    height: 12rem;
-    /*position: absolute;*/
+    height: 650px;
   }
   a {
     text-decoration: none;
