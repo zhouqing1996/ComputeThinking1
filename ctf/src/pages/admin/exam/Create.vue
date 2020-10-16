@@ -16,6 +16,16 @@
                 <el-input v-model="inputname" placeholder="模糊查找" size="mini"></el-input>
               </div>
               <button class="btn2 el-icon-search" v-on:click="getExamList(4)">搜索试卷</button>
+
+              <router-link :to="{ name: 'selfcreate' }">
+                <button class="btn2 el-icon-circle-plus-outline">手动组卷</button>
+              </router-link>
+
+              <router-link :to="{ name: 'newcreate' }">
+                <button class="btn2 el-icon-circle-plus-outline">创建试卷</button>
+              </router-link>
+
+              <!--<button class="btn2 el-icon-circle-plus-outline" @click="alert('暂时未实现')">创建组卷（未）</button>-->
               <button class="btn2 el-icon-circle-plus-outline" @click="dialogFormVisibleAdd=true">自动组卷</button>
               <el-dialog title="自动组卷" :visible.sync="dialogFormVisibleAdd">
                 <el-form :model="addexam">

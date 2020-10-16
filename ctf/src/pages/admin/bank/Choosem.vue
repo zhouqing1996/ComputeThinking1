@@ -1,5 +1,5 @@
 <template>
-  <!--选择题-->
+  <!--多选题-->
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css" style="font-size: 0.25rem">
       <el-breadcrumb-item :to="{ path: '/admin/index' }">首页</el-breadcrumb-item>
@@ -10,7 +10,7 @@
     <div class="display1">
       <el-tabs type="border-card">
         <el-tab-pane>
-          <span slot="label"><i class="el-icon-date"></i> 选择题列表</span>
+          <span slot="label"><i class="el-icon-date"></i> 多选题列表</span>
           <div class="display2">
             <div class="searchmem">
               <div class="meeting" >
@@ -18,7 +18,7 @@
               </div>
               <button class="btn3 el-icon-search" v-on:click="searchC()">搜索</button>
               <button class="btn3 el-icon-circle-plus-outline" @click="dialogFormVisibleadd = true">添加</button>
-              <el-dialog title="添加选择题" :visible.sync="dialogFormVisibleadd">
+              <el-dialog title="添加多选题" :visible.sync="dialogFormVisibleadd">
                 <el-form :model="addList">
                   <el-form-item label="题干" :label-width="formLabelWidth">
                     <el-input style="width: 350px;" v-model="addList.item" auto-complete="off"></el-input>
@@ -351,7 +351,7 @@
         this.currentPage++;
         this.setCurrentPageDate()
       },
-      //获取选择题列表
+      //获取多选题列表
       getQuerymquestion:function(){
         this.$http.post('/yii/bank/choosem/querychoose',{
           flag:1
@@ -365,7 +365,7 @@
           console.log(error)
         })
       },
-      //获取有效选择题列表
+      //获取有效多选题列表
       getQuerymquestionY:function(){
         this.$http.post('/yii/bank/choosem/querychoose',{
           flag:2
@@ -379,7 +379,7 @@
           console.log(error)
         })
       },
-      //获取无效选择题列表
+      //获取无效多选题列表
       getQuerymquestionN:function(){
         this.$http.post('/yii/bank/choosem/querychoose',{
           flag:4
@@ -423,10 +423,10 @@
           rem:List.rem
         }).then(function (res) {
           console.log(res.data)
-          if(res.data.message=="插入选择题成功")
+          if(res.data.message=="插入多选题成功")
           {
             this.getQuerymquestion()
-            alert("插入选择题成功")
+            alert("插入多选题成功")
             this.Reset()
           }
           this.dialogFormVisibleadd=false
@@ -463,7 +463,7 @@
             item:this.changeList.item,
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该选择题题干修改成功")
+            if(res.data.message=="该多选题题干修改成功")
             {
               this.getQuerymquestion()
             }
@@ -483,7 +483,7 @@
             op1:this.changeList.op1
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该选择题选项1修改成功")
+            if(res.data.message=="该多选题选项1修改成功")
             {
               this.getQuerymquestion()
             }
@@ -503,7 +503,7 @@
             op2:this.changeList.op2
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该选择题选项2修改成功")
+            if(res.data.message=="该多选题选项2修改成功")
             {
               this.getQuerymquestion()
             }
@@ -523,7 +523,7 @@
             op3:this.changeList.op3
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该选择题选项3修改成功")
+            if(res.data.message=="该多选题选项3修改成功")
             {
               this.getQuerymquestion()
             }
@@ -543,7 +543,7 @@
             op4:this.changeList.op4
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该选择题选项4修改成功")
+            if(res.data.message=="该多选题选项4修改成功")
             {
               this.getQuerymquestion()
             }
@@ -562,7 +562,7 @@
             ans:this.changeList.ans
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该选择题答案修改成功")
+            if(res.data.message=="该多选题答案修改成功")
             {
               this.getQuerymquestion()
             }
@@ -581,7 +581,7 @@
             tail:this.changeList.tail
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该选择题详解修改成功")
+            if(res.data.message=="该多选题详解修改成功")
             {
               this.getQuerymquestion()
             }
@@ -600,7 +600,7 @@
             rem:this.changeList.rem
           }).then(function (res) {
             console.log(res.data)
-            if(res.data.message=="该选择题相关知识修改成功")
+            if(res.data.message=="该多选题相关知识修改成功")
             {
               this.getQuerymquestion()
             }
@@ -620,7 +620,7 @@
           }).then(function (res) {
 
             console.log(res.data)
-            if(res.data.message=="该选择题状态修改成功")
+            if(res.data.message=="该多选题状态修改成功")
             {
               this.getQuerymquestion()
             }
@@ -638,7 +638,7 @@
         console.log(item)
         if(item==1)
         {
-          this.$confirm("删除该用户选择题，是否继续？", "提示", {
+          this.$confirm("删除该用户多选题，是否继续？", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
@@ -648,7 +648,7 @@
               flag:1
             }).then(function (res) {
               console.log(res.data)
-              if(res.data.message=="该选择题删除成功")
+              if(res.data.message=="该多选题删除成功")
               {
                 this.getQuerymquestion()
               }
@@ -660,7 +660,7 @@
         }
         else if(item==2)
         {
-          this.$confirm("永久删除该用户选择题，是否继续？", "提示", {
+          this.$confirm("永久删除该用户多选题，是否继续？", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
@@ -670,7 +670,7 @@
               flag:2
             }).then(function (res) {
               console.log(res.data)
-              if(res.data.message=="该选择题永久删除成功")
+              if(res.data.message=="该多选题永久删除成功")
               {
                 this.getQuerymquestion()
               }

@@ -41,6 +41,12 @@ import Book from '../pages/admin/book/Book'
 import Create from '../pages/admin/exam/Create'
 //查看试卷
 import View from '../pages/admin/exam/Viewexam'
+//手动组卷（题库中选择）
+import SelfCreate from '../pages/admin/exam/Selfcreate'
+//创建试卷
+import NewCreate from '../pages/admin/exam/Newcreate'
+
+
 
 
 //教师用户
@@ -243,6 +249,22 @@ const  router = new Router({
             isLogin:true
           },
           component:View
+        },
+        {
+          path:'/admin/exam/selfcreate',
+          name:'selfcreate',
+          meta:{
+            isLogin:true
+          },
+          component:SelfCreate
+        },
+        {
+          path:'/admin/exam/newcreate',
+          name:'newcreate',
+          meta:{
+            isLogin:true
+          },
+          component:NewCreate
         },
         {
           //我的信息:修改密码

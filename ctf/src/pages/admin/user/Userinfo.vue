@@ -1,12 +1,12 @@
 <template>
     <!--用户信息-->
   <div>
-    <el-page-header @click="history.back()" content="用户信息">
-    </el-page-header>
-    <!--<el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css">-->
-      <!--&lt;!&ndash;<el-breadcrumb-item :to="{ path: '/admin/index' }">首页</el-breadcrumb-item>&ndash;&gt;-->
-      <!--<el-breadcrumb-item>用户信息</el-breadcrumb-item>-->
-    <!--</el-breadcrumb>-->
+    <!--<el-page-header @click="history.back()" content="用户信息">-->
+    <!--</el-page-header>-->
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb-css">
+      <!--<el-breadcrumb-item :to="{ path: '/admin/index' }">首页</el-breadcrumb-item>-->
+      <el-breadcrumb-item>用户信息</el-breadcrumb-item>
+    </el-breadcrumb>
     <div><hr/></div>
     <div class="display1">
       <el-tabs type="border-card">
@@ -53,6 +53,8 @@
                   <el-button @click="addReset">重置</el-button>
                 </div>
               </el-dialog>
+              <button class="btn2 el-icon-folder-checked" @click="getQueryS">学生用户</button>
+              <button class="btn2 el-icon-folder-checked" @click="getQueryT">教师用户</button>
               <button class="btn2 el-icon-folder" @click="getQueryY">有效用户</button>
               <button class="btn2 el-icon-folder-remove" @click="getQueryN">无效用户</button>
               <button class="btn2 el-icon-folder-checked" @click="getQuery">所有用户</button>
@@ -216,13 +218,38 @@
             this.setCurrentPageDate()
           })
         },
+        getQueryT:function(){
+          this.$http.post('/yii/home/user/query',
+            {
+              flag: 5,
+            }).then(function (res) {
+            console.log(res.data)
+            // that.userinfoList = res.data.data
+            this.userinfoList=res.data.data
+            this.totalPage =Math.ceil(this.userinfoList.length/this.pageSize)
+            this.totalPage=this.totalPage==0?1:this.totalPage
+            this.setCurrentPageDate()
+          })
+        },
+        getQueryS:function(){
+          this.$http.post('/yii/home/user/query',
+            {
+              flag: 6,
+            }).then(function (res) {
+            console.log(res.data)
+            // that.userinfoList = res.data.data
+            this.userinfoList=res.data.data
+            this.totalPage =Math.ceil(this.userinfoList.length/this.pageSize)
+            this.totalPage=this.totalPage==0?1:this.totalPage
+            this.setCurrentPageDate()
+          })
+        },
         //获取全部的用户信息
         getQuery: function () {
           // let that = this
           this.$http.post('/yii/home/user/query',
             {
               flag: 2,
-              page: this.currentpage
             }).then(function (res) {
             console.log(res.data)
             // that.userinfoList = res.data.data
@@ -238,7 +265,6 @@
           this.$http.post('/yii/home/user/query',
             {
               flag: 1,
-              page: this.currentpage
             }).then(function (res) {
             console.log(res.data)
             // that.userinfoList = res.data.data
@@ -254,7 +280,6 @@
           this.$http.post('/yii/home/user/query',
             {
               flag: 3,
-              page: this.currentpage
             }).then(function (res) {
             console.log(res.data)
             // that.userinfoList = res.data.data
