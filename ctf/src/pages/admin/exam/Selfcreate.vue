@@ -40,6 +40,9 @@
                   </td>
                 </tr>
               </table>
+              <hr/>
+              <div>单选题：{{List1}}，填空题：{{List2}},判断题：{{List3}},多选题：{{List4}},程序题：{{List5}}</div>
+              <hr/>
               <div class="page">
                 <ul class="pagination pagination-sm"><!--分页-->
                   <li class="page-item" v-if="currentPage1!=1">
@@ -85,6 +88,9 @@
                 </tr>
               </table>
             </div>
+            <hr/>
+            <div>单选题：{{List1}}，填空题：{{List2}},判断题：{{List3}},多选题：{{List4}},程序题：{{List5}}</div>
+            <hr/>
             <div class="page">
               <ul class="pagination pagination-sm"><!--分页-->
                 <li class="page-item" v-if="currentPage2!=1">
@@ -129,6 +135,9 @@
                 </tr>
               </table>
             </div>
+            <hr/>
+            <div>单选题：{{List1}}，填空题：{{List2}},判断题：{{List3}},多选题：{{List4}},程序题：{{List5}}</div>
+            <hr/>
             <div class="page">
               <ul class="pagination pagination-sm"><!--分页-->
                 <li class="page-item" v-if="currentPage3!=1">
@@ -173,6 +182,9 @@
                 </tr>
               </table>
             </div>
+            <hr/>
+            <div>单选题：{{List1}}，填空题：{{List2}},判断题：{{List3}},多选题：{{List4}},程序题：{{List5}}</div>
+            <hr/>
             <div class="page">
               <ul class="pagination pagination-sm"><!--分页-->
                 <li class="page-item" v-if="currentPage4!=1">
@@ -217,6 +229,9 @@
                 </tr>
               </table>
             </div>
+            <hr/>
+            <div>单选题：{{List1}}，填空题：{{List2}},判断题：{{List3}},多选题：{{List4}},程序题：{{List5}}</div>
+            <hr/>
             <div class="page">
               <ul class="pagination pagination-sm"><!--分页-->
                 <li class="page-item" v-if="currentPage5!=1">
@@ -574,7 +589,7 @@
 
       //  预览试卷
         SelfView:function () {
-          console.log("手动创建试卷")
+          console.log("预览试卷")
           this.$http.post('/yii/exam/index/addexam',{
             flag:2,
             k:1,
@@ -603,10 +618,18 @@
             fillList:this.List2,
             judgeList:this.List3,
             choosemList:this.List4,
-            programList:this.List5
+            programList:this.List5,
+            exname:this.SelfList.name,
+            auth:this.$store.getters.getsId
           }).then(function (res) {
             console.log(res.data)
+            if(res.data.message=="完成问卷试卷")
+            {
+              this.$router.push({path:'/admin/exam/create'})
+            }
             alert(res.data.message)
+            this.dialogFormVisible = false
+            this.SelfList.name =""
           }).catch(function (error) {
             console.log(error)
           })

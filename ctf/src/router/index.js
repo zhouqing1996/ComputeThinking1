@@ -64,6 +64,9 @@ import UserHome from '../pages/user/Home'
 import UserIndex from '../pages/user/Index'
 //测评
 import UserEvaluate from '../pages/user/evaluate/Evaluate'
+//进入测评
+import UserGoEva from '../pages/user/evaluate/Goeva'
+
 //排名
 import UserRank from '../pages/user/rank/Rank'
 //练习
@@ -349,6 +352,15 @@ const  router = new Router({
             isLogin:true
           },
           component:UserEvaluate
+        },
+        {
+          //  进入测评
+          path:'/user/evaluate/goeva',
+          name:'goeva',
+          meta:{
+            isLogin:true
+          },
+          component:UserGoEva
         },
         {
         //  练习

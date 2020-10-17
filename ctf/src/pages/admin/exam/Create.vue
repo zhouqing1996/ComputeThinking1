@@ -128,7 +128,6 @@
         //  查看试卷
         lookexam:function(id){
           console.log(id)
-          // this.$router.push({ name:'viewexam', params: { id: id }})
           this.$router.push({
             path:'/admin/exam/viewexam',
             query:{
@@ -478,8 +477,6 @@
   }
   ul {
     display: flex;
-    /*flex-direction: row;*/
-    /*flex-wrap: nowrap;*/
     flex-flow: row nowrap;
     justify-content: center;
   }
