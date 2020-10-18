@@ -36,7 +36,7 @@
                   <td>{{c.cqid}}</td>
                   <td>{{c.cqitem}}</td>
                   <td>
-                    <span  class="span2" @click="Click1(c.cqid)">添加</span>
+                    <span class="span2" @click="Click1(c.cqid)" :id="tianjia1(c.cqid)">添加</span>
                   </td>
                 </tr>
               </table>
@@ -83,7 +83,8 @@
                   <td>{{f.fqid}}</td>
                   <td>{{f.fqitem}}</td>
                   <td>
-                    <span  class="span2" @click="Click2(f.fqid)">添加</span>
+                    <!--<span  class="span2" @click="Click2(f.fqid)" >添加</span>-->
+                    <span class="span2" @click="Click2(f.fqid)" :id="tianjia2(f.fqid)">添加</span>
                   </td>
                 </tr>
               </table>
@@ -130,7 +131,8 @@
                   <td>{{j.jqid}}</td>
                   <td>{{j.jqitem}}</td>
                   <td>
-                    <span  class="span2" @click="Click3(j.jqid)">添加</span>
+                    <!--<span  class="span2" @click="Click3(j.jqid)">添加</span>-->
+                    <span class="span2" @click="Click3(j.jqid)" :id="tianjia3(j.jqid)">添加</span>
                   </td>
                 </tr>
               </table>
@@ -177,7 +179,8 @@
                   <td>{{m.mqid}}</td>
                   <td>{{m.mqitem}}</td>
                   <td>
-                    <span  class="span2" @click="Click4(m.mqid)">添加</span>
+                    <!--<span  class="span2" @click="Click4(m.mqid)">添加</span>-->
+                    <span class="span2" @click="Click4(m.mqid)" :id="tianjia4(m.mqid)">添加</span>
                   </td>
                 </tr>
               </table>
@@ -224,7 +227,8 @@
                   <td>{{p.pqid}}</td>
                   <td>{{p.pqitem}}</td>
                   <td>
-                    <span  class="span2" @click="Click5(p.pqid)">添加</span>
+                    <!--<span  class="span2" @click="Click5(p.pqid)">添加</span>-->
+                    <span class="span2" @click="Click5(p.pqid)" :id="tianjia5(p.pqid)">添加</span>
                   </td>
                 </tr>
               </table>
@@ -534,15 +538,37 @@
             console.log(error)
           })
         },
+        tianjia1:function(id)
+        {
+          return "tianjia1("+id+")";
+        },
+        tianjia2:function(id)
+        {
+          return "tianjia2("+id+")";
+        },
+        tianjia3:function(id)
+        {
+          return "tianjia3("+id+")";
+        },
+        tianjia4:function(id)
+        {
+          return "tianjia4("+id+")";
+        },
+        tianjia5:function(id)
+        {
+          return "tianjia5("+id+")";
+        },
         // 点击添加至列表中
         Click1:function (id) {
         //  选择题
           console.log(id)
           if(this.List1.indexOf(id)>-1){
             this.List1.splice(this.List1.indexOf(id),1)
+            document.getElementById("tianjia1("+id+")").innerHTML="添加"
           }
           else{
             this.List1.push(id)
+            document.getElementById("tianjia1("+id+")").innerHTML="已添加"
           }
           console.log(this.List1)
         },
@@ -550,9 +576,11 @@
           console.log(id)
           if(this.List2.indexOf(id)>-1){
             this.List2.splice(this.List2.indexOf(id),1)
+            document.getElementById("tianjia2("+id+")").innerHTML="添加"
           }
           else{
             this.List2.push(id)
+            document.getElementById("tianjia2("+id+")").innerHTML="已添加"
           }
           console.log(this.List2)
         },
@@ -560,9 +588,11 @@
           console.log(id)
           if(this.List3.indexOf(id)>-1){
             this.List3.splice(this.List3.indexOf(id),1)
+            document.getElementById("tianjia3("+id+")").innerHTML="添加"
           }
           else{
             this.List3.push(id)
+            document.getElementById("tianjia3("+id+")").innerHTML="已添加"
           }
           console.log(this.List3)
         },
@@ -570,9 +600,11 @@
           console.log(id)
           if(this.List4.indexOf(id)>-1){
             this.List4.splice(this.List4.indexOf(id),1)
+            document.getElementById("tianjia4("+id+")").innerHTML="添加"
           }
           else{
             this.List4.push(id)
+            document.getElementById("tianjia4("+id+")").innerHTML="已添加"
           }
           console.log(this.List4)
         },
@@ -580,9 +612,11 @@
           console.log(id)
           if(this.List5.indexOf(id)>-1){
             this.List5.splice(this.List5.indexOf(id),1)
+            document.getElementById("tianjia5("+id+")").innerHTML="添加"
           }
           else{
             this.List5.push(id)
+            document.getElementById("tianjia5("+id+")").innerHTML="已添加"
           }
           console.log(this.List5)
         },

@@ -55,7 +55,7 @@
           </el-submenu>
         </el-menu>
     </el-header>
-    <el-main  class="main-css" v-if="isN">
+    <el-main  class="main-css">
       <router-view />
     </el-main>
     <el-footer>
