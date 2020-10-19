@@ -16,14 +16,7 @@
           <el-radio :label="10">{{c.cqcho.split('---')[3]}}</el-radio><br>
         </el-radio-group>
         <br>
-
-      <!--<li class="item">({{key1+1}}){{c.cqitem}}<br>-->
-        <!--<input type="radio" name="radio" v-model="cList">（A）{{c.cqcho.split('-&#45;&#45;')[0]}}<br>-->
-        <!--<input type="radio" name="radio" v-model="cList">（B）{{c.cqcho.split('-&#45;&#45;')[1]}}<br>-->
-        <!--<input type="radio" name="radio" v-model="cList">（C）{{c.cqcho.split('-&#45;&#45;')[2]}}<br>-->
-        <!--<input type="radio" name="radio" v-model="cList">（D）{{c.cqcho.split('-&#45;&#45;')[3]}}<br>-->
-      <!--</li>-->
-    </span>
+      </span>
       </div>
       <hr/>
       <h2>二、填空题</h2>

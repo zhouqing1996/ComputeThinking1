@@ -149,7 +149,7 @@
 <style >
   .main-css{
     width: 100%;
-    height: 650px;
+    height: 550px;
   }
   a {
     text-decoration: none;
