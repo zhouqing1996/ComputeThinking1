@@ -7,23 +7,22 @@
       <hr/>
       <h2>一、选择题</h2>
       <div>
-      <span v-for="(c,key1) in chooseqList":key="key1">
-        <span class="item">({{key1+1}}){{c.cqitem}}</span><br>
-        <el-radio-group v-model="cList">
-          <el-radio :label="3">{{c.cqcho.split('---')[0]}}</el-radio><br>
-          <el-radio :label="6">{{c.cqcho.split('---')[1]}}</el-radio><br>
-          <el-radio :label="9">{{c.cqcho.split('---')[2]}}</el-radio><br>
-          <el-radio :label="10">{{c.cqcho.split('---')[3]}}</el-radio><br>
-        </el-radio-group>
-        <br>
-      </span>
+        <div v-for="(c,index) in chooseqList">
+          <h3>({{index+1}}):{{c.cqitem}}</h3>
+          <ul>
+            <li v-for="(x,i) in c.cqcho" >
+              <input type="radio" :name="c.cqid"
+                     @change="cr(c.cqid,c.cqcho[i])"/>{{x}}
+            </li>
+          </ul>
+        </div>
       </div>
       <hr/>
       <h2>二、填空题</h2>
       <div>
       <span v-for="(f,key2) in fillqList":key="key2">
       <li class="item">({{key2+1}}){{f.fqitem}}<br>
-        <input type="text" value="" v-model="fList[f.fqid]"><br>
+        <input type="text"  :name="f.fqid" @input="fr(f.fqid,$event)"><br>
       </li>
     </span>
       </div>
@@ -97,22 +96,77 @@
             path:'/user/evaluate',
           })
         },
-          getExamList:function () {
-            let that =this
-            this.$http.post('/yii/exam/exam/view',{
-              id:this.eid
-            }).then(function (res) {
-              console.log(res.data)
-              that.examList.exname=res.data.data[0]
-              that.examList.exUser=res.data.data[1].data.username
-              that.examList.exCreateTime=res.data.data[2]
-              that.chooseqList=res.data.data[3]
-              that.fillqList=res.data.data[4]
-              that.programqList=res.data.data[5]
-              that.judgeList =res.data.data[6]
-              that.choosemList=res.data.data[7]
+        getExamList:function () {
+          let that =this
+          this.$http.post('/yii/exam/exam/view',{
+            id:this.eid
+          }).then(function (res) {
+            console.log(res.data)
+            that.examList.exname=res.data.data[0]
+            that.examList.exUser=res.data.data[1].data.username
+            that.examList.exCreateTime=res.data.data[2]
+            let cqList = res.data.data[3]
+            for(let i=0;i<cqList.length;i++)
+            {
+              that.chooseqList.push({
+                cqid:cqList[i].cqid,
+                cqitem:cqList[i].cqitem,
+                cqcho:[cqList[i].cqcho.split('---')[0],cqList[i].cqcho.split('---')[1],cqList[i].cqcho.split('---')[2],cqList[i].cqcho.split('---')[3]],
+                cqrem:cqList[i].cqrem,
+                cqans:cqList[i].cqans
+              })
+            }
+            that.fillqList=res.data.data[4]
+            that.programqList=res.data.data[5]
+            that.judgeList =res.data.data[6]
+            that.choosemList=res.data.data[7]
+          })
+        },
+        //提交选择题
+        cr:function(id,str){
+          let flag = false
+          for(let i=0;i< this.cList.length;i++)
+          {
+            if(this.cList[i]['id']==id)
+            {
+              flag=true
+              break
+            }
+          }
+          if(flag){
+            this.cList.splice(id,1)
+            console.log(this.cList)
+          }
+          else{
+            this.cList.push({
+              id:id,
+              ans:str
             })
-          },
+            console.log(this.cList)
+          }
+        },
+        //提交填空题
+        fr:function(id,event){
+          let flag = false
+          for(let i=0;i< this.fList.length;i++)
+          {
+            if(this.fList[i]['id']==id)
+            {
+              flag=true
+              break
+            }
+          }
+          if(flag){
+            this.fList.splice(id,1)
+          }
+          else{
+            this.fList.push({
+              id:id,
+              ans:event.currentTarget.value
+            })
+          }
+          console.log(this.fList)
+        },
         //提交试卷
         EvaOK:function () {
           console.log(this.cList);
@@ -125,6 +179,7 @@
       created(){
           this.eid =this.$route.query.id
         this.getExamList()
+        console.log(this.chooseqList)
       }
     }
 </script>
