@@ -26,10 +26,9 @@ class Fillq extends ActiveRecord
     public function rules()
     {
         return [
-            [['fqid','status'],'required'],
-            [['fqid','status'],'integer'],
-            [['fqans'],'string','max'=>255],
-            [['fqitem','fqtail','fqrem'],'text'],
+            [['fqid','fqstatus'],'required'],
+            [['fqid','fqstatus'],'integer'],
+            [['fqitem','fqtail','fqrem','fqans'],'text'],
         ];
     }
     public function attributeLabels()

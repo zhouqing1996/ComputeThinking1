@@ -95,7 +95,6 @@ class ChooseqController extends Controller
         $id = (new Query())
             ->select("*")
             ->from('chooseq')
-            ->where(['cqstatus'=>1])
             ->max('cqid');
         $id = $id+1;
         $request = \Yii::$app->request;

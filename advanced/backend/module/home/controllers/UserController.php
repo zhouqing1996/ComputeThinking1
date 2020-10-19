@@ -119,6 +119,9 @@ class UserController extends Controller
      * 1:有效的用户
      * 2:所有的用户
      * 3:无效的用户
+     * 4:模糊查找
+     * 5:教师
+     * 6：学生
      * 显示用户信息时，不保存用户的密码信息，仅显示用户名、角色
      */
     public function actionQuery()
@@ -150,6 +153,37 @@ class UserController extends Controller
                 ->Where(['status'=> 0])
                 ->all();
             return array("data"=>$query,"msg"=>"所有无效的用户");
+        }
+        else if($flag==4)
+        {
+            $name = $request->post('name');
+            $query = (new Query())
+                ->select('*')
+                ->from('user')
+                ->where(['or',
+                    ['like', 'username', $name],
+                    ['like', 'id', $name],
+                ])
+                ->all();
+            return array("data"=>$query,"msg"=>$name."用户");
+        }
+        else if($flag==5)
+        {
+            $query = (new Query())
+                ->select('*')
+                ->from('user')
+                ->Where(['role'=> 2])
+                ->all();
+            return array("data"=>$query,"msg"=>"所有教师用户");
+        }
+        else if($flag==6)
+        {
+            $query = (new Query())
+                ->select('*')
+                ->from('user')
+                ->Where(['role'=> 3])
+                ->all();
+            return array("data"=>$query,"msg"=>"所有学生用户");
         }
         else{
             return array("data"=>[$flag,'0'],"msg"=>"输入错误");

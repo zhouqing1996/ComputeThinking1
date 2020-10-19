@@ -9,7 +9,7 @@ use yii\db\ActiveRecord;
  * @property integer $exid
  * @property integer $qid
  * @property integer $qtypeid
- * @property string $text
+ * @property string $ans
  * @property float $grade
  * @property string $finishtime
  * @property integer $status
