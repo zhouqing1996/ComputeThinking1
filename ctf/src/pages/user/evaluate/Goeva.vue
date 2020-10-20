@@ -31,35 +31,37 @@
       <div>
       <span v-for="(j,keyj) in judgeList":key="keyj">
       <li class="item">({{keyj+1}}){{j.jqitem}}<br>
-        <input type="text" value=""><br>
+        <input type="radio" :name="j.jqid" @change="jr(j.jqid,1)">正确
+        <input type="radio" :name="j.jqid" @change="jr(j.jqid,0)">错误
       </li>
     </span>
       </div>
       <hr/>
       <h2>四、多选题</h2>
       <div>
-      <span v-for="(m,keym) in choosemList":key="keym">
-      <li class="item">({{keym+1}}){{m.mqitem}}<br>
-        <input type="radio"  value="0">（A）{{m.mqcho.split('---')[0]}}<br>
-        <input type="radio"  value="1">（B）{{m.mqcho.split('---')[1]}}<br>
-        <input type="radio"  value="2">（C）{{m.mqcho.split('---')[2]}}<br>
-        <input type="radio"  value="3">（D）{{m.mqcho.split('---')[3]}}<br>
-      </li>
-    </span>
+        <div v-for="(m,index) in choosemList">
+          <h3>({{index+1}}):{{m.mitem}}</h3>
+          <ul>
+            <li v-for="(x,i) in m.mcho" >
+              <input type="radio" :name="m.mid+i"
+                     @change="mr(m.mid,m.mcho[i])"/>{{x}}
+            </li>
+          </ul>
+        </div>
       </div>
       <hr/>
       <h2>五、程序题</h2>
       <div>
-      <span v-for="(p,key3) in programqList":key="key3">
-        ({{key3+1}})<strong>{{p.pqitem}}</strong>
-        <input type="text" value=""><br>
-      </span>
+      <span v-for="(p,keyp) in programqList":key="keyp">
+      <li class="item">({{keyp+1}}){{p.pqitem}}<br>
+        <input type="text"  :name="p.pqid" @input="pr(p.pqid,$event)"><br>
+      </li>
+    </span>
       </div>
     </div>
     <hr/>
     <div style="text-align: center">
       <button class="btn2" @click="back">返回</button>
-      <el-divider direction="vertical"></el-divider>
       <button class="btn2" @click="EvaOK">提交试卷</button>
     </div>
   </div>
@@ -119,47 +121,53 @@
             that.fillqList=res.data.data[4]
             that.programqList=res.data.data[5]
             that.judgeList =res.data.data[6]
-            that.choosemList=res.data.data[7]
+            let mList = res.data.data[7]
+            for(let i=0;i<mList.length;i++)
+            {
+              that.choosemList.push({
+                mid:mList[i].mqid,
+                mitem:mList[i].mqitem,
+                mcho:[mList[i].mqcho.split('---')[0],mList[i].mqcho.split('---')[1],mList[i].mqcho.split('---')[2],mList[i].mqcho.split('---')[3]],
+                mrem:mList[i].mqrem,
+                mans:mList[i].mqans
+              })
+            }
+            // that.choosemList=res.data.data[7]
           })
         },
         //提交选择题
         cr:function(id,str){
-          let flag = false
+          let flag = true
           for(let i=0;i< this.cList.length;i++)
           {
             if(this.cList[i]['id']==id)
             {
-              flag=true
+              flag=false
+              this.cList[i]['ans']=str
               break
             }
           }
           if(flag){
-            this.cList.splice(id,1)
-            console.log(this.cList)
-          }
-          else{
             this.cList.push({
               id:id,
               ans:str
             })
-            console.log(this.cList)
           }
+          console.log(this.cList)
         },
         //提交填空题
         fr:function(id,event){
-          let flag = false
+          let flag = true
           for(let i=0;i< this.fList.length;i++)
           {
             if(this.fList[i]['id']==id)
             {
-              flag=true
+              flag=false
+              this.fList[i]['ans'] = event.currentTarget.value
               break
             }
           }
           if(flag){
-            this.fList.splice(id,1)
-          }
-          else{
             this.fList.push({
               id:id,
               ans:event.currentTarget.value
@@ -167,19 +175,97 @@
           }
           console.log(this.fList)
         },
+        //提交判断题
+        jr:function(id,num) {
+          let flag = true
+          for(let i=0;i< this.jList.length;i++)
+          {
+            if(this.jList[i]['id']==id)
+            {
+              flag=false
+              this.jList[i]['ans'] = num
+              break
+            }
+          }
+          if(flag){
+            this.jList.push({
+              id:id,
+              ans:num
+            })
+          }
+          console.log(this.jList)
+        },
+        //提交多选题
+        mr:function(id,str){
+          let flag =true
+          for(let i=0;i< this.cmList.length;i++)
+          {
+            if(this.cmList[i]['id']==id)
+            {
+              flag =false
+              if(this.cmList[i]['ans']==str)
+              {
+                this.cmList.splice(id,1)
+              }
+              else{
+                this.cmList[i]['ans']=this.cmList[i]['ans']+'---'+str
+              }
+              break
+            }
+          }
+          if(flag){
+            this.cmList.push({
+              id:id,
+              ans:str
+            })
+          }
+          console.log(this.cmList)
+        },
+        //提交程序题
+        pr:function(id,event){
+          let flag = true
+          for(let i=0;i< this.pList.length;i++)
+          {
+            if(this.pList[i]['id']==id)
+            {
+              flag=false
+              this.pList[i]['ans'] = event.currentTarget.value
+              break
+            }
+          }
+          if(flag){
+            this.pList.push({
+              id:id,
+              ans:event.currentTarget.value
+            })
+          }
+          console.log(this.pList)
+        },
         //提交试卷
         EvaOK:function () {
-          console.log(this.cList);
-          console.log(this.fList);
-          console.log(this.pList);
-          console.log(this.jList);
-          console.log(this.cmList);
+          this.$http.post('/yii/exam/exam/userans',{
+            cList:this.cList,
+            fList:this.fList,
+            cmList:this.cmList,
+            pList:this.pList,
+            jList:this.jList,
+            uid:this.$store.getters.getsId,
+            eid:this.eid
+          }).then(function (res) {
+            console.log(res.data)
+            this.$router.push({path:'/user/evaluate'})
+            alert(res.data.message)
+          })
+          // console.log(this.cList);
+          // console.log(this.fList);
+          // console.log(this.pList);
+          // console.log(this.jList);
+          // console.log(this.cmList);
         }
       },
       created(){
           this.eid =this.$route.query.id
         this.getExamList()
-        console.log(this.chooseqList)
       }
     }
 </script>
