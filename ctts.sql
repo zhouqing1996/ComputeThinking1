@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50637
 File Encoding         : 65001
 
-Date: 2020-10-13 22:03:37
+Date: 2020-10-20 18:47:53
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -54,6 +54,70 @@ INSERT INTO `book` VALUES ('19', '人名', '2037', '未知', '一些', '1');
 INSERT INTO `book` VALUES ('20', '人名', '2038', '未知', '一些', '0');
 
 -- ----------------------------
+-- Table structure for bprogramq
+-- ----------------------------
+DROP TABLE IF EXISTS `bprogramq`;
+CREATE TABLE `bprogramq` (
+  `bpid` varchar(255) NOT NULL,
+  `bpitem` varchar(255) NOT NULL,
+  `bpans` varchar(255) NOT NULL,
+  `bptail` varchar(255) NOT NULL,
+  `bprem` varchar(255) NOT NULL,
+  `bpstatus` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of bprogramq
+-- ----------------------------
+INSERT INTO `bprogramq` VALUES ('1', '题目一', 'C', 'C语言是世界上最好的编程语言', 'C语言', '1');
+INSERT INTO `bprogramq` VALUES ('3', '题目三', 'C++', 'C++是世界上最好的编程语言', 'C++', '1');
+INSERT INTO `bprogramq` VALUES ('4', '题目四', 'Java', 'Java语言是世界上最好的编程语言', 'Java', '1');
+INSERT INTO `bprogramq` VALUES ('6', '题目五', 'PHP', 'PHP是世界上最好的编程语言', 'PHP语言', '1');
+
+-- ----------------------------
+-- Table structure for choosem
+-- ----------------------------
+DROP TABLE IF EXISTS `choosem`;
+CREATE TABLE `choosem` (
+  `mqid` int(11) NOT NULL,
+  `mqitem` text,
+  `mqcho` text,
+  `mqans` text,
+  `mqtail` text,
+  `mqrem` text,
+  `mqstatus` int(2) NOT NULL,
+  PRIMARY KEY (`mqid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of choosem
+-- ----------------------------
+INSERT INTO `choosem` VALUES ('1', '选择题1', 'A11---B12---C13---D14', 'B12', '略', '一', '1');
+INSERT INTO `choosem` VALUES ('2', '选择题2', 'A12---B13---C14---D15', 'B13', '略', '二', '1');
+INSERT INTO `choosem` VALUES ('3', '选择题3', 'A13---B14---C15---D16', 'B14', '略', '三', '1');
+INSERT INTO `choosem` VALUES ('4', '选择题4', 'A14---B15---C16---D17', 'B15', '略', '四', '1');
+INSERT INTO `choosem` VALUES ('5', '选择题5', 'A15---B16---C17---D18', 'B16', '略', '五', '1');
+INSERT INTO `choosem` VALUES ('6', '选择题6', 'A16---B17---C18---D19', 'B17', '略', '六', '1');
+INSERT INTO `choosem` VALUES ('7', '选择题7', 'A17---B18---C19---D20', 'B18', '略', '日', '1');
+INSERT INTO `choosem` VALUES ('8', '选择题8', 'A18---B19---C20---D21', 'B19', '略', '一', '1');
+INSERT INTO `choosem` VALUES ('9', '选择题9', 'A19---B20---C21---D22', 'B20', '略', '二', '1');
+INSERT INTO `choosem` VALUES ('10', '选择题10', 'A20---B21---C22---D23', 'B21', '略', '三', '1');
+INSERT INTO `choosem` VALUES ('11', '选择题11', 'A21---B22---C23---D24', 'B22', '略', '四', '1');
+INSERT INTO `choosem` VALUES ('12', '选择题12', 'A22---B23---C24---D25', 'B23', '略', '五', '1');
+INSERT INTO `choosem` VALUES ('13', '选择题13', 'A23---B24---C25---D26', 'B24', '略', '六', '1');
+INSERT INTO `choosem` VALUES ('14', '选择题14', 'A24---B25---C26---D27', 'B25', '略', '日', '1');
+INSERT INTO `choosem` VALUES ('15', '选择题15', 'A25---B26---C27---D28', 'B26', '略', '一', '1');
+INSERT INTO `choosem` VALUES ('16', '选择题16', 'A26---B27---C28---D29', 'B27', '略', '二', '1');
+INSERT INTO `choosem` VALUES ('17', '选择题17', 'A27---B28---C29---D30', 'B28', '略', '三', '1');
+INSERT INTO `choosem` VALUES ('18', '选择题18', 'A28---B29---C30---D31', 'B29', '略', '四', '1');
+INSERT INTO `choosem` VALUES ('19', '选择题19', 'A29---B30---C31---D32', 'B30', '略', '五', '1');
+INSERT INTO `choosem` VALUES ('20', 'ahhaha', 'aaa---aaa---aa---aaaaaaa', 'aaa---aa', 'a', 'eeeeee', '1');
+INSERT INTO `choosem` VALUES ('21', 'aaa', 'aa---aaa---aaaa---aaaaa', 'aa---aaa', 'a', 'aaaaaaaaaaaaaaaaa', '1');
+INSERT INTO `choosem` VALUES ('22', '4', '4---5---6---7', '4--5---6---7', '11', '4', '1');
+INSERT INTO `choosem` VALUES ('23', '44444', '44444---4444---444---444', '44', '444', '444', '1');
+INSERT INTO `choosem` VALUES ('24', '涉及', '1---1---1---1', '2', '2', '1--2', '1');
+
+-- ----------------------------
 -- Table structure for chooseq
 -- ----------------------------
 DROP TABLE IF EXISTS `chooseq`;
@@ -93,6 +157,24 @@ INSERT INTO `chooseq` VALUES ('19', '选择题16', 'A26---B27---C28---D29', 'B27
 INSERT INTO `chooseq` VALUES ('20', '选择题17', 'A27---B28---C29---D30', 'B28', '略', '三', '1');
 INSERT INTO `chooseq` VALUES ('21', '选择题18', 'A28---B29---C30---D31', 'B29', '略', '四', '1');
 INSERT INTO `chooseq` VALUES ('22', '选择题19', 'A29---B30---C31---D32', 'B30', '略', '五', '1');
+INSERT INTO `chooseq` VALUES ('23', 'shia', '11---1---1---1', '1', '1', '1', '1');
+INSERT INTO `chooseq` VALUES ('24', '111111', '1111---1111---1111---11111', '1111', '111', '1111', '1');
+INSERT INTO `chooseq` VALUES ('25', '教师测试选择题', '1---2---3---4', '1', '布置', '选择题', '1');
+
+-- ----------------------------
+-- Table structure for course
+-- ----------------------------
+DROP TABLE IF EXISTS `course`;
+CREATE TABLE `course` (
+  `cid` int(11) NOT NULL,
+  `cname` varchar(255) DEFAULT NULL,
+  `status` int(2) NOT NULL,
+  PRIMARY KEY (`cid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of course
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for exam
@@ -116,6 +198,18 @@ INSERT INTO `exam` VALUES ('4', '册数', '2020-10-12 17:30:37', '1', '1');
 INSERT INTO `exam` VALUES ('5', '预览', '2020-10-12 20:42:11', '1', '1');
 INSERT INTO `exam` VALUES ('6', '测试', '2020-10-13 18:24:50', '1', '1');
 INSERT INTO `exam` VALUES ('7', '修改后', '2020-10-13 19:52:16', '1', '1');
+INSERT INTO `exam` VALUES ('8', 'shisisaaa', '2020-10-15 20:55:12', '1', '1');
+INSERT INTO `exam` VALUES ('9', 'shsiaaoaa', '2020-10-16 15:46:21', '1', '1');
+INSERT INTO `exam` VALUES ('10', 'xin', '2020-10-17 09:10:31', null, '1');
+INSERT INTO `exam` VALUES ('11', 'xinc', '2020-10-17 09:11:59', '1', '1');
+INSERT INTO `exam` VALUES ('12', 'shisis', '2020-10-17 09:12:50', '1', '1');
+INSERT INTO `exam` VALUES ('13', '改进', '2020-10-18 17:00:39', '1', '1');
+INSERT INTO `exam` VALUES ('14', '创建试卷测试', '2020-10-19 15:11:40', '1', '1');
+INSERT INTO `exam` VALUES ('15', '创建试卷测试2', '2020-10-19 15:12:51', '1', '1');
+INSERT INTO `exam` VALUES ('16', '测评测试', '2020-10-20 10:34:45', '1', '1');
+INSERT INTO `exam` VALUES ('17', '教师测试', '2020-10-20 15:26:44', '4', '1');
+INSERT INTO `exam` VALUES ('18', '教师测试随机组卷', '2020-10-20 15:51:36', '4', '1');
+INSERT INTO `exam` VALUES ('19', '教师测试创建试卷', '2020-10-20 15:57:31', '4', '1');
 
 -- ----------------------------
 -- Table structure for examtail
@@ -224,6 +318,128 @@ INSERT INTO `examtail` VALUES ('7', '14', '2', '1');
 INSERT INTO `examtail` VALUES ('7', '17', '1', '1');
 INSERT INTO `examtail` VALUES ('7', '17', '3', '1');
 INSERT INTO `examtail` VALUES ('7', '19', '1', '1');
+INSERT INTO `examtail` VALUES ('8', '1', '1', '1');
+INSERT INTO `examtail` VALUES ('8', '5', '3', '1');
+INSERT INTO `examtail` VALUES ('8', '6', '2', '1');
+INSERT INTO `examtail` VALUES ('8', '7', '1', '1');
+INSERT INTO `examtail` VALUES ('8', '12', '2', '1');
+INSERT INTO `examtail` VALUES ('8', '14', '1', '1');
+INSERT INTO `examtail` VALUES ('8', '16', '1', '1');
+INSERT INTO `examtail` VALUES ('8', '20', '1', '1');
+INSERT INTO `examtail` VALUES ('9', '5', '1', '1');
+INSERT INTO `examtail` VALUES ('9', '8', '2', '1');
+INSERT INTO `examtail` VALUES ('9', '17', '1', '1');
+INSERT INTO `examtail` VALUES ('9', '17', '3', '1');
+INSERT INTO `examtail` VALUES ('10', '1', '1', '1');
+INSERT INTO `examtail` VALUES ('10', '1', '2', '1');
+INSERT INTO `examtail` VALUES ('10', '1', '3', '1');
+INSERT INTO `examtail` VALUES ('10', '2', '1', '1');
+INSERT INTO `examtail` VALUES ('10', '2', '3', '1');
+INSERT INTO `examtail` VALUES ('10', '2', '4', '1');
+INSERT INTO `examtail` VALUES ('10', '2', '5', '1');
+INSERT INTO `examtail` VALUES ('10', '3', '2', '1');
+INSERT INTO `examtail` VALUES ('10', '3', '5', '1');
+INSERT INTO `examtail` VALUES ('10', '4', '2', '1');
+INSERT INTO `examtail` VALUES ('10', '4', '4', '1');
+INSERT INTO `examtail` VALUES ('10', '5', '1', '1');
+INSERT INTO `examtail` VALUES ('10', '5', '2', '1');
+INSERT INTO `examtail` VALUES ('10', '6', '1', '1');
+INSERT INTO `examtail` VALUES ('10', '6', '2', '1');
+INSERT INTO `examtail` VALUES ('10', '6', '4', '1');
+INSERT INTO `examtail` VALUES ('10', '8', '3', '1');
+INSERT INTO `examtail` VALUES ('11', '1', '4', '1');
+INSERT INTO `examtail` VALUES ('11', '1', '5', '1');
+INSERT INTO `examtail` VALUES ('11', '2', '1', '1');
+INSERT INTO `examtail` VALUES ('11', '3', '5', '1');
+INSERT INTO `examtail` VALUES ('11', '4', '4', '1');
+INSERT INTO `examtail` VALUES ('11', '4', '5', '1');
+INSERT INTO `examtail` VALUES ('11', '5', '1', '1');
+INSERT INTO `examtail` VALUES ('11', '6', '3', '1');
+INSERT INTO `examtail` VALUES ('11', '6', '4', '1');
+INSERT INTO `examtail` VALUES ('11', '7', '1', '1');
+INSERT INTO `examtail` VALUES ('11', '8', '2', '1');
+INSERT INTO `examtail` VALUES ('11', '9', '2', '1');
+INSERT INTO `examtail` VALUES ('11', '9', '3', '1');
+INSERT INTO `examtail` VALUES ('11', '16', '5', '1');
+INSERT INTO `examtail` VALUES ('11', '18', '2', '1');
+INSERT INTO `examtail` VALUES ('11', '18', '3', '1');
+INSERT INTO `examtail` VALUES ('12', '1', '2', '1');
+INSERT INTO `examtail` VALUES ('12', '1', '4', '1');
+INSERT INTO `examtail` VALUES ('12', '2', '2', '1');
+INSERT INTO `examtail` VALUES ('12', '2', '4', '1');
+INSERT INTO `examtail` VALUES ('12', '4', '1', '1');
+INSERT INTO `examtail` VALUES ('12', '4', '2', '1');
+INSERT INTO `examtail` VALUES ('12', '4', '3', '1');
+INSERT INTO `examtail` VALUES ('12', '4', '5', '1');
+INSERT INTO `examtail` VALUES ('12', '5', '3', '1');
+INSERT INTO `examtail` VALUES ('12', '6', '1', '1');
+INSERT INTO `examtail` VALUES ('12', '6', '3', '1');
+INSERT INTO `examtail` VALUES ('12', '6', '5', '1');
+INSERT INTO `examtail` VALUES ('12', '7', '3', '1');
+INSERT INTO `examtail` VALUES ('12', '7', '5', '1');
+INSERT INTO `examtail` VALUES ('12', '8', '1', '1');
+INSERT INTO `examtail` VALUES ('13', '1', '3', '1');
+INSERT INTO `examtail` VALUES ('13', '1', '5', '1');
+INSERT INTO `examtail` VALUES ('13', '2', '1', '1');
+INSERT INTO `examtail` VALUES ('13', '2', '2', '1');
+INSERT INTO `examtail` VALUES ('13', '2', '4', '1');
+INSERT INTO `examtail` VALUES ('13', '3', '5', '1');
+INSERT INTO `examtail` VALUES ('13', '4', '1', '1');
+INSERT INTO `examtail` VALUES ('13', '4', '2', '1');
+INSERT INTO `examtail` VALUES ('13', '5', '4', '1');
+INSERT INTO `examtail` VALUES ('13', '6', '1', '1');
+INSERT INTO `examtail` VALUES ('13', '6', '2', '1');
+INSERT INTO `examtail` VALUES ('13', '6', '3', '1');
+INSERT INTO `examtail` VALUES ('13', '6', '5', '1');
+INSERT INTO `examtail` VALUES ('13', '7', '1', '1');
+INSERT INTO `examtail` VALUES ('13', '8', '3', '1');
+INSERT INTO `examtail` VALUES ('13', '8', '4', '1');
+INSERT INTO `examtail` VALUES ('14', '20', '5', '1');
+INSERT INTO `examtail` VALUES ('14', '21', '2', '1');
+INSERT INTO `examtail` VALUES ('14', '21', '3', '1');
+INSERT INTO `examtail` VALUES ('14', '22', '4', '1');
+INSERT INTO `examtail` VALUES ('14', '23', '1', '1');
+INSERT INTO `examtail` VALUES ('15', '21', '5', '1');
+INSERT INTO `examtail` VALUES ('15', '22', '2', '1');
+INSERT INTO `examtail` VALUES ('15', '22', '3', '1');
+INSERT INTO `examtail` VALUES ('15', '23', '4', '1');
+INSERT INTO `examtail` VALUES ('15', '24', '1', '1');
+INSERT INTO `examtail` VALUES ('16', '1', '4', '1');
+INSERT INTO `examtail` VALUES ('16', '2', '2', '1');
+INSERT INTO `examtail` VALUES ('16', '2', '3', '1');
+INSERT INTO `examtail` VALUES ('16', '2', '5', '1');
+INSERT INTO `examtail` VALUES ('16', '3', '2', '1');
+INSERT INTO `examtail` VALUES ('16', '3', '4', '1');
+INSERT INTO `examtail` VALUES ('16', '4', '3', '1');
+INSERT INTO `examtail` VALUES ('16', '4', '5', '1');
+INSERT INTO `examtail` VALUES ('16', '7', '1', '1');
+INSERT INTO `examtail` VALUES ('16', '8', '1', '1');
+INSERT INTO `examtail` VALUES ('17', '1', '1', '1');
+INSERT INTO `examtail` VALUES ('17', '1', '5', '1');
+INSERT INTO `examtail` VALUES ('17', '2', '2', '1');
+INSERT INTO `examtail` VALUES ('17', '2', '3', '1');
+INSERT INTO `examtail` VALUES ('17', '4', '2', '1');
+INSERT INTO `examtail` VALUES ('17', '4', '3', '1');
+INSERT INTO `examtail` VALUES ('17', '5', '4', '1');
+INSERT INTO `examtail` VALUES ('17', '5', '5', '1');
+INSERT INTO `examtail` VALUES ('17', '7', '1', '1');
+INSERT INTO `examtail` VALUES ('17', '7', '2', '1');
+INSERT INTO `examtail` VALUES ('17', '7', '4', '1');
+INSERT INTO `examtail` VALUES ('18', '1', '2', '1');
+INSERT INTO `examtail` VALUES ('18', '2', '1', '1');
+INSERT INTO `examtail` VALUES ('18', '2', '3', '1');
+INSERT INTO `examtail` VALUES ('18', '9', '5', '1');
+INSERT INTO `examtail` VALUES ('18', '11', '1', '1');
+INSERT INTO `examtail` VALUES ('18', '15', '2', '1');
+INSERT INTO `examtail` VALUES ('18', '18', '3', '1');
+INSERT INTO `examtail` VALUES ('18', '18', '5', '1');
+INSERT INTO `examtail` VALUES ('18', '19', '4', '1');
+INSERT INTO `examtail` VALUES ('18', '21', '4', '1');
+INSERT INTO `examtail` VALUES ('19', '22', '5', '1');
+INSERT INTO `examtail` VALUES ('19', '23', '2', '1');
+INSERT INTO `examtail` VALUES ('19', '23', '3', '1');
+INSERT INTO `examtail` VALUES ('19', '24', '4', '1');
+INSERT INTO `examtail` VALUES ('19', '25', '1', '1');
 
 -- ----------------------------
 -- Table structure for fillq
@@ -242,25 +458,128 @@ CREATE TABLE `fillq` (
 -- ----------------------------
 -- Records of fillq
 -- ----------------------------
-INSERT INTO `fillq` VALUES ('3', '华师在哪一个省？', '湖北省', '地理', '知识点1', '1');
-INSERT INTO `fillq` VALUES ('4', '题目2', '答案2', '', '知识点2', '1');
-INSERT INTO `fillq` VALUES ('5', '题目3', '答案3', '', '知识点3', '0');
-INSERT INTO `fillq` VALUES ('6', '题目4', '答案4', '', '知识点4', '1');
-INSERT INTO `fillq` VALUES ('7', '题目5', '答案5', '', '知识点5', '1');
-INSERT INTO `fillq` VALUES ('8', '题目6', '答案6', '', '知识点6', '1');
-INSERT INTO `fillq` VALUES ('9', '题目7', '答案7', '', '知识点7', '1');
-INSERT INTO `fillq` VALUES ('10', '题目8', '答案8', '', '知识点8', '0');
-INSERT INTO `fillq` VALUES ('11', '题目9', '9', '', '知识点9', '1');
-INSERT INTO `fillq` VALUES ('12', '题目10', '答案10', '', '知识点10', '1');
-INSERT INTO `fillq` VALUES ('13', '题目11', '答案11', '', '知识点11', '1');
-INSERT INTO `fillq` VALUES ('14', '题目12', '答案12', '', '知识点12', '1');
-INSERT INTO `fillq` VALUES ('15', '题目13', '答案13', '', '知识点13', '1');
-INSERT INTO `fillq` VALUES ('16', '题目14', '答案14', '', '知识点14', '1');
-INSERT INTO `fillq` VALUES ('17', '题目15', '答案15', '', '知识点15', '1');
-INSERT INTO `fillq` VALUES ('18', '题目16', '答案16', '', '知识点16', '1');
-INSERT INTO `fillq` VALUES ('19', '题目17', '答案17', '', '知识点17', '1');
-INSERT INTO `fillq` VALUES ('20', '题目18', '答案18', '', '知识点18', '1');
-INSERT INTO `fillq` VALUES ('21', '题目19', '答案19', '', '知识点19', '1');
+INSERT INTO `fillq` VALUES ('1', '题目1', '答案1', '详情1', '知识点1', '1');
+INSERT INTO `fillq` VALUES ('2', '题目2', '答案2', '详情2', '知识点2', '1');
+INSERT INTO `fillq` VALUES ('3', '题目3', '答案3', '详情3', '知识点3', '1');
+INSERT INTO `fillq` VALUES ('4', '题目4', '答案4', '详情4', '知识点4', '1');
+INSERT INTO `fillq` VALUES ('5', '题目5', '答案5', '详情5', '知识点5', '1');
+INSERT INTO `fillq` VALUES ('6', '题目6', '答案6', '详情6', '知识点6', '1');
+INSERT INTO `fillq` VALUES ('7', '题目7', '答案7', '详情7', '知识点7', '1');
+INSERT INTO `fillq` VALUES ('8', '题目8', '答案8', '详情8', '知识点8', '1');
+INSERT INTO `fillq` VALUES ('9', '题目9', '答案9', '详情9', '知识点9', '1');
+INSERT INTO `fillq` VALUES ('10', '题目10', '答案10', '详情10', '知识点10', '1');
+INSERT INTO `fillq` VALUES ('11', '题目11', '答案11', '详情11', '知识点11', '1');
+INSERT INTO `fillq` VALUES ('12', '题目12', '答案12', '详情12', '知识点12', '1');
+INSERT INTO `fillq` VALUES ('13', '题目13', '答案13', '详情13', '知识点13', '1');
+INSERT INTO `fillq` VALUES ('14', '题目14', '答案14', '详情14', '知识点14', '1');
+INSERT INTO `fillq` VALUES ('15', '题目15', '答案15', '详情15', '知识点15', '1');
+INSERT INTO `fillq` VALUES ('16', '题目16', '答案16', '详情16', '知识点16', '1');
+INSERT INTO `fillq` VALUES ('17', '题目17', '答案17', '详情17', '知识点17', '1');
+INSERT INTO `fillq` VALUES ('18', '题目18', '答案18', '详情18', '知识点18', '1');
+INSERT INTO `fillq` VALUES ('19', '题目19', '答案19', '详情19', '知识点19', '1');
+INSERT INTO `fillq` VALUES ('20', '信息以什么形式存储在计算机中？', '二进制编码', '计算机基础', '计算机', '1');
+INSERT INTO `fillq` VALUES ('21', '2', '2', '2', '2', '1');
+INSERT INTO `fillq` VALUES ('22', '222', '222', '22', '2222', '1');
+INSERT INTO `fillq` VALUES ('23', '填空题1', '1', '1', '1', '1');
+
+-- ----------------------------
+-- Table structure for judge
+-- ----------------------------
+DROP TABLE IF EXISTS `judge`;
+CREATE TABLE `judge` (
+  `jqid` int(11) NOT NULL,
+  `jqitem` text,
+  `jqans` int(2) DEFAULT NULL,
+  `jqtail` text,
+  `jqrem` text,
+  `jqstatus` int(2) NOT NULL,
+  PRIMARY KEY (`jqid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of judge
+-- ----------------------------
+INSERT INTO `judge` VALUES ('1', '题目1', '1', '详情1', '知识点1', '1');
+INSERT INTO `judge` VALUES ('2', '题目2', '1', '详情2', '知识点2', '1');
+INSERT INTO `judge` VALUES ('3', '题目3', '0', '详情3', '知识点3', '1');
+INSERT INTO `judge` VALUES ('4', '题目4', '1', '详情4', '知识点4', '1');
+INSERT INTO `judge` VALUES ('5', '题目5', '0', '详情5', '知识点5', '1');
+INSERT INTO `judge` VALUES ('6', '题目6', '1', '详情6', '知识点6', '1');
+INSERT INTO `judge` VALUES ('7', '题目7', '0', '详情7', '知识点7', '1');
+INSERT INTO `judge` VALUES ('8', '题目8', '1', '详情8', '知识点8', '1');
+INSERT INTO `judge` VALUES ('9', '题目9', '0', '详情9', '知识点9', '1');
+INSERT INTO `judge` VALUES ('10', '题目10', '1', '详情10', '知识点10', '1');
+INSERT INTO `judge` VALUES ('11', '题目11', '0', '详情11', '知识点11', '1');
+INSERT INTO `judge` VALUES ('12', '题目12', '1', '详情12', '知识点12', '1');
+INSERT INTO `judge` VALUES ('13', '题目13', '0', '详情13', '知识点13', '1');
+INSERT INTO `judge` VALUES ('14', '题目14', '1', '详情14', '知识点14', '1');
+INSERT INTO `judge` VALUES ('15', '题目15', '0', '详情15', '知识点15', '1');
+INSERT INTO `judge` VALUES ('16', '题目16', '1', '详情16', '知识点16', '1');
+INSERT INTO `judge` VALUES ('17', '题目17', '0', '详情17', '知识点17', '1');
+INSERT INTO `judge` VALUES ('18', '题目18', '1', '详情18', '知识点18', '1');
+INSERT INTO `judge` VALUES ('19', '题目19', '0', '详情19', '知识点19', '1');
+INSERT INTO `judge` VALUES ('20', '3', '3', '3', '3', '1');
+INSERT INTO `judge` VALUES ('21', '333', '333', '333', '333', '1');
+INSERT INTO `judge` VALUES ('22', '判断1', '1', '1', '1', '1');
+
+-- ----------------------------
+-- Table structure for pratice
+-- ----------------------------
+DROP TABLE IF EXISTS `pratice`;
+CREATE TABLE `pratice` (
+  `id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `qid` int(11) NOT NULL,
+  `qtypeid` int(11) NOT NULL,
+  `ans` text,
+  `finishtime` varchar(255) DEFAULT NULL,
+  `status` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of pratice
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for program
+-- ----------------------------
+DROP TABLE IF EXISTS `program`;
+CREATE TABLE `program` (
+  `pqid` int(11) NOT NULL,
+  `pqitem` text,
+  `pqans` text,
+  `pqtail` text,
+  `pqrem` text,
+  `pqstatus` int(2) NOT NULL,
+  PRIMARY KEY (`pqid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of program
+-- ----------------------------
+INSERT INTO `program` VALUES ('1', '程序题1', '答案1', '详情1', '知识点1', '1');
+INSERT INTO `program` VALUES ('2', '程序题2', '答案2', '详情2', '知识点2', '1');
+INSERT INTO `program` VALUES ('3', '程序题3', '答案3', '详情3', '知识点3', '1');
+INSERT INTO `program` VALUES ('4', '程序题4', '答案4', '详情4', '知识点4', '1');
+INSERT INTO `program` VALUES ('5', '程序题5', '答案5', '详情5', '知识点5', '1');
+INSERT INTO `program` VALUES ('6', '程序题6', '答案6', '详情6', '知识点6', '1');
+INSERT INTO `program` VALUES ('7', '程序题7', '答案7', '详情7', '知识点7', '1');
+INSERT INTO `program` VALUES ('8', '程序题8', '答案8', '详情8', '知识点8', '1');
+INSERT INTO `program` VALUES ('9', '程序题9', '答案9', '详情9', '知识点9', '1');
+INSERT INTO `program` VALUES ('10', '程序题10', '答案10', '详情10', '知识点10', '1');
+INSERT INTO `program` VALUES ('11', '程序题11', '答案11', '详情11', '知识点11', '1');
+INSERT INTO `program` VALUES ('12', '程序题12', '答案12', '详情12', '知识点12', '1');
+INSERT INTO `program` VALUES ('13', '程序题13', '答案13', '详情13', '知识点13', '1');
+INSERT INTO `program` VALUES ('14', '程序题14', '答案14', '详情14', '知识点14', '1');
+INSERT INTO `program` VALUES ('15', '程序题15', '答案15', '详情15', '知识点15', '1');
+INSERT INTO `program` VALUES ('16', '程序题16', '答案16', '详情16', '知识点16', '1');
+INSERT INTO `program` VALUES ('17', '程序题17', '答案17', '详情17', '知识点17', '1');
+INSERT INTO `program` VALUES ('18', '程序题18', '答案18', '详情18', '知识点18', '1');
+INSERT INTO `program` VALUES ('19', '程序题19', '答案19', '详情19', '知识点19', '1');
+INSERT INTO `program` VALUES ('20', '5', '5', '5', '5', '1');
+INSERT INTO `program` VALUES ('21', '5', '5', '5', '5', '1');
+INSERT INTO `program` VALUES ('22', '555', '555', '555', '555', '1');
+INSERT INTO `program` VALUES ('23', '程序题1', '1', '1', '1', '1');
 
 -- ----------------------------
 -- Table structure for programq
@@ -287,7 +606,6 @@ CREATE TABLE `programq` (
 -- Records of programq
 -- ----------------------------
 INSERT INTO `programq` VALUES ('1', 'A1', '背景1', '描述1', '输入1', '输出1', '样例1', '说明1', '1', '标签1', '推荐1', '答案1', '1');
-INSERT INTO `programq` VALUES ('2', 'A2', '背景2', '描述2', '输入2', '输出2', '样例2', '说明2', '1', '标签2', '推荐2', '答案2', '1');
 INSERT INTO `programq` VALUES ('3', 'A3', '背景3', '描述3', '输入3', '输出3', '样例3', '说明3', '1', '标签3', '推荐3', '答案3', '1');
 INSERT INTO `programq` VALUES ('4', 'A4', '背景4', '描述4', '输入4', '输出4', '样例4', '说明4', '1', '标签4', '推荐4', '答案4', '1');
 INSERT INTO `programq` VALUES ('5', 'A5', '背景5', '描述5', '输入5', '输出5', '样例5', '说明5', '1', '标签5', '推荐5', '答案5', '1');
@@ -324,6 +642,39 @@ CREATE TABLE `qtype` (
 INSERT INTO `qtype` VALUES ('1', '选择题');
 INSERT INTO `qtype` VALUES ('2', '填空题');
 INSERT INTO `qtype` VALUES ('3', '程序题');
+INSERT INTO `qtype` VALUES ('4', '多选题');
+INSERT INTO `qtype` VALUES ('5', '判断题');
+
+-- ----------------------------
+-- Table structure for student
+-- ----------------------------
+DROP TABLE IF EXISTS `student`;
+CREATE TABLE `student` (
+  `sid` int(11) NOT NULL,
+  `tid` int(11) DEFAULT NULL,
+  `cid` int(11) DEFAULT NULL,
+  `status` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of student
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for teacher
+-- ----------------------------
+DROP TABLE IF EXISTS `teacher`;
+CREATE TABLE `teacher` (
+  `tid` int(11) NOT NULL,
+  `cid` int(11) DEFAULT NULL,
+  `status` int(2) NOT NULL,
+  PRIMARY KEY (`tid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of teacher
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for user
@@ -342,16 +693,16 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'root', 'oVhWN09Yhh9ApR5z8x5PSo17IbM2TqK_', 'eASjeAQVRCYhuvAQ1O5NwjAwOWU3YTZhNTVjNTY4ZThlZTgzMjRiMmRlYTY2MzMzMmVjZTllMTM2OTg0YTBlODNjNGJkMTA0NmIyODkyNWQcZdRsORm1vx4/QdY534ZtA4skulJ7QL+42NzGfbtxbQ==', '1', '1');
+INSERT INTO `user` VALUES ('1', 'root', '', 'eASjeAQVRCYhuvAQ1O5NwjAwOWU3YTZhNTVjNTY4ZThlZTgzMjRiMmRlYTY2MzMzMmVjZTllMTM2OTg0YTBlODNjNGJkMTA0NmIyODkyNWQcZdRsORm1vx4/QdY534ZtA4skulJ7QL+42NzGfbtxbQ==', '1', '1');
 INSERT INTO `user` VALUES ('3', 'zzz', 'YNH_mjl-1IWVk51mO0nJ-_JAclIQvh1I', 'hCE9bP6ssuVUvQ2GT87WWDI4NDExMzc5MzVmNGM2ZjMyNGI3NTFiMWU3YTc2MWExNmMwMjUyYmY4ZDZkMDUzMWY3OWFhNGE2ODNjNTBlNmbWr45ZfRv49u4cztKPMTjvexf7SDIeRyqXU2lcLc7NqA==', '3', '1');
-INSERT INTO `user` VALUES ('4', 'zhouqing', 'y5dxjFIExmljkVfgFUydjTlPd9Q0ovJW', 'gli8MyBwcC9wowo1sS1M5zEzNzk4MGIwZDM4N2VkMTk4MTRhYzgyMDBlNjIwMDI1YTMxMDQxNTI4OTExMDJlMDYzYjVkM2Y4ODdkMzA1MTKIf6TDzI4hUCd8z4rD1Zd6Ix5gM3SbnS8XEMZuHaZmSg==', '2', '1');
-INSERT INTO `user` VALUES ('5', 'feng', 'Umor2p9AgYRdZ8Qd42egwf5Xe_Mvg05y', 'zIUkBt6kz5HMafywT8/+ZDY1NDlmNzYwZDFiMThjNDVlOTU2NmIxNzU0MGM3NjQ0ZmZhYjk5ZGYyZDBkZDlhNjAzODcyN2JkZmI2M2FkZDKKv2tZ3T0d5id6qN1IHjj9A1tMKlqUib6ru+DHKNUgfw==', '1', '1');
-INSERT INTO `user` VALUES ('6', '杨冰', '8MhKUlr0FD1rkrFvhOX44DP8QGMojgDk', 'UQWhxB372dHMqNL9qyQRXWZjYWExNjA5ODgwOWI0NGRlMGY4M2Q4OGFhNTQ2N2I4YTBiZmVmZTg5YjE0MGJhZWQ5ZmFhZWFmMTk5OGI1OGEceHEshMETk+1Tveu+2FB9sxlR1f+cggDosVUXRhMJ5Q==', '1', '1');
+INSERT INTO `user` VALUES ('4', 'root2', '', 'gli8MyBwcC9wowo1sS1M5zEzNzk4MGIwZDM4N2VkMTk4MTRhYzgyMDBlNjIwMDI1YTMxMDQxNTI4OTExMDJlMDYzYjVkM2Y4ODdkMzA1MTKIf6TDzI4hUCd8z4rD1Zd6Ix5gM3SbnS8XEMZuHaZmSg==', '2', '1');
+INSERT INTO `user` VALUES ('5', 'feng', '', 'zIUkBt6kz5HMafywT8/+ZDY1NDlmNzYwZDFiMThjNDVlOTU2NmIxNzU0MGM3NjQ0ZmZhYjk5ZGYyZDBkZDlhNjAzODcyN2JkZmI2M2FkZDKKv2tZ3T0d5id6qN1IHjj9A1tMKlqUib6ru+DHKNUgfw==', '1', '1');
+INSERT INTO `user` VALUES ('6', '杨冰', 'm1wUiHqaHemOk2_kOdVI6Z14jdjDZjyX', 'UQWhxB372dHMqNL9qyQRXWZjYWExNjA5ODgwOWI0NGRlMGY4M2Q4OGFhNTQ2N2I4YTBiZmVmZTg5YjE0MGJhZWQ5ZmFhZWFmMTk5OGI1OGEceHEshMETk+1Tveu+2FB9sxlR1f+cggDosVUXRhMJ5Q==', '1', '1');
 INSERT INTO `user` VALUES ('7', 'zhouq', null, '123456', '3', '0');
 INSERT INTO `user` VALUES ('8', '周青', null, '123456', '3', '1');
 INSERT INTO `user` VALUES ('9', '周青1', null, '123456', '3', '1');
 INSERT INTO `user` VALUES ('10', '施雨', null, '123456', '3', '0');
-INSERT INTO `user` VALUES ('12', 'cxx', 'imhsM0izxEMet91pZxG8R4nfgW8eUG9L', 'rf5AvNNKCmbIvXbnzjs8JzU2ZGNjODM0ZGUzMDNkZTU4ODE2ZjY0ZWUxOWNkNjI3ZGQ4OWYwOTNiMjEyYjA5MjllOTRiNTRiYzljOTM5NTIXcmFfrYwz577/rVo81CIX1kwBaulC/8ylgCwvOl7Rtg==', '1', '1');
+INSERT INTO `user` VALUES ('12', 'cxx', '_xg-uNAeYDRmK9qMdKlLQAaMRiPydqkW', 'rf5AvNNKCmbIvXbnzjs8JzU2ZGNjODM0ZGUzMDNkZTU4ODE2ZjY0ZWUxOWNkNjI3ZGQ4OWYwOTNiMjEyYjA5MjllOTRiNTRiYzljOTM5NTIXcmFfrYwz577/rVo81CIX1kwBaulC/8ylgCwvOl7Rtg==', '1', '1');
 INSERT INTO `user` VALUES ('13', 'test1', null, '123456', '3', '1');
 INSERT INTO `user` VALUES ('14', 'test', null, '123456', '2', '1');
 INSERT INTO `user` VALUES ('15', '800', null, 'W4idi5vfUDK0Nn9tOTUxLjEwY2ExNjM2ZDYxMDIyYmVkMzliZTFhM2ZjZjkxMjg1NjNmMTg3YmY1YTQ1OWVhMGE5MWM1YmQyMWNjMzRmYzj0jc7E3Vi4p4gfoDBihYkSKvTU1/awUhk+roZpqRGL7g==', '1', '1');
@@ -373,13 +724,15 @@ INSERT INTO `user` VALUES ('30', '815', null, 'wqiHXPSuZ6rt2VfmSNlzGmU2NWM0MjE0M
 INSERT INTO `user` VALUES ('31', '816', null, '85tD3o3s2dtOuXIQ8qK2YWFiNmRiY2NlZWJkMjExNGY1ODYwYjhjOTRiNmJiNWNiMjQyYmY1NzY0MDQyYThjYjQ4NzA2MGQ4YmNhMzAwN2Rcqk9RkvQrE5moummYs0N4j1xVropXNgZ/ySiUoZybGw==', '2', '1');
 INSERT INTO `user` VALUES ('32', '817', null, 'ovkBwfF3rtJ+c+NYxqCV/GI4NWFjZTA5ZjFhOWQxZWY1YzkzOGVlOGQyOTIyMDQxODc3NzIxNjdjNTk5NzBmMzY3Njk3OWIwOGVhNDIwOWavOTyy5mWSdBFPO07TOj7n6L58fDrkY8/T9wswdjh78w==', '3', '1');
 INSERT INTO `user` VALUES ('33', '818', null, 'EPIfKsMKcfiCQINhh2SdrDczYWRkNjAzMTdiYmUwNjc2YzgyZmQ4MGY4NDA3YjVhMDUzMTU2YjRjN2JjYzQ5N2JkZGJjOTRmYjAxMjBmMzjCp6up4WlVFk4kSKTvNObirJn1TrFa3t+yNKYuqinDDw==', '1', '1');
-INSERT INTO `user` VALUES ('34', 'root2', '', 'S8RkaSLAd2W+uHfY5jSK+zljNzJjYmI0ZGUwM2VhMmY0OGMwOTliYjgxOWM3ZmExNmY1ZDE0MWNiZmZmMTE4OGI4ZWM0ZTQ4MDliZGNjZTNdLWGLmPyfp9JaBzlQpCNSfYGe05yzWiO/s+Yjth+IdQ==', '3', '1');
+INSERT INTO `user` VALUES ('34', 'root3', 'KXL-WhtszsEHrj32p307_OVbTx4W0ca2', 'S8RkaSLAd2W+uHfY5jSK+zljNzJjYmI0ZGUwM2VhMmY0OGMwOTliYjgxOWM3ZmExNmY1ZDE0MWNiZmZmMTE4OGI4ZWM0ZTQ4MDliZGNjZTNdLWGLmPyfp9JaBzlQpCNSfYGe05yzWiO/s+Yjth+IdQ==', '3', '1');
+INSERT INTO `user` VALUES ('35', 'ddd', '', 'DJjTa3eLJ0+cO7v6w+3YeWYwMmJmYzUwNzdkMWVkZjdlYTIzMTJkNzRiODU4ZDRhNWYyNjljYzRiMGM2NjUyMjlhZjhkYjVkNzMxOGIzNWYP0rOAqLL4oKUm+o+Wo3woN/9ika/F3uuEAr14Shsq3g==', '3', '1');
 
 -- ----------------------------
 -- Table structure for userans
 -- ----------------------------
 DROP TABLE IF EXISTS `userans`;
 CREATE TABLE `userans` (
+  `id` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
   `exid` int(11) NOT NULL,
   `qid` int(11) NOT NULL,
@@ -387,10 +740,48 @@ CREATE TABLE `userans` (
   `ans` text,
   `grade` float DEFAULT NULL,
   `finishtime` varchar(255) DEFAULT NULL,
-  `status` int(2) NOT NULL,
-  PRIMARY KEY (`userid`,`exid`,`qid`,`qtypeid`)
+  `status` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of userans
 -- ----------------------------
+INSERT INTO `userans` VALUES ('1', '34', '16', '7', '1', 'D17', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('1', '34', '16', '8', '1', 'A15', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('1', '34', '16', '2', '2', '1111', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('1', '34', '16', '3', '2', '1111', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('1', '34', '16', '2', '3', '111', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('1', '34', '16', '4', '3', '1111', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('1', '34', '16', '1', '4', 'A11---B12---C13', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('1', '34', '16', '3', '4', 'A13---C15---D16', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('1', '34', '16', '2', '5', '0', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('1', '34', '16', '4', '5', '1', null, '2020-10-20 11:39:21', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '7', '1', 'D17', null, '2020-10-20 11:41:52', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '8', '1', 'A15', null, '2020-10-20 11:41:52', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '2', '2', 'q', null, '2020-10-20 11:41:52', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '3', '2', 'q', null, '2020-10-20 11:41:52', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '2', '3', 'q', null, '2020-10-20 11:41:52', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '4', '3', 'q', null, '2020-10-20 11:41:52', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '1', '4', 'A11---D14---C13', null, '2020-10-20 11:41:52', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '3', '4', 'A13---C15', null, '2020-10-20 11:41:52', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '2', '5', '1', null, '2020-10-20 11:41:52', '1');
+INSERT INTO `userans` VALUES ('2', '34', '16', '4', '5', '0', null, '2020-10-20 11:41:52', '1');
+
+-- ----------------------------
+-- Table structure for useranss
+-- ----------------------------
+DROP TABLE IF EXISTS `useranss`;
+CREATE TABLE `useranss` (
+  `id` int(111) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `exid` int(11) NOT NULL,
+  `grade` varchar(255) DEFAULT NULL,
+  `finishtime` varchar(255) DEFAULT NULL,
+  `status` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of useranss
+-- ----------------------------
+INSERT INTO `useranss` VALUES ('1', '34', '16', '', '2020-10-20 11:39:21', '1');
+INSERT INTO `useranss` VALUES ('2', '34', '16', '', '2020-10-20 11:41:52', '1');
