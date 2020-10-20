@@ -256,11 +256,6 @@
             this.$router.push({path:'/user/evaluate'})
             alert(res.data.message)
           })
-          // console.log(this.cList);
-          // console.log(this.fList);
-          // console.log(this.pList);
-          // console.log(this.jList);
-          // console.log(this.cmList);
         }
       },
       created(){

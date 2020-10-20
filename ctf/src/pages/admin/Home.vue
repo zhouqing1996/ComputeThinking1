@@ -62,9 +62,9 @@
       <el-menu
         class="el-menu-demo"
         mode="horizontal"
-        background-color="#545c64"
+        background-color="	#1E90FF"
         text-color="#fff"
-        active-text-color="#ffd04b">
+        active-text-color="#ffd04b">>
         <el-menu-item index="1">footer1</el-menu-item>
         <el-submenu index="2">
           <template slot="title">footer2</template>

@@ -34,6 +34,14 @@ return [
         'bank' => [
             'class' => 'backend\module\bank\Module',
         ],
+        //教师用户的管理
+        'teacher' => [
+            'class' => 'backend\module\teacher\Module',
+        ],
+        //学生用户的管理
+        'student' => [
+            'class' => 'backend\module\student\Module',
+        ],
     ],
     'components' => [
         // 'request' => [

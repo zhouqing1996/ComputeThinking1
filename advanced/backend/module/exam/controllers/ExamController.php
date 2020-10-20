@@ -172,14 +172,27 @@ class ExamController extends Controller
         $Plist = $request->post('pList');
         $CMlist =$request->post('cmList');
         $Jlist = $request->post('jList');
-        $id = (new Query())
+
+        $query = (new Query())
             ->select("*")
             ->from("useranss")
             ->Where(['userid'=>$uid])
             ->andWhere(['exid'=>$eid])
-            ->max('id');
+            ->all();
+        if($query){
+            $id = (new Query())
+                ->select("*")
+                ->from("useranss")
+                ->Where(['userid'=>$uid])
+                ->andWhere(['exid'=>$eid])
+                ->max('id');
 //        作答次数
-        $id = $id+1;
+            $id = $id+1;
+        }
+        else{
+            $id =1;
+        }
+
         $finishtime = date('Y-m-d H:i:s',time());
         for($i=0;$i<count($Clist);$i++)
         {

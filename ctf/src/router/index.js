@@ -12,6 +12,12 @@ import NotFound from '../pages/404'
 import adminHome from '../pages/admin/Home'
 //首页
 import adminIndex from '../pages/admin/Index'
+//我的信息
+//修改密码
+import Changepwd from '../pages/admin/my/Changepwd'
+//我的资料
+import My from '../pages/admin/my/My'
+
 //用户信息
 import Userinfo from '../pages/admin/user/Userinfo'
 //添加用户
@@ -50,10 +56,23 @@ import NewCreate from '../pages/admin/exam/Newcreate'
 
 
 //教师用户
+//教师主页
 import TeacherHome from '../pages/teacher/Home'
 import TeacherIndex from '../pages/teacher/Index'
+//教师我的信息
 import Teachermy from '../pages/teacher/my/My'
+//教师修改密码
 import Teacherchgpwd from '../pages/teacher/my/Changepwd'
+//教师创建试卷主页
+import TeacherCreate from '../pages/teacher/teach/Create'
+//教师预览试卷
+import TeacherView from '../pages/teacher/teach/Viewexam'
+//教师手动创建试卷（从题库中选择）
+import TeacherSelfCreate from '../pages/teacher/teach/Selfcreate'
+//教师创建试卷（从无到有）
+import TeacherNewCreate from '../pages/teacher/teach/Newcreate'
+//教师管理学生
+import TeacherSManage from '../pages/teacher/student/SManage'
 
 
 
@@ -71,17 +90,24 @@ import UserGoEva from '../pages/user/evaluate/Goeva'
 import UserRank from '../pages/user/rank/Rank'
 //练习
 import UserExercise from '../pages/user/exercise/Exercise'
+// 练习题目 选择题
+import UserExerciseChoose from '../pages/user/exercise/ViewChoose'
+//填空题
+import UserExerciseFill from '../pages/user/exercise/ViewFill'
+//程序题
+import UserExerciseProgram from '../pages/user/exercise/ViewProgram'
+//判断题
+import UserExerciseJudge from '../pages/user/exercise/ViewJudge'
+//多选题
+import UserExerciseChoosem from '../pages/user/exercise/ViewChoosem'
+
 //我的
 import UserMy from '../pages/user/my/My'
 import Userchangepwd from '../pages/user/my/Changepwd'
 
 
 
-//我的信息
-//修改密码
-import Changepwd from '../pages/admin/my/Changepwd'
-//我的资料
-import My from '../pages/admin/my/My'
+
 
 
 Vue.use(Router)
@@ -324,6 +350,51 @@ const  router = new Router({
             isLogin:true
           },
           component:Teacherchgpwd
+        },
+        {
+        //  教师创建试卷主页
+          path:'/teacher/create',
+          name:'TeacherCreate',
+          meta:{
+            isLogin:true
+          },
+          component:TeacherCreate
+        },
+        {
+        //  教师创建试卷（手动）
+          path:'/teacher/selfcreate',
+          name:"TeacherSelfCreate",
+          meta:{
+            isLogin:true
+          },
+          component:TeacherSelfCreate
+        },
+        {
+        //  教师创建新问卷
+          path:'/teacher/newcreate',
+          name:'TeacherNewCreate',
+          meta:{
+            isLogin:true
+          },
+          component:TeacherNewCreate
+        },
+        {
+        //  教师预览试卷
+          path:'/teacher/viewexam',
+          name:'TeacherViewexam',
+          meta:{
+            isLogin:true
+          },
+          component:TeacherView
+        },
+        {
+        //  教师管理学生
+          path:'/teacher/stuManage',
+          name:'TeacherStuManage',
+          meta:{
+            isLogin:true
+          },
+          component:TeacherSManage
         }
       ]
     },
@@ -347,7 +418,7 @@ const  router = new Router({
         {
         //  测评
           path:'/user/evaluate',
-          name:'evaluate',
+          name:'Userevaluate',
           meta:{
             isLogin:true
           },
@@ -356,7 +427,7 @@ const  router = new Router({
         {
           //  进入测评
           path:'/user/evaluate/goeva',
-          name:'goeva',
+          name:'Usergoeva',
           meta:{
             isLogin:true
           },
@@ -365,11 +436,56 @@ const  router = new Router({
         {
         //  练习
           path:'/user/exercise',
-          name:'exercise',
+          name:'Userexercise',
           meta:{
             isLogin:true
           },
           component:UserExercise
+        },
+        {
+        //  用户练习选择题
+          path:'/user/exercisre/pchoose',
+          name:'UserpChoose',
+          meta:{
+            isLogin:true
+          },
+          component:UserExerciseChoose
+        },
+        {
+        //  用户练习填空题
+          path:'/user/exercise/pfill',
+          name:'UserpFill',
+          meta:{
+            isLogin:true
+          },
+          component:UserExerciseFill
+        },
+        {
+        //  用户练习程序题
+          path:'/user/exercise/pprogram',
+          name:'UserpProgram',
+          meta:{
+            isLogin:true
+          },
+          component:UserExerciseProgram
+        },
+        {
+        //  用户练习判断题
+          path:'/user/exercise/pjudge',
+          name:"UserpJudge",
+          meta:{
+            isLogin:true
+          },
+          component:UserExerciseJudge
+        },
+        {
+        //  用户练习多选题
+          path:'/user/exercise/pchoosem',
+          name:'UserpChoosem',
+          meta:{
+            isLogin:true
+          },
+          component:UserExerciseChoosem
         },
         {
         //  我的

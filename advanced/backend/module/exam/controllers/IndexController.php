@@ -142,6 +142,8 @@ class IndexController extends Controller
             $numc = $request->post('numc');
             $numf = $request->post('numf');
             $nump = $request->post('nump');
+            $numj = $request->post('numj');
+            $numcm = $request->post('numcm');
 
             //不考虑题库中题数目不足的情况
             //所有的题库表的id都是从1开始的，从中产生随机数id，插入到数据库中；
@@ -193,19 +195,61 @@ class IndexController extends Controller
             }
             $queryp = (new Query())
                 ->select("*")
-                ->from("programq")
+                ->from("program")
                 ->max('pqid');
             $arrp = $this->Rand($min, $queryp, $nump);
-            for ($x = 0; $x < $nump; $x++) {
+            for ($x = 0; $x < $nump; ) {
                 $err = (new Query())
                     ->select('*')
-                    ->from('programq')
+                    ->from('program')
                     ->where(['pqid'=>$arrp[$x]])
                     ->one();
                 if($err['pqstatus']==1)
                 {
                     $insertp = \Yii::$app->db->createCommand()->insert('examtail', array('exid' => $id,
                         'qid' => $arrp[$x], 'qtypeid' => 3, 'exstatus' => 1))->execute();
+                    $x =$x+1;
+                }
+                else{
+                    $x = $x;
+                }
+            }
+            $queryj = (new Query())
+                ->select("*")
+                ->from("judge")
+                ->max('jqid');
+            $arrj = $this->Rand($min, $queryj, $numj);
+            for ($x = 0; $x < $numj; ) {
+                $err = (new Query())
+                    ->select('*')
+                    ->from('judge')
+                    ->where(['jqid'=>$arrj[$x]])
+                    ->one();
+                if($err['jqstatus']==1)
+                {
+                    $insertj = \Yii::$app->db->createCommand()->insert('examtail', array('exid' => $id,
+                        'qid' => $arrj[$x], 'qtypeid' => 5, 'exstatus' => 1))->execute();
+                    $x =$x+1;
+                }
+                else{
+                    $x = $x;
+                }
+            }
+            $querycm = (new Query())
+                ->select("*")
+                ->from("choosem")
+                ->max('mqid');
+            $arrcm = $this->Rand($min, $querycm, $numcm);
+            for ($x = 0; $x < $numcm; ) {
+                $err = (new Query())
+                    ->select('*')
+                    ->from('choosem')
+                    ->where(['mqid'=>$arrcm[$x]])
+                    ->one();
+                if($err['mqstatus']==1)
+                {
+                    $insertcm = \Yii::$app->db->createCommand()->insert('examtail', array('exid' => $id,
+                        'qid' => $arrcm[$x], 'qtypeid' => 4, 'exstatus' => 1))->execute();
                     $x =$x+1;
                 }
                 else{

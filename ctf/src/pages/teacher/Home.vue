@@ -11,11 +11,17 @@
           <router-link to="/teacher/index">首页</router-link>
         </el-menu-item>
         <el-menu-item index="2">
-          <router-link to="/teacher" >学生管理</router-link>
+          <router-link to="/teacher/stuManage" >学生管理</router-link>
         </el-menu-item>
-        <el-menu-item index="3">
-          <router-link to="" >资源管理</router-link>
-        </el-menu-item>
+        <el-submenu index="3">
+          <template slot="title">教师事务管理</template>
+          <el-menu-item index="3-1">
+            <router-link to="/teacher/create" >评测管理</router-link>
+          </el-menu-item>
+          <el-menu-item index="3-2">
+            <router-link to="" >资源管理</router-link>
+          </el-menu-item>
+        </el-submenu>
         <el-menu-item index="4">
           <router-link to="" >学生评测数据</router-link>
         </el-menu-item>
@@ -27,10 +33,10 @@
         <el-submenu index="7">
           <template slot="title">我的信息</template>
           <el-menu-item index="7-1">
-            <router-link to="/user/my" >我的资料</router-link>
+            <router-link to="/teacher/my" >我的资料</router-link>
           </el-menu-item>
           <el-menu-item index="7-2">
-            <router-link to="/user/my/changepwd" >修改密码</router-link>
+            <router-link to="/teacher/my/changepwd" >修改密码</router-link>
           </el-menu-item>
           <el-menu-item index="7-3" v-on:click="logout">
             退出登录
